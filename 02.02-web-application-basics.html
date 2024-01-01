@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="author" content="Alex Edwards">
+		<meta name="copyright" content="Copyright Alex Edwards 2023">
+		<title>Web application basics &mdash; Let's Go</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+	</head>
+	<body>
+		<header>
+			<div class="wrapper">
+				<div>
+					
+						
+						<a href="00.00-front-matter.html">Let's Go</a> <span class="crumbs">&rsaquo; <a href="02.00-foundations.html">Foundations</a> &rsaquo; Web application basics</span>
+						
+					
+				</div>
+				<div>
+					&lsaquo; <a href="02.01-project-setup-and-creating-a-module.html">Previous</a>
+					&middot; <a href="00.01-contents.html">Contents</a> &middot;
+					<a href="02.03-routing-requests.html">Next</a> &rsaquo;
+				</div>
+			</div>
+		</header>
+		<main class="wrapper text">
+			<div class="chapter">Chapter 2.2.</div>
+			<h2 id="web-application-basics">Web application basics</h2>
+
+<p>Now that everything is set up correctly, let&rsquo;s make the first iteration of our web application. We&rsquo;ll begin with the three absolute essentials:</p>
+
+<ul>
+<li><p>The first thing we need is <mark>a <dfn>handler</dfn></mark>. If you&rsquo;ve previously built web applications using a MVC pattern, you can think of handlers as being a bit like controllers. They&rsquo;re responsible for executing your application logic and for writing HTTP response headers and bodies.</p></li>
+
+<p>"핸들러는 애플리케이션 로직을 실행하고 HTTP 응답 헤더와 본문을 작성하는 책임이 있습니다."</p>
+
+<li><p>The second component is <mark>a router</mark> (or <dfn>servemux</dfn> in Go terminology). This stores a mapping between the URL patterns for your application and the corresponding handlers. <u>Usually you have one servemux for your application containing all your routes.</u></p></li>
+<p>"라우터는 애플리케이션의 URL 패턴과 해당 핸들러 간의 매핑을 저장합니다." </p>
+
+<li><p>The last thing we need is <mark>a <dfn>web server</dfn></mark>. One of the great things about Go is that you can establish a web server and listen for incoming requests <em>as part of your application itself</em>. <u>You don&rsquo;t need an external third-party server like Nginx, Apache or Caddy.</u></p></li>
+
+<p>"애플리케이션 자체의 일부로 웹 서버를 구축하고 들어오는 요청을 수신합니다."</p>
+
+</ul>
+
+<p>Let&rsquo;s put these components together in the <code>main.go</code> file to make a working application.</p>
+<p>"동작하는 애플리케이션을 만들기 위해서 3가지 컴포넌트를 main.go 파일에 넣었습니다."</p>
+
+<figure class="code go">
+<figcaption>File: main.go</figcaption>
+<pre><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;log&#34;</span>
+    <span class="s">&#34;net/http&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// 핸들러</span>
+<span class="c1">// Define a home handler function which writes a byte slice containing
+</span><span class="c1"></span><span class="c1">// &#34;Hello from Snippetbox&#34; as the response body.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">home</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="p">[</span><span class="p">]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;Hello from Snippetbox&#34;</span><span class="p">)</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 라우터</span>
+    <span class="c1">// Use the http.NewServeMux() function to initialize a new servemux, then
+</span><span class="c1"></span>    <span class="c1">// register the home function as the handler for the &#34;/&#34; URL pattern.
+</span><span class="c1"></span>    <span class="nx">mux</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">NewServeMux</span><span class="p">(</span><span class="p">)</span>
+    <span class="nx">mux</span><span class="p">.</span><span class="nf">HandleFunc</span><span class="p">(</span><span class="s">&#34;/&#34;</span><span class="p">,</span> <span class="nx">home</span><span class="p">)</span>
+
+    <span class="c1">// Print a log a message to say that the server is starting.
+</span><span class="c1"></span>    <span class="nx">log</span><span class="p">.</span><span class="nf">Print</span><span class="p">(</span><span class="s">&#34;starting server on :4000&#34;</span><span class="p">)</span>
+
+	<span class="c1">// 웹서버</span>
+    <span class="c1">// Use the http.ListenAndServe() function to start a new web server. We pass in
+</span><span class="c1"></span>    <span class="c1">// two parameters: <mark><u>the TCP network address</u></mark> to listen on (in this case &#34;:4000&#34;)
+</span><span class="c1"></span>    <span class="c1">// and <mark><u>the servemux</u></mark> we just created. If http.ListenAndServe() returns an error
+</span><span class="c1"></span>    <span class="c1">// we use the log.Fatal() function to log the error message and exit. Note
+</span><span class="c1"></span>    <span class="c1">// that any error returned by http.ListenAndServe() is always non-nil.
+</span><span class="c1"></span>    <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">(</span><span class="s"><mark>&#34;:4000&#34;</mark></span><span class="p">,</span> <span class="nx"><mark>mux</mark></span><span class="p">)</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span></pre>
+</figure>
+
+<aside class="note"><p>
+<strong>Note:</strong> The <code>home</code> handler function is just a regular Go function with two parameters. The <code>http.ResponseWriter</code> parameter provides <u>methods for assembling a HTTP response and sending it to the user</u>, and the <code>*http.Request</code> parameter is <u>a pointer to a struct which holds information about the current request</u> (like the HTTP method and the URL being requested). We&rsquo;ll talk more about these parameters and demonstrate how to use them as we progress through the book.
+</p></aside>
+
+<p>When you run this code, it will start a web server listening on port 4000 of your local machine. Each time the server receives a new HTTP request it will pass the request on to the servemux and &mdash; in turn &mdash; the servemux will check the URL path and dispatch the request to the matching handler.</p>
+<p>"서버가 HTTP 요청을 받을 때마다 ServeMux 로 전달하고, ServeMux 는 URL 경로를 확인한 후 해당하는 핸들러로 요청을 보냅니다."</p>
+
+<p>Let&rsquo;s give this a whirl. Save your <code>main.go</code> file and then try running it from your terminal using the <code>go run</code> command.</p>
+
+<figure class="code bash">
+<pre>$ cd $HOME/code/snippetbox
+$ go run .
+<samp>2023/09/04 07:32:17 starting server on :4000</samp></pre>
+</figure>
+
+<p>While the server is running, open a web browser and try visiting <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>. If everything has gone to plan you should see a page which looks a bit like this:</p>
+
+<figure class="img">
+<img src="assets/img/02.02-01.png" alt="02.02-01.png" />
+</figure>
+
+<aside class="important"><p>
+<strong>Important:</strong> Before we continue, I should explain that Go&rsquo;s servemux treats the URL pattern <code>&quot;/&quot;</code> like a catch-all. So at the moment <em>all</em> HTTP requests to our server will be handled by the <code>home</code> function, regardless of their URL path. For instance, <u>you can visit a different URL path like <a href="http://localhost:4000/foo"><code>http://localhost:4000/foo</code></a> and you’ll receive exactly the same response.</u>
+</p>
+<p>"Go의 ServeMux 는 URL 패턴 "/"을 Catch-all 로 취급한다는 것을 설명해야 할 것 같습니다. 현재 모든 서버의 HTTP 요청은 URL 경로와 관계없이 home 함수에서 처리됩니다."</p>
+</aside>
+
+<p>If you head back to your terminal window, you can stop the server by pressing <code>Ctrl+C</code> on your keyboard.</p>
+
+<hr />
+
+<h3 id="additional-information">Additional information</h3>
+
+<h4 id="network-addresses">Network addresses</h4>
+
+<p>The TCP network address that you pass to <code>http.ListenAndServe()</code> should be in the format <code>&quot;host:port&quot;</code>. If you omit the host (like we did with <code>&quot;:4000&quot;</code>) then the server will listen on all your computer&rsquo;s available network interfaces. Generally, you only need to specify a host in the address if your computer has multiple network interfaces and you want to listen on just one of them.</p>
+
+<p>"<code>http.ListenAndServe()</code>에 전달하는 TCP 네트워크 주소는 <code>"host:port"</code> 형식이어야 합니다. 
+만약 host를 생략하고 (예: <code>":4000"</code>과 같이) 포트만 지정하면, 서버는 컴퓨터의 모든 사용 가능한 네트워크 인터페이스를 수신합니다."</p>
+
+<p>In other Go projects or documentation you might sometimes see network addresses written using named ports like <code>&quot;:http&quot;</code> or <code>&quot;:http-alt&quot;</code> instead of a number. If you use a named port then the <code>http.ListenAndServe()</code> function will attempt to look up the relevant port number from your <code>/etc/services</code> file when starting the server, returning an error if a match can&rsquo;t be found.</p>
+
+<h4 id="using-go-run">Using go run</h4>
+
+<p>During development the <code>go run</code> command is a convenient way to try out your code. It&rsquo;s essentially a shortcut that compiles your code, creates an executable binary in your <code>/tmp</code> directory, and then runs this binary in one step.</p>
+
+<p>"개발 중에는 <code>go run</code> 명령어가 코드를 실행하는 편리한 방법입니다. 이는 사실상 코드를 컴파일하여 <code>/tmp</code> 디렉터리에 실행 가능한 바이너리를 생성한 다음, 이 바이너리를 한 단계에서 실행하는 단축키입니다."</p>
+
+<p>It accepts either a space-separated list of <code>.go</code> files, the path to a specific package (where the <code>.</code> character represents your current directory), or the full module path. For our application at the moment, the three following commands are all equivalent:</p>
+
+<p>"현재 우리 애플리케이션에서는 아래 세 가지 명령어가 모두 동등합니다."</p>
+
+<figure class="code bash">
+<pre>$ go run .
+$ go run main.go
+$ go run snippetbox.alexedwards.net</pre>
+</figure>
+
+		</main>
+		<footer>
+			<div class="wrapper">
+				<div>
+					&lsaquo; <a href="02.01-project-setup-and-creating-a-module.html">Previous</a>
+				</div>
+				<div>
+					<a href="00.01-contents.html">Contents</a>
+				</div>
+				<div>
+					<a href="02.03-routing-requests.html">Next</a> &rsaquo;
+				</div>
+			</div>
+		</footer>
+		<script>
+			document.onkeydown = function(evt) {
+				evt = evt || window.event;
+				switch (evt.keyCode) {
+					
+					case 37:
+						window.location.href = "02.01-project-setup-and-creating-a-module.html";
+						break;
+						
+					
+					case 39:
+						window.location.href = "02.03-routing-requests.html";
+						break;
+						
+				}
+			};
+		</script>
+	</body>
+</html>
+
