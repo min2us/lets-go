@@ -30,34 +30,36 @@
 			<div class="chapter">Chapter 3.1.</div>
 			<h2 id="managing-configuration-settings">Managing configuration settings</h2>
 
-<p>Our web application&rsquo;s <code>main.go</code> file currently contains a couple of hard-coded configuration settings:</p>
+<p>Our web application&rsquo;s <code>main.go</code> file currently contains a couple of hard-coded configuration settings:<br>"현재 웹 애플리케이션의 <code>main.go</code> 파일에는 몇 가지 하드코딩된 설정이 포함되어 있습니다:"</p>
 
 <ul>
-<li>The network address for the server to listen on (currently <code>&quot;:4000&quot;</code>)</li>
-<li>The file path for the static files directory (currently <code>&quot;./ui/static&quot;</code>)</li>
+<li>The network address for the server to listen on (currently <code>&quot;:4000&quot;</code>) <br>서버가 수신 대기할 네트워크 주소 (현재 <code>&quot;:4000&quot;</code>)</li>
+<li>The file path for the static files directory (currently <code>&quot;./ui/static&quot;</code>)<br>정적 파일 디렉토리의 파일 경로 (현재 <code>&quot;./ui/static&quot;</code>)</li>
 </ul>
 
-<p>Having these hard-coded isn&rsquo;t ideal. There&rsquo;s no separation between our configuration settings and code, and we can&rsquo;t change the settings at runtime (which is important if you need different settings for development, testing and production environments).</p>
+<p>Having these hard-coded isn&rsquo;t ideal. There&rsquo;s no separation between our configuration settings and code, and we can&rsquo;t change the settings at runtime (which is important if you need different settings for development, testing and production environments).<br>
+"이러한 값을 하드코딩하는 것은 이상적이지 않습니다. 설정과 코드 간에 분리가 없으며 런타임에서 설정을 변경할 수 없습니다 (개발, 테스트 및 프로덕션 환경에 대해 다른 설정이 필요한 경우 중요합니다)."</p>
 
-<p>In this chapter we&rsquo;ll start to improve that, beginning by making the network address for our server configurable at runtime.</p>
+<p>In this chapter we&rsquo;ll start to improve that, beginning by making the network address for our server configurable at runtime.<br>
+"이 장에서는 시작으로 서버의 네트워크 주소를 런타임에 구성 가능하게 만들어 이를 개선할 것입니다."</p>
 
 <h3 id="command-line-flags">Command-line flags</h3>
 
-<p>In Go, a common and idiomatic way to manage configuration settings is to use <dfn>command-line flags</dfn> when starting an application. For example:</p>
+<p>In Go, a common and idiomatic way to manage configuration settings is to use <dfn>command-line flags</dfn> when starting an application. For example:<br>"Go에서 구성 설정을 관리하는 일반적이고 관용적인 방법은 응용 프로그램을 시작할 때 <dfn>command-line flags</dfn> 를 사용하는 것입니다. 예를 들면 다음과 같습니다:"</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web -addr=&#34;:80&#34;</pre>
 </figure>
 
-<p>The easiest way to accept and parse a command-line flag in your application is with a line of code like this:</p>
+<p>The easiest way to accept and parse a command-line flag in your application is with a line of code like this:<br>"응용 프로그램에서 <dfn>command-line flags</dfn> 를 수락하고 구문 분석하는 가장 쉬운 방법은 다음과 같은 코드 한 줄을 사용하는 것입니다:"</p>
 
 <figure class="code go">
 <pre><span class="nx">addr</span> <span class="o">:=</span> <span class="nx">flag</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;addr&#34;</span><span class="p">,</span> <span class="s">&#34;:4000&#34;</span><span class="p">,</span> <span class="s">&#34;HTTP network address&#34;</span><span class="p">)</span></pre>
 </figure>
 
-<p>This essentially defines a new command-line flag with the name <code>addr</code>, a default value of <code>&quot;:4000&quot;</code> and some short help text explaining what the flag controls. The value of the flag will be stored in the <code>addr</code> variable at runtime.</p>
+<p>This essentially defines a new command-line flag with the name <code>addr</code>, a default value of <code>&quot;:4000&quot;</code> and some short help text explaining what the flag controls. The value of the flag will be stored in the <code>addr</code> variable at runtime.<br>"이는 본질적으로 이름이 <code>addr</code>인 새로운 명령줄 플래그를 정의하며, 기본값은 <code>&quot;:4000&quot;</code>이고 플래그가 무엇을 제어하는지 설명하는 짧은 도움말 텍스트가 있습니다. 플래그의 값은 런타임에 <code>addr</code> 변수에 저장됩니다."</p>
 
-<p>Let&rsquo;s use this in our application and swap out the hard-coded network address in favor of a command-line flag instead:</p>
+<p>Let&rsquo;s use this in our application and swap out the hard-coded network address in favor of a command-line flag instead:<br>"이를 응용 프로그램에서 사용하여 하드코딩된 네트워크 주소를 명령줄 플래그로 교체해 봅시다."</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -104,7 +106,7 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>Save this file and try using the <code>-addr</code> flag when you start the application. You should find that the server now listens on whatever address you specify, like so:</p>
+<p>Save this file and try using the <code>-addr</code> flag when you start the application. You should find that the server now listens on whatever address you specify, like so:<br>"이 파일을 저장하고 응용 프로그램을 시작할 때 <code>-addr</code> 플래그를 사용해 보세요. 이제 서버가 지정한 주소에서 수신 대기되는 것을 확인할 수 있습니다."</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web -addr=&#34;:9999&#34;
@@ -113,28 +115,43 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> Ports 0-1023 are restricted and (typically) can only be used by services which have root privileges. If you try to use one of these ports you should get a <code>bind: permission denied</code> error message on start-up.
+<br>"<strong>Note:</strong> 포트 0-1023은 제한되어 있으며 (일반적으로) 루트 권한을 갖는 서비스만 사용할 수 있습니다. 이러한 포트 중 하나를 사용하려고하면 시작시 <code>bind: permission denied</code> 오류 메시지가 표시됩니다."
 </p></aside>
 
 <h3 id="default-values">Default values</h3>
 
-<p>Command-line flags are completely optional. For instance, if you run the application with no <code>-addr</code> flag the server will fall back to listening on address <code>&quot;:4000&quot;</code> (which is the default value we specified).</p>
+<p>Command-line flags are completely optional. For instance, if you run the application with no <code>-addr</code> flag the server will fall back to listening on address <code>&quot;:4000&quot;</code> (which is the default value we specified).
+<br>"Command-line flags 는 완전히 선택 사항입니다. 예를 들어 <code>-addr</code> 플래그 없이 응용 프로그램을 실행하면 서버가 주소 <code>&quot;:4000&quot;</code>에서 수신 대기하도록 되돌아갑니다 (이는 우리가 지정한 기본값입니다)."
+</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web
 <samp>2023/09/05 10:56:29 starting server on :4000</samp></pre>
 </figure>
 
-<p>There are no rules about what to use as the default values for your command-line flags. I like to use defaults which make sense for my development environment, because it saves me time and typing when I&rsquo;m building an application. But YMMV. You might prefer the safer approach of setting defaults for your production environment instead.</p>
+<p>There are no rules about what to use as the default values for your command-line flags. I like to use defaults which make sense for my development environment, because it saves me time and typing when I&rsquo;m building an application. But YMMV. You might prefer the safer approach of setting defaults for your production environment instead.
+<br>
+"command-line flags의 기본값으로 사용할 내용에 대한 규칙은 없습니다. 개인적으로 응용 프로그램을 빌드할 때 시간과 타이핑을 절약하기 위해 개발 환경에 맞는 기본값을 사용하는 것을 좋아합니다. 그러나 사용자의 입장에 따라 다를 수 있습니다. 대신 프로덕션 환경에 대한 기본값을 설정하는 더 안전한 접근 방식을 선호할 수 있습니다."
+</p>
 
 <h3 id="type-conversions">Type conversions</h3>
 
-<p>In the code above we&rsquo;ve used the <code>flag.String()</code> function to define the command-line flag. This has the benefit of converting whatever value the user provides at runtime to a <code>string</code> type. If the value <em>can&rsquo;t</em> be converted to a <code>string</code> then the application will print an error message and exit.</p>
+<p>In the code above we&rsquo;ve used the <code>flag.String()</code> function to define the command-line flag. This has the benefit of converting whatever value the user provides at runtime to a <code>string</code> type. If the value <em>can&rsquo;t</em> be converted to a <code>string</code> then the application will print an error message and exit.
+<br>
+"위의 코드에서는 <code>flag.String()</code> 함수를 사용하여 command-line flag를 정의했습니다. 이는 사용자가 런타임에 제공한 값을 <code>string</code> 유형으로 변환하는 이점이 있습니다. 값이 <code>string</code>로 변환될 수 없으면 응용 프로그램은 오류 메시지를 출력하고 종료합니다."
+</p>
 
-<p>Go also has a range of other functions including <a href="https://pkg.go.dev/flag/#Int"><code>flag.Int()</code></a>, <a href="https://pkg.go.dev/flag/#Bool"><code>flag.Bool()</code></a>, <a href="https://pkg.go.dev/flag/#Float64"><code>flag.Float64()</code></a> and <a href="https://pkg.go.dev/flag#Duration"><code>flag.Duration()</code></a> for defining flags. These work in exactly the same way as <code>flag.String()</code>, except they automatically convert the command-line flag value to the appropriate type.</p>
+<p>Go also has a range of other functions including <a href="https://pkg.go.dev/flag/#Int"><code>flag.Int()</code></a>, <a href="https://pkg.go.dev/flag/#Bool"><code>flag.Bool()</code></a>, <a href="https://pkg.go.dev/flag/#Float64"><code>flag.Float64()</code></a> and <a href="https://pkg.go.dev/flag#Duration"><code>flag.Duration()</code></a> for defining flags. These work in exactly the same way as <code>flag.String()</code>, except they automatically convert the command-line flag value to the appropriate type.
+<br>
+"Go에는 <code>flag.Int()</code>, <code>flag.Bool()</code>, <code>flag.Float64()</code> 및 <code>flag.Duration()</code>과 같은 다양한 다른 함수가 있어 플래그를 정의할 수 있습니다. 이러한 함수들은 <code>flag.String()</code>과 완전히 동일한 방식으로 작동하지만 command-line flag 값을 자동으로 해당 유형으로 변환합니다."
+</p>
 
 <h3 id="automated-help">Automated help</h3>
 
-<p>Another great feature is that you can use the <code>-help</code> flag to list all the available command-line flags for an application and their accompanying help text. Give it a try:</p>
+<p>Another great feature is that you can use the <code>-help</code> flag to list all the available command-line flags for an application and their accompanying help text. Give it a try:
+<br>
+"또 다른 훌륭한 기능은 <code>-help</code> 플래그를 사용하여 응용 프로그램의 모든 사용 가능한 명령줄 플래그와 해당 도움말 텍스트를 나열할 수 있다는 것입니다. 한 번 시도해보세요:"
+</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web -help
@@ -143,25 +160,42 @@
         HTTP network address (default &#34;:4000&#34;)</samp></pre>
 </figure>
 
-<p>So, all in all, this is starting to look really good. We&rsquo;ve introduced an idiomatic way of managing configuration settings for our application at runtime, and thanks to the <code>-help</code> flag, we&rsquo;ve also got an explicit and documented interface between our application and its operating configuration.</p>
+<p>So, all in all, this is starting to look really good. We&rsquo;ve introduced an idiomatic way of managing configuration settings for our application at runtime, and thanks to the <code>-help</code> flag, we&rsquo;ve also got an explicit and documented interface between our application and its operating configuration.
+<br>
+"
+따라서 전반적으로 이제 정말 좋아 보입니다. 런타임에 응용 프로그램의 구성 설정을 관리하는 관용적인 방법을 소개했으며, <code>-help</code> 플래그 덕분에 응용 프로그램과 운영 구성 간에 명시적이고 문서화된 인터페이스도 얻었습니다."
+</p>
 
 <hr />
 
 <h3 id="additional-information">Additional information</h3>
 
-<h4 id="environment-variables">Environment variables</h4>
+<h4 id="environment-variables">Environment variables (환경 변수)</h4>
 
-<p>If you&rsquo;ve built and deployed web applications before, then you&rsquo;re probably thinking <em>what about environment variables? Surely it&rsquo;s <a href="http://12factor.net/config">good-practice</a> to store configuration settings there?</em></p>
+<p>If you&rsquo;ve built and deployed web applications before, then you&rsquo;re probably thinking <em>what about environment variables? Surely it&rsquo;s <a href="http://12factor.net/config">good-practice</a> to store configuration settings there?</em>
+<br>
 
-<p>If you want, you <em>can</em> store your configuration settings in environment variables and access them directly from your application by using the <a href="https://pkg.go.dev/os/#Getenv"><code>os.Getenv()</code></a> function like so:</p>
+"이전에 웹 애플리케이션을 구축하고 배포한 적이 있다면 아마도 환경 변수에 대해 생각 중일 것입니다. 확실히 환경 변수에 구성 설정을 저장하는 것이 좋은 방법이 아닌가요?"
+</p>
+
+<p>If you want, you <em>can</em> store your configuration settings in environment variables and access them directly from your application by using the <a href="https://pkg.go.dev/os/#Getenv"><code>os.Getenv()</code></a> function like so:
+<br>
+"원한다면 환경 변수에 구성 설정을 저장하고 <code>os.Getenv()</code> 함수를 사용하여 응용 프로그램에서 직접 액세스할 수 있습니다. 다음과 같이:"
+</p>
 
 <figure class="code go">
 <pre><span class="nx">addr</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;SNIPPETBOX_ADDR&#34;</span><span class="p">)</span></pre>
 </figure>
 
-<p>But this has some drawbacks compared to using command-line flags. You can&rsquo;t specify a default setting (the return value from <code>os.Getenv()</code> is the empty string if the environment variable doesn&rsquo;t exist), you don&rsquo;t get the <code>-help</code> functionality that you do with command-line flags, and the return value from <code>os.Getenv()</code> is <em>always</em> a string &mdash; you don’t get automatic type conversions like you do with <code>flag.Int()</code>, <code>flag.Bool()</code> and the other command line flag functions.</p>
+<p>But this has some drawbacks compared to using command-line flags. You can&rsquo;t specify a default setting (the return value from <code>os.Getenv()</code> is the empty string if the environment variable doesn&rsquo;t exist), you don&rsquo;t get the <code>-help</code> functionality that you do with command-line flags, and the return value from <code>os.Getenv()</code> is <em>always</em> a string &mdash; you don’t get automatic type conversions like you do with <code>flag.Int()</code>, <code>flag.Bool()</code> and the other command line flag functions.
+<br>
+"그러나 이것은 command-line flags 를 사용하는 것과 비교하여 몇 가지 단점이 있습니다. 기본 설정을 지정할 수 없습니다 (<code>os.Getenv()</code>의 반환 값은 환경 변수가 존재하지 않으면 빈 문자열입니다). command-line flags 와 같이 <code>-help</code> 기능을 얻을 수 없으며, <code>os.Getenv()</code>의 반환 값은 항상 문자열이며 <code>flag.Int()</code>, <code>flag.Bool()</code> 및 다른 명령줄 플래그 함수와 같은 자동 형 변환을 받을 수 없습니다."
+</p>
 
-<p>Instead, you can get the best of both worlds by passing the environment variable as a command-line flag when starting the application. For example:</p>
+<p>Instead, you can get the best of both worlds by passing the environment variable as a command-line flag when starting the application. For example:
+<br>
+"대신, 응용 프로그램을 시작할 때 environment variable 를 command-line flag 로 전달하여 양쪽의 이점을 모두 얻을 수 있습니다. 예를 들어:"
+</p>
 
 <figure class="code bash">
 <pre>$ export SNIPPETBOX_ADDR=&#34;:9999&#34;
@@ -171,20 +205,33 @@ $ go run ./cmd/web -addr=$SNIPPETBOX_ADDR
 
 <h4 id="boolean-flags">Boolean flags</h4>
 
-<p>For flags defined with <code>flag.Bool()</code>, omitting a value when starting the application is the same as writing <code>-flag=true</code>. The following two commands are equivalent:</p>
+<p>For flags defined with <code>flag.Bool()</code>, omitting a value when starting the application is the same as writing <code>-flag=true</code>. The following two commands are equivalent:
+<br>
+"<code>flag.Bool()</code> 로 정의된 플래그의 경우 응용 프로그램을 시작할 때 값을 생략하는 것은 <code>-flag=true</code> 를 작성하는 것과 동일합니다. 다음 두 명령은 동일합니다:"
+</p>
 
 <figure class="code bash">
 <pre>$ go run ./example -flag=true
 $ go run ./example -flag</pre>
 </figure>
 
-<p>You must explicitly use <code>-flag=false</code> if you want to set a boolean flag value to false.</p>
+<p>You must explicitly use <code>-flag=false</code> if you want to set a boolean flag value to false.
+<br>
+"부울 플래그 값을 false로 설정하려면 명시적으로 <code>-flag=false</code> 를 사용해야 합니다."
+</p>
 
 <h4 id="pre-existing-variables">Pre-existing variables</h4>
 
-<p>It&rsquo;s possible to parse command-line flag values into the memory addresses of pre-existing variables, using <a href="https://pkg.go.dev/flag/#FlagSet.StringVar"><code>flag.StringVar()</code></a>, <a href="https://pkg.go.dev/flag/#FlagSet.IntVar"><code>flag.IntVar()</code></a>, <a href="https://pkg.go.dev/flag/#FlagSet.BoolVar"><code>flag.BoolVar()</code></a>, and similar functions for other types.</p>
+<p>It&rsquo;s possible to parse command-line flag values into the memory addresses of pre-existing variables, using <a href="https://pkg.go.dev/flag/#FlagSet.StringVar"><code>flag.StringVar()</code></a>, <a href="https://pkg.go.dev/flag/#FlagSet.IntVar"><code>flag.IntVar()</code></a>, <a href="https://pkg.go.dev/flag/#FlagSet.BoolVar"><code>flag.BoolVar()</code></a>, and similar functions for other types.
+<br>
+"<code>flag.StringVar()</code>, <code>flag.IntVar()</code>, <code>flag.BoolVar()</code> 및 다른 유형에 대한 유사한 함수를 사용하여 command-line flag 값을 pre-existing variable 의 메모리 주소로 구문 분석하는 것이 가능합니다."
+</p>
 
-<p>These functions are particularly useful if you want to store all your configuration settings in a single struct. As a rough example:</p>
+<p>These functions are particularly useful if you want to store all your configuration settings in a single struct. As a rough example:
+<br>
+"
+이러한 함수들은 모든 구성 설정을 단일 구조체에 저장하려는 경우에 특히 유용합니다. 대략적인 예로는 다음과 같습니다:"
+</p>
 
 <figure class="code go">
 <pre><span class="kd">type</span> <span class="nx">config</span> <span class="kd">struct</span> <span class="p">{</span>

@@ -31,7 +31,8 @@
 			<h2 id="url-query-strings">URL query strings</h2>
 
 <p>While we&rsquo;re on the subject of routing, let&rsquo;s update the <code>snippetView</code> handler so that it accepts an <code>id</code> query string parameter from the user like so:</p>
-
+<p>"
+라우팅에 대해 얘기하는 동안, 사용자로부터 <code>id</code> 쿼리 문자열 매개변수를 받아들일 수 있도록 <code>snippetView</code> 핸들러를 다음과 같이 업데이트해 봅시다."</p>
 <table>
 <thead>
 <tr>
@@ -66,13 +67,18 @@
 </tbody>
 </table>
 <p>Later we&rsquo;ll use this <code>id</code> parameter to select a specific snippet from a database and show it to the user. But for now, we&rsquo;ll just read the value of the <code>id</code> parameter and interpolate it with a placeholder response.</p>
-
+<p>"
+나중에 이 <code>id</code> 매개변수를 사용하여 데이터베이스에서 특정 스니펫을 선택하고 사용자에게 보여줄 것입니다. 그러나 지금은 <code>id</code> 매개변수의 값을 읽고 이를 자리 표시자 응답으로 보간할 것입니다."</p>
 <p>To make this work we&rsquo;ll need to update the <code>snippetView</code> handler function to do two things:</p>
-
+<p>"이를 작동하게 만들려면 <code>snippetView</code> 핸들러 함수를 두 가지로 업데이트해야 합니다"</p>
 <ol>
-<li><p>It needs to retrieve the value of the <code>id</code> parameter from the URL query string, which we can do using the <code>r.URL.Query().Get()</code> method. This will always return a string value for a parameter, or the empty string <code>&quot;&quot;</code> if no matching parameter exists.</p></li>
+<li><p>It needs to retrieve the value of the <code>id</code> parameter from the URL query string, which we can do using the <code>r.URL.Query().Get()</code> method. This will always return a string value for a parameter, or the empty string <code>&quot;&quot;</code> if no matching parameter exists.</p>
+<p>"URL 쿼리 문자열에서 <code>id</code> 매개변수의 값을 검색해야 합니다. 이는 <code>r.URL.Query().Get()</code> 메서드를 사용하여 수행할 수 있습니다. 이 메서드는 항상 매개변수에 대한 문자열 값을 반환하며 해당 매개변수가 없으면 빈 문자열 <code>&quot;&quot;</code>을 반환합니다."</p>
+</li>
 
-<li><p>Because the <code>id</code> parameter is untrusted user input, we should validate it to make sure it&rsquo;s sane and sensible. For the purpose of our Snippetbox application, we want to check that it contains a positive integer value. We can do this by trying to convert the string value to an integer with the <a href="https://pkg.go.dev/strconv/#Atoi"><code>strconv.Atoi()</code></a> function, and then checking that the value is greater than zero.</p></li>
+<li><p>Because the <code>id</code> parameter is untrusted user input, we should validate it to make sure it&rsquo;s sane and sensible. For the purpose of our Snippetbox application, we want to check that it contains a positive integer value. We can do this by trying to convert the string value to an integer with the <a href="https://pkg.go.dev/strconv/#Atoi"><code>strconv.Atoi()</code></a> function, and then checking that the value is greater than zero.</p>
+<p>"<code>id</code> 매개변수는 신뢰할 수 없는 사용자 입력이므로 합리적이고 올바른지 확인해야 합니다. Snippetbox 애플리케이션의 목적에 따라 이 매개변수가 양의 정수 값을 포함하는지 확인하려 합니다. 이를 위해 <code>strconv.Atoi()</code> 함수를 사용하여 문자열 값을 정수로 변환한 다음 해당 값이 0보다 큰지 확인합니다."</p>
+</li>
 </ol>
 
 <p>Here&rsquo;s how:</p>
@@ -110,14 +116,18 @@
 </figure>
 
 <p>Let&rsquo;s try this out.</p>
+<p>"이를 시도해 보겠습니다."</p>
 
 <p>Restart the application, and try visiting a URL like <a href="http://localhost:4000/snippet/view?id=123"><code>http://localhost:4000/snippet/view?id=123</code></a>. You should see a response which looks like this:</p>
-
+<p>"
+애플리케이션을 다시 시작하고 <code>http://localhost:4000/snippet/view?id=123</code>과 같은 URL을 방문해 보세요. 다음과 같은 응답이 표시되어야 합니다"</p>
 <figure class="img">
 <img src="assets/img/02.05-01.png" alt="02.05-01.png" />
 </figure>
 
 <p>You might also like to try visiting some URLs which have invalid values for the <code>id</code> parameter, or no parameter at all. For instance:</p>
+
+<p>"<code>id</code> 매개변수에 대한 무효한 값이나 전혀 매개변수가 없는 일부 URL을 방문해 보는 것도 좋습니다. 예를 들어:"</p>
 
 <ul>
 <li><a href="http://localhost:4000/snippet/view"><code>http://localhost:4000/snippet/view</code></a></li>
@@ -126,20 +136,24 @@
 </ul>
 
 <p>For all these requests you should get a <code>404 page not found</code> response.</p>
-
+<p>"이러한 모든 요청에 대해 <code>404 page not found</code> 응답을 받아야 합니다."</p>
 <h3 id="the-io-writer-interface">The io.writer interface</h3>
 
 <p>The code above introduced another new thing behind-the-scenes. If you take a look at the documentation for the <a href="https://pkg.go.dev/fmt/#Fprintf"><code>fmt.Fprintf()</code></a> function you&rsquo;ll notice that it takes an <a href="https://pkg.go.dev/io/#Writer"><code>io.Writer</code></a> as the first parameter&hellip;</p>
+<p>"위의 코드는 뒷단에서 또 다른 새로운 것을 소개했습니다. <code>fmt.Fprintf()</code> 함수의 문서를 살펴보면 첫 번째 매개변수로 <code>io.Writer</code>를 취하는 것을 알 수 있습니다."</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="nf">Fprintf</span><span class="p">(</span><span class="nx">w</span> <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span><span class="p">,</span> <span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">a</span> <span class="o">...</span><span class="nx">any</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span></pre>
 </figure>
 
 <p>&hellip;but we passed it our <code>http.ResponseWriter</code> object instead &mdash; and it worked fine.</p>
-
+<p>"... 그러나 우리는 대신 <code>http.ResponseWriter</code> 객체를 전달했음에도 불구하고 잘 작동했습니다."</p>
 <p>We&rsquo;re able to do this because the <code>io.Writer</code> type is an <dfn>interface</dfn>, and the <code>http.ResponseWriter</code> object <em>satisfies the interface</em> because it has a <code>w.Write()</code> method.</p>
 
+<p>"우리는 이렇게 할 수 있는 이유는 <code>io.Writer</code> 유형이 인터페이스이며, <code>http.ResponseWriter</code>객체가 이 인터페이스를 충족하기 때문입니다. 왜냐하면 <code>w.Write()</code> 메서드를 가지고 있기 때문입니다."</p>
+
 <p>If you&rsquo;re new to Go, then the <a href="https://www.alexedwards.net/blog/interfaces-explained">concept of interfaces</a> can be a bit confusing and I don&rsquo;t want to get too hung up on it right now. It&rsquo;s enough to know that &mdash; in practice &mdash; anywhere you see an <code>io.Writer</code> parameter it&rsquo;s OK to pass in your <code>http.ResponseWriter</code> object. Whatever is being written will subsequently be sent as the body of the HTTP response.</p>
+<p>"Go에 처음 입문한 경우 인터페이스 개념이 혼란스러울 수 있으며 지금은 그것에 너무 많이 신경 쓰지 않고 싶습니다. 실제로 <code>io.Writer</code> 매개변수를 볼 때마다 <code>http.ResponseWriter</code> 객체를 전달하는 것이 괜찮다는 것만 알면 됩니다. 작성 중인 것은 이후에 HTTP 응답의 본문으로 전송됩니다."</p>
 
 		</main>
 		<footer>
