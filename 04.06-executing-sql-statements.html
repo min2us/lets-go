@@ -30,30 +30,44 @@
 			<div class="chapter">Chapter 4.6.</div>
 			<h2 id="executing-sql-statements">Executing SQL statements</h2>
 
-<p>Now let&rsquo;s update the <code>SnippetModel.Insert()</code> method &mdash; which we&rsquo;ve just made &mdash; so that it creates a new record in our <code>snippets</code> table and then returns the integer <code>id</code> for the new record.</p>
+<p>Now let&rsquo;s update the <code>SnippetModel.Insert()</code> method &mdash; which we&rsquo;ve just made &mdash; so that it creates a new record in our <code>snippets</code> table and then returns the integer <code>id</code> for the new record.
+<br>
+"이제 우리가 만든 <code>SnippetModel.Insert()</code> 메서드를 업데이트하여 <code>snippets</code> 테이블에 새로운 레코드를 생성하고, 그 레코드의 정수 <code>id</code> 를 반환하도록 합시다."
+</p>
 
-<p>To do this we&rsquo;ll want to execute the following SQL query on our database:</p>
+<p>To do this we&rsquo;ll want to execute the following SQL query on our database: "이를 위해 데이터베이스에서 다음 SQL 쿼리를 실행하려고 합니다:"</p>
 
 <figure class="code sql">
 <pre><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">snippets</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="n">expires</span><span class="p">)</span>
 <span class="k">VALUES</span><span class="p">(</span><span class="o">?</span><span class="p">,</span> <span class="o">?</span><span class="p">,</span> <span class="n">UTC_TIMESTAMP</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="n">DATE_ADD</span><span class="p">(</span><span class="n">UTC_TIMESTAMP</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="nb">INTERVAL</span> <span class="o">?</span> <span class="k">DAY</span><span class="p">)</span><span class="p">)</span></pre>
 </figure>
 
-<p>Notice how in this query we&rsquo;re using the <code>?</code> character to indicate <em>placeholder parameters</em> for the data that we want to insert in the database? Because the data we&rsquo;ll be using will ultimately be untrusted user input from a form, it&rsquo;s good practice to use placeholder parameters instead of interpolating data in the SQL query.</p>
+<p>Notice how in this query we&rsquo;re using the <code>?</code> character to indicate <em>placeholder parameters</em> for the data that we want to insert in the database? Because the data we&rsquo;ll be using will ultimately be untrusted user input from a form, it&rsquo;s good practice to use placeholder parameters instead of interpolating data in the SQL query.
+<br>
+"이 쿼리에서 데이터베이스에 삽입할 데이터의 플레이스홀더 매개변수를 나타내기 위해 <code>?</code> 문자를 사용하는 것에 주목하세요. 사용할 데이터는 최종적으로 폼에서의 신뢰할 수 없는 사용자 입력일 수 있으므로 SQL 쿼리에 데이터를 보간하는 대신 플레이스홀더 매개변수를 사용하는 것이 좋은 실천 방법입니다."
+</p>
 
 <h3 id="executing-the-query">Executing the query</h3>
 
-<p>Go provides three different methods for executing database queries:</p>
+<p>Go provides three different methods for executing database queries: "Go는 데이터베이스 쿼리를 실행하는 세 가지 다른 메서드를 제공합니다:"</p>
 
 <ul>
-<li><a href="https://pkg.go.dev/database/sql/#DB.Query"><code>DB.Query()</code></a> is used for <code>SELECT</code> queries which return multiple rows.</li>
-<li><a href="https://pkg.go.dev/database/sql/#DB.QueryRow"><code>DB.QueryRow()</code></a> is used for <code>SELECT</code> queries which return a single row.</li>
-<li><a href="https://pkg.go.dev/database/sql/#DB.Exec"><code>DB.Exec()</code></a> is used for statements which don&rsquo;t return rows (like <code>INSERT</code> and <code>DELETE</code>).</li>
+<li><a href="https://pkg.go.dev/database/sql/#DB.Query"><code>DB.Query()</code></a> is used for <code>SELECT</code> queries which return multiple rows. <br>"<code>DB.Query()</code>는 여러 행을 반환하는 SELECT 쿼리에 사용됩니다."</li>
+<li><a href="https://pkg.go.dev/database/sql/#DB.QueryRow"><code>DB.QueryRow()</code></a> is used for <code>SELECT</code> queries which return a single row. <br> "<code>DB.QueryRow()</code>는 단일 행을 반환하는 SELECT 쿼리에 사용됩니다."</li>
+<li><a href="https://pkg.go.dev/database/sql/#DB.Exec"><code>DB.Exec()</code></a> is used for statements which don&rsquo;t return rows (like <code>INSERT</code> and <code>DELETE</code>). <br> "<code>DB.Exec()</code>는 행을 반환하지 않는 문(<code>INSERT</code> and <code>DELETE</code>와 같은)에 사용됩니다."
+
+
+
+
+"</li>
 </ul>
 
-<p>So, in our case, the most appropriate tool for the job is <code>DB.Exec()</code>. Let&rsquo;s jump in the deep end and demonstrate how to use this in our <code>SnippetModel.Insert()</code> method. We&rsquo;ll discuss the details afterwards.</p>
+<p>So, in our case, the most appropriate tool for the job is <code>DB.Exec()</code>. Let&rsquo;s jump in the deep end and demonstrate how to use this in our <code>SnippetModel.Insert()</code> method. We&rsquo;ll discuss the details afterwards.
+<br>
+"따라서 우리의 경우에는 작업에 가장 적합한 도구가 <code>DB.Exec()</code>입니다. 자, 이를 <code>SnippetModel.Insert()</code> 메서드에서 어떻게 사용하는지 깊게 들어가서 보여드리겠습니다. 세부 내용은 나중에 논의하겠습니다."
+</p>
 
-<p>Open your <code>internal/models/snippets.go</code> file and update it like so:</p>
+<p>Open your <code>internal/models/snippets.go</code> file and update it like so: "<code>internal/models/snippets.go</code> 파일을 열고 다음과 같이 업데이트하세요:"</p>
 
 <figure class="code go">
 <figcaption>File: internal/models/snippets.go</figcaption>
@@ -97,19 +111,33 @@
 <span class="o">...</span></pre>
 </figure>
 
-<p>Let&rsquo;s quickly  discuss the <a href="https://pkg.go.dev/database/sql/#Result"><code>sql.Result</code></a> type returned by <code>DB.Exec()</code>. This provides two methods:</p>
+<p>Let&rsquo;s quickly  discuss the <a href="https://pkg.go.dev/database/sql/#Result"><code>sql.Result</code></a> type returned by <code>DB.Exec()</code>. This provides two methods:
+<br>
+"<code>DB.Exec()</code>에 의해 반환되는 <code>sql.Result</code> 유형에 대해 간단히 논의해 봅시다. 이는 두 가지 메서드를 제공합니다:"
+</p>
 
 <ul>
-<li><p><code>LastInsertId()</code> &mdash; which returns the integer (an <code>int64</code>) generated by the database in response to a command. Typically this will be from an &ldquo;auto increment&rdquo; column when inserting a new row, which is exactly what&rsquo;s happening in our case.</p></li>
+<li><p><code>LastInsertId()</code> &mdash; which returns the integer (an <code>int64</code>) generated by the database in response to a command. Typically this will be from an &ldquo;auto increment&rdquo; column when inserting a new row, which is exactly what&rsquo;s happening in our case.
+<br>
+"<code>LastInsertId()</code> — 이는 데이터베이스에서 명령에 응답으로 생성된 정수(<code>int64</code>)를 반환합니다. 일반적으로 이는 새로운 행을 삽입할 때 "자동 증가" 열에서 가져온 것일 것이며, 우리의 경우에도 정확히 그렇게 일어나고 있습니다."
+</p></li>
 
-<li><p><code>RowsAffected()</code> &mdash; which returns the number of rows (as an <code>int64</code>) affected by the statement.</p></li>
+<li><p><code>RowsAffected()</code> &mdash; which returns the number of rows (as an <code>int64</code>) affected by the statement.
+<br>
+"<code>RowsAffected()</code> — 이는 명령에 의해 영향을 받은 행의 수를 반환합니다(정수로 표현된 <code>int64</code>)."
+</p></li>
 </ul>
 
 <aside class="important"><p>
 <strong>Important:</strong> Not all drivers and databases support the <code>LastInsertId()</code> and <code>RowsAffected()</code> methods. For example, <code>LastInsertId()</code> is <a href="https://github.com/lib/pq/issues/24">not supported</a> by PostgreSQL. So if you&rsquo;re planning on using these methods it&rsquo;s important to check the documentation for your particular driver first.
+<br>
+"<strong>Important:</strong> 모든 드라이버와 데이터베이스가 <code>LastInsertId()</code> 및 <code>RowsAffected()</code> 메서드를 지원하지는 않습니다. 예를 들어, PostgreSQL은 <code>LastInsertId()</code>를 지원하지 않습니다. 따라서 이러한 메서드를 사용할 계획이 있다면 먼저 특정 드라이버의 문서를 확인하는 것이 중요합니다."
 </p></aside>
 
-<p>Also, it is perfectly acceptable (and common) to ignore the <code>sql.Result</code> return value if you don&rsquo;t need it. Like so:</p>
+<p>Also, it is perfectly acceptable (and common) to ignore the <code>sql.Result</code> return value if you don&rsquo;t need it. Like so:
+<br>
+"또한, 만약 필요하지 않다면 (이것은 흔한 경우입니다) <code>sql.Result</code> 반환 값을 무시하는 것이 완전히 허용됩니다. 다음과 같이:"
+</p>
 
 <figure class="code go">
 <pre><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">DB</span><span class="p">.</span><span class="nf">Exec</span><span class="p">(</span><span class="s">&#34;INSERT INTO ...&#34;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span></pre>
@@ -117,7 +145,10 @@
 
 <h3 id="using-the-model-in-our-handlers">Using the model in our handlers</h3>
 
-<p>Let&rsquo;s bring this back to something more concrete and demonstrate how to call this new code from our handlers. Open your <code>cmd/web/handlers.go</code> file and update the <code>snippetCreate</code> handler like so:</p>
+<p>Let&rsquo;s bring this back to something more concrete and demonstrate how to call this new code from our handlers. Open your <code>cmd/web/handlers.go</code> file and update the <code>snippetCreate</code> handler like so:
+<br>
+"이것을 더 구체적인 내용으로 돌아와서 새 코드를 핸들러에서 어떻게 호출하는지 보여드립니다. <code>cmd/web/handlers.go</code> 파일을 열고 다음과 같이 <code>snippetCreate</code> 핸들러를 업데이트하세요."
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -151,7 +182,10 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>Start up the application, then open a second terminal window and use curl to make a <code>POST /snippet/create</code> request, like so (note that the <code>-L</code> flag instructs curl to automatically follow redirects):</p>
+<p>Start up the application, then open a second terminal window and use curl to make a <code>POST /snippet/create</code> request, like so (note that the <code>-L</code> flag instructs curl to automatically follow redirects):
+<br>
+"애플리케이션을 시작한 후 두 번째 터미널 창을 열고 curl을 사용하여 <code>POST /snippet/create</code> 요청을 만들어 보세요 (주의: <code>-L</code> 플래그는 curl이 자동으로 리디렉션을 따르도록 지시합니다):"
+</p>
 
 <figure class="code bash">
 <pre>$ curl -iL -X POST http://localhost:4000/snippet/create
@@ -168,9 +202,16 @@ Content-Type: text/plain; charset=utf-8
 Display a specific snippet with ID 4...</samp></pre>
 </figure>
 
-<p>So this is working pretty nicely. We&rsquo;ve just sent a HTTP request which triggered our <code>snippetCreate</code> handler, which in turn called our <code>SnippetModel.Insert()</code> method. This inserted a new record in the database and returned the ID of this new record. Our handler then issued a redirect to another URL with the ID as a query string parameter.</p>
+<p>So this is working pretty nicely. We&rsquo;ve just sent a HTTP request which triggered our <code>snippetCreate</code> handler, which in turn called our <code>SnippetModel.Insert()</code> method. This inserted a new record in the database and returned the ID of this new record. Our handler then issued a redirect to another URL with the ID as a query string parameter.
+<br>
 
-<p>Feel free to take a look in the <code>snippets</code> table of your MySQL database. You should see the new record with an ID of <code>4</code> similar to this:</p>
+"이것은 꽤 잘 작동하고 있습니다. 우리는 방금 HTTP 요청을 보냈고, 이로 인해 <code>snippetCreate</code> 핸들러가 호출되었으며, 이 핸들러는 다시 <code>SnippetModel.Insert()</code> 메서드를 호출했습니다. 이로써 데이터베이스에 새로운 레코드가 삽입되고 이 새로운 레코드의 ID가 반환되었습니다. 그런 다음 핸들러는 이 ID를 쿼리 문자열 매개변수로 사용하여 다른 URL로 리디렉션을 수행했습니다."
+</p>
+
+<p>Feel free to take a look in the <code>snippets</code> table of your MySQL database. You should see the new record with an ID of <code>4</code> similar to this:
+<br>
+"데이터베이스의 <code>snippets</code> 테이블을 살펴보세요. 여기에는 ID가 4인 새 레코드가 표시될 것입니다. 다음과 비슷합니다:"
+</p>
 
 <figure class="code bash">
 <pre>mysql&gt; SELECT id, title, expires FROM snippets;
@@ -191,21 +232,40 @@ Display a specific snippet with ID 4...</samp></pre>
 
 <h4 id="placeholder-parameters">Placeholder parameters</h4>
 
-<p>In the code above we constructed our SQL statement using placeholder parameters, where <code>?</code> acted as a placeholder for the data we want to insert.</p>
+<p>In the code above we constructed our SQL statement using placeholder parameters, where <code>?</code> acted as a placeholder for the data we want to insert.
+<br>
+"위의 코드에서 우리는 플레이스홀더 매개변수를 사용하여 SQL 문을 구성했는데, 여기서 <code>?</code> 는 삽입하려는 데이터의 플레이스홀더로 작용했습니다."
+</p>
 
-<p>The reason for using placeholder parameters to construct our query (rather than string interpolation) is to help avoid SQL injection attacks from any untrusted user-provided input.</p>
+<p>The reason for using placeholder parameters to construct our query (rather than string interpolation) is to help avoid SQL injection attacks from any untrusted user-provided input.
+<br>
+"쿼리를 구성할 때 (문자열 보간 대신) 플레이스홀더 매개변수를 사용한 이유는 신뢰할 수 없는 사용자 제공 입력에서의 SQL 인젝션 공격을 방지하기 위해서입니다."
+</p>
 
-<p>Behind the scenes, the <code>DB.Exec()</code> method works in three steps:</p>
+<p>Behind the scenes, the <code>DB.Exec()</code> method works in three steps: "<code>DB.Exec()</code> 메서드는 뒷단에서 세 가지 단계로 작동합니다:"</p>
 
 <ol>
-<li><p>It creates a new <a href="https://en.wikipedia.org/wiki/Prepared_statement">prepared statement</a> on the database using the provided SQL statement. The database parses and compiles the statement, then stores it ready for execution.</p></li>
+<li><p>It creates a new <a href="https://en.wikipedia.org/wiki/Prepared_statement">prepared statement</a> on the database using the provided SQL statement. The database parses and compiles the statement, then stores it ready for execution.
+<br>
+"제공된 SQL 문을 사용하여 데이터베이스에 새로운 <code>prepared statement</code> 을 만듭니다. 데이터베이스는 문을 구문 분석하고 컴파일한 다음 실행 준비를 완료합니다.""
+</p></li>
 
-<li><p>In a second separate step, <code>DB.Exec()</code> passes the parameter values to the database. The database then executes the prepared statement using these parameters. Because the parameters are transmitted later, after the statement has been compiled, the database treats them as pure data. They can&rsquo;t change the <em>intent</em> of the statement. So long as the original statement is not derived from untrusted data, injection cannot occur.</p></li>
+<li><p>In a second separate step, <code>DB.Exec()</code> passes the parameter values to the database. The database then executes the prepared statement using these parameters. Because the parameters are transmitted later, after the statement has been compiled, the database treats them as pure data. They can&rsquo;t change the <em>intent</em> of the statement. So long as the original statement is not derived from untrusted data, injection cannot occur.
+<br>
+"별도의 두 번째 단계에서 <code>DB.Exec()</code> 은 매개변수 값을 데이터베이스에 전달합니다. 데이터베이스는 이 매개변수를 사용하여 준비된 문을 실행합니다. 매개변수는 문이 컴파일된 후에 전송되기 때문에 데이터베이스는 이를 순수한 데이터로 처리합니다. 매개변수가 원래 문이 신뢰할 수 없는 데이터에서 파생되지 않는 한 인젝션이 발생할 수 없습니다."
+</p></li>
 
-<li><p>It then closes (or <em>deallocates</em>) the prepared statement on the database.</p></li>
+<li><p>It then closes (or <em>deallocates</em>) the prepared statement on the database.
+<br>
+"그런 다음 데이터베이스에서는 <code>prepared statement</code> 을 닫거나 할당 해제합니다."
+</p></li>
 </ol>
 
-<p>The placeholder parameter syntax differs depending on your database. MySQL, SQL Server and SQLite use the <code>?</code> notation, but PostgreSQL uses the <code>$N</code> notation. For example, if you were using PostgreSQL instead you would write:</p>
+<p>The placeholder parameter syntax differs depending on your database. MySQL, SQL Server and SQLite use the <code>?</code> notation, but PostgreSQL uses the <code>$N</code> notation. For example, if you were using PostgreSQL instead you would write:
+<br>
+
+"플레이스홀더 매개변수 구문은 데이터베이스에 따라 다릅니다. MySQL, SQL Server 및 SQLite는 <code>?</code> 표기법을 사용하지만 PostgreSQL은 <code>$N</code> 표기법을 사용합니다. 예를 들어, PostgreSQL을 사용하는 경우 다음과 같이 작성해야 합니다:"
+</p>
 
 <figure class="code go">
 <pre><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">DB</span><span class="p">.</span><span class="nf">Exec</span><span class="p">(</span><span class="s">&#34;INSERT INTO ... VALUES ($1, $2, $3)&#34;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span></pre>

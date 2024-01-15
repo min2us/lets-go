@@ -30,7 +30,10 @@
 			<div class="chapter">Chapter 4.3.</div>
 			<h2 id="modules-and-reproducible-builds">Modules and reproducible builds</h2>
 
-<p>Now that the MySQL driver is installed, let&rsquo;s take a look at the <code>go.mod</code> file (which we created right at the start of the book). You should see a new <code>require</code> line containing the package path and exact version number of the driver that you downloaded:</p>
+<p>Now that the MySQL driver is installed, let&rsquo;s take a look at the <code>go.mod</code> file (which we created right at the start of the book). You should see a new <code>require</code> line containing the package path and exact version number of the driver that you downloaded:
+<br>
+"MySQL 드라이버가 설치되었으므로 <code>go.mod</code> 파일을 살펴보겠습니다(이 파일은 책을 시작할 때 만들었습니다). 다운로드한 드라이버의 패키지 경로와 정확한 버전 번호가 포함된 새로운 <code>require</code> 라인이 보일 것입니다:"
+</p>
 
 <figure class="code plain">
 <figcaption>File: go.mod</figcaption>
@@ -38,20 +41,32 @@
 
 go 1.21.0
 
-require github.com/go-sql-driver/mysql v1.7.1</pre>
+<mark>require github.com/go-sql-driver/mysql v1.7.1</mark></pre>
 </figure>
 
-<p>This new line in <code>go.mod</code> essentially tells the Go command which exact version of <code>github.com/go-sql-driver/mysql</code> should be used when you run a command like <code>go run</code>, <code>go test</code> or <code>go build</code> from your project directory. In my case, it tells Go that we always want to use version <code>v1.7.1</code>.</p>
+<p>This new line in <code>go.mod</code> essentially tells the Go command which exact version of <code>github.com/go-sql-driver/mysql</code> should be used when you run a command like <code>go run</code>, <code>go test</code> or <code>go build</code> from your project directory. In my case, it tells Go that we always want to use version <code>v1.7.1</code>.
+<br>
+"<code>go.mod</code> 의 이 새로운 라인은 본질적으로 Go 명령에게 프로젝트 디렉토리에서 <code>go run</code>, <code>go test</code> 또는 <code>go build</code> 와 같은 명령을 실행할 때 어떤 정확한 버전의 <code>github.com/go-sql-driver/mysql</code> 을 사용해야 하는지 알려줍니다. 제 경우에는 항상 버전 <code>v1.7.1</code> 을 사용하도록 Go에게 알려줍니다."
+</p>
 
-<p>This makes it easy to have multiple projects on the same machine where <em>different versions of the same package</em> are used. This project is using <code>v1.7.1</code> of the MySQL driver, but you could have another codebase on your computer which uses <code>v1.5.0</code> and that would be A-OK.</p>
+<p>This makes it easy to have multiple projects on the same machine where <em>different versions of the same package</em> are used. This project is using <code>v1.7.1</code> of the MySQL driver, but you could have another codebase on your computer which uses <code>v1.5.0</code> and that would be A-OK.
+<br>
+"이렇게 하면 동일한 머신에서 동일한 패키지의 다른 버전을 사용하는 여러 프로젝트를 쉽게 관리할 수 있습니다. 이 프로젝트는 MySQL 드라이버의 <code>v1.7.1</code>을 사용하고 있지만, 컴퓨터에 또 다른 코드베이스가 <code>v1.5.0</code>을 사용하도록 설정해도 괜찮습니다."
+</p>
 
-<p>You&rsquo;ll also see that a new file has been created in the root of your project directory called <code>go.sum</code>.</p>
+<p>You&rsquo;ll also see that a new file has been created in the root of your project directory called <code>go.sum</code>.
+<br>
+"또한 프로젝트 디렉토리의 루트에 <code>go.sum</code>이라는 새 파일이 생성된 것을 볼 수 있습니다."
+</p>
 
 <figure class="img">
 <img src="assets/img/04.03-01.png" alt="04.03-01.png" />
 </figure>
 
-<p>This <code>go.sum</code> file contains the cryptographic checksums representing the content of the required packages. If you open it up you should see something like this:</p>
+<p>This <code>go.sum</code> file contains the cryptographic checksums representing the content of the required packages. If you open it up you should see something like this:
+<br>
+"이 <code>go.sum</code> 파일에는 필요한 패키지의 내용을 나타내는 암호화 체크섬이 포함되어 있습니다. 열어보면 다음과 같은 내용이 있을 것입니다:"
+</p>
 
 <figure class="code plain">
 <figcaption>File: go.sum</figcaption>
@@ -59,10 +74,16 @@ require github.com/go-sql-driver/mysql v1.7.1</pre>
 github.com/go-sql-driver/mysql v1.7.1/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9S1MCJN5yJMI=</pre>
 </figure>
 
-<p>The <code>go.sum</code> file isn&rsquo;t designed to be human-editable and generally you won&rsquo;t need to open it. But it serves two useful functions:</p>
+<p>The <code>go.sum</code> file isn&rsquo;t designed to be human-editable and generally you won&rsquo;t need to open it. But it serves two useful functions:
+<br>
+"<code>go.sum</code>파일은 인간이 편집하기 위해 설계되지 않았으며 일반적으로 열 필요가 없습니다. 그러나 두 가지 유용한 기능이 있습니다:"
+</p>
 
 <ul>
-<li><p>If you run the <code>go mod verify</code> command from your terminal, this will verify that the checksums of the downloaded packages on your machine match the entries in <code>go.sum</code>, so you can be confident that they haven&rsquo;t been altered.</p>
+<li><p>If you run the <code>go mod verify</code> command from your terminal, this will verify that the checksums of the downloaded packages on your machine match the entries in <code>go.sum</code>, so you can be confident that they haven&rsquo;t been altered.
+<br>
+"터미널에서 <code>go mod verify</code> 명령을 실행하면 이 명령은 내 컴퓨터에서 다운로드한 패키지의 체크섬이 <code>go.sum</code>의 항목과 일치하는지 확인하여 수정되지 않았음을 확인할 수 있습니다."
+</p>
 
 <figure class="code bash">
 <pre>$ go mod verify
@@ -70,50 +91,84 @@ github.com/go-sql-driver/mysql v1.7.1/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9
 </figure>
 </li>
 
-<li><p>If someone else needs to download all the dependencies for the project &mdash; which they can do by running <code>go mod download</code> &mdash; they will get an error if there is any mismatch between the packages they are downloading and the checksums in the file.</p></li>
+<li><p>If someone else needs to download all the dependencies for the project &mdash; which they can do by running <code>go mod download</code> &mdash; they will get an error if there is any mismatch between the packages they are downloading and the checksums in the file.
+<br>
+"누군가가 프로젝트의 모든 종속성을 다운로드해야 하는 경우, <code>go mod download</code>를 실행하여 다운로드하는 패키지와 파일의 체크섬 간에 불일치가 있으면 오류가 발생합니다."
+</p></li>
 </ul>
 
-<p>So, in summary:</p>
+<p>So, in summary: "요약하면,"</p>
 
 <ul>
-<li>You (or someone else in the future) can run <code>go mod download</code> to download the exact versions of all the packages that your project needs.</li>
-<li>You can run <code>go mod verify</code> to ensure that nothing in those downloaded packages has been changed unexpectedly.</li>
-<li>Whenever you run <code>go run</code>, <code>go test</code> or <code>go build</code>, the exact package versions listed in <code>go.mod</code> will always be used.</li>
+<li>You (or someone else in the future) can run <code>go mod download</code> to download the exact versions of all the packages that your project needs.
+<br>
+"<code>go mod download</code> 명령을 실행하여 프로젝트가 필요로 하는 모든 패키지의 정확한 버전을 다운로드할 수 있습니다."
+</li>
+<li>You can run <code>go mod verify</code> to ensure that nothing in those downloaded packages has been changed unexpectedly.
+<br>	
+"<code>go mod verify</code> 명령을 실행하여 다운로드한 패키지에서 예기치 않게 변경된 것이 없는지 확인할 수 있습니다."
+</li>
+<li>Whenever you run <code>go run</code>, <code>go test</code> or <code>go build</code>, the exact package versions listed in <code>go.mod</code> will always be used.
+<br>
+<code>go run</code>, <code>go test</code> or <code>go build</code>를 실행할 때마다 <code>go.mod</code> 에 나열된 정확한 패키지 버전이 항상 사용됩니다.
+</li>
 </ul>
 
-<p>And those things together makes it much easier to reliably create <a href="https://en.wikipedia.org/wiki/Reproducible_builds">reproducible builds</a> of your Go applications.</p>
+<p>And those things together makes it much easier to reliably create <a href="https://en.wikipedia.org/wiki/Reproducible_builds">reproducible builds</a> of your Go applications.
+<br>
+"이러한 기능들은 함께 사용하면 Go 응용 프로그램을 신뢰성 있게 재현 가능한 빌드로 만드는 작업이 훨씬 쉬워집니다."
+</p>
 
 <hr />
 
 <h3 id="additional-information">Additional information</h3>
 
-<h4 id="upgrading-packages">Upgrading packages</h4>
+<h4 id="upgrading-packages">Upgrading packages (패키지 업그레이드)</h4>
 
-<p>Once a package has been downloaded and added to your <code>go.mod</code> file the package and version are &lsquo;fixed&rsquo;. But there are many reasons why you might want to upgrade to use a newer version of a package in the future.</p>
+<p>Once a package has been downloaded and added to your <code>go.mod</code> file the package and version are &lsquo;fixed&rsquo;. But there are many reasons why you might want to upgrade to use a newer version of a package in the future.
+<br>
+"한 번 패키지가 다운로드되어 <code>go.mod</code> 파일에 추가되면 해당 패키지와 버전이 '고정'됩니다. 그러나 미래에 패키지의 더 새로운 버전을 사용하려는 이유가 여러 가지 있을 수 있습니다."
+</p>
 
-<p>To upgrade to latest available <em>minor or patch release</em> of a package, you can simply run <code>go get</code> with the <code>-u</code> flag like so:</p>
+<p>To upgrade to latest available <em>minor or patch release</em> of a package, you can simply run <code>go get</code> with the <code>-u</code> flag like so:
+<br>
+
+"패키지의 최신 마이너 또는 패치 릴리스로 업그레이드하려면 다음과 같이 <code>-u</code> 플래그를 사용하여 <code>go get</code>을 실행하면 됩니다:"
+</p>
 
 <figure class="code bash">
 <pre>$ go get -u github.com/foo/bar</pre>
 </figure>
 
-<p>Or alternatively, if you want to upgrade to a specific version then you should run the same command but with the appropriate <code>@version</code> suffix. For example:</p>
+<p>Or alternatively, if you want to upgrade to a specific version then you should run the same command but with the appropriate <code>@version</code> suffix. For example:
+<br>
+"또는 특정 버전으로 업그레이드하려면 동일한 명령을 실행하되 적절한 <code>@version</code> 접미사와 함께 사용해야 합니다. 예를 들어:"
+</p>
 
 <figure class="code bash">
 <pre>$ go get -u github.com/foo/bar@v2.0.0</pre>
 </figure>
 
-<h4 id="removing-unused-packages">Removing unused packages</h4>
+<h4 id="removing-unused-packages">Removing unused packages (사용하지 않는 패키지 제거하기)</h4>
 
-<p>Sometimes you might <code>go get</code> a package only to realize later that you don&rsquo;t need it anymore. When this happens you&rsquo;ve got two choices.</p>
+<p>Sometimes you might <code>go get</code> a package only to realize later that you don&rsquo;t need it anymore. When this happens you&rsquo;ve got two choices.
+<br>
+"가끔은 나중에 더 이상 필요하지 않다는 것을 깨닫고 나서 패키지를 <code>go get</code> 할 수 있습니다. 이런 경우 두 가지 선택이 있습니다."
+</p>
 
-<p>You could either run <code>go get</code> and postfix the package path with <code>@none</code>, like so:</p>
+<p>You could either run <code>go get</code> and postfix the package path with <code>@none</code>, like so:
+<br>
+"또는 다음과 같이 패키지 경로에 <code>@none</code>을 추가하여 <code>go get</code>을 실행할 수 있습니다."
+</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/foo/bar@none</pre>
 </figure>
 
-<p>Or if you&rsquo;ve removed all references to the package in your code, you can run <code>go mod tidy</code>, which will automatically remove any unused packages from your <code>go.mod</code> and <code>go.sum</code> files.</p>
+<p>Or if you&rsquo;ve removed all references to the package in your code, you can run <code>go mod tidy</code>, which will automatically remove any unused packages from your <code>go.mod</code> and <code>go.mod</code> files.
+<br>
+"또는 코드에서 패키지에 대한 모든 참조를 제거한 경우 <code>go mod tidy</code>를 실행할 수 있습니다. 이렇게 하면 <code>go.mod</code> 및 <code>go.mod</code> 파일에서 사용되지 않는 패키지가 자동으로 제거됩니다."
+</p>
 
 <figure class="code bash">
 <pre>$ go mod tidy</pre>

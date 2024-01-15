@@ -30,11 +30,18 @@
 			<div class="chapter">Chapter 4.2.</div>
 			<h2 id="installing-a-database-driver">Installing a database driver</h2>
 
-<p>To use MySQL from our Go web application we need to install a <dfn>database driver</dfn>. This essentially acts as a middleman, translating commands between Go and the MySQL database itself.</p>
+<p>To use MySQL from our Go web application we need to install a <dfn>database driver</dfn>. This essentially acts as a middleman, translating commands between Go and the MySQL database itself.
+<br>
+"Go 웹 응용 프로그램에서 MySQL을 사용하려면 데이터베이스 드라이버를 설치해야 합니다. 이것은 본질적으로 Go와 MySQL 데이터베이스 간의 명령을 번역하는 중개자 역할을 합니다."
+</p>
 
-<p>You can find a comprehensive <a href="https://github.com/golang/go/wiki/SQLDrivers">list of available drivers</a> on the Go wiki, but for our application we&rsquo;ll use the popular <a href="https://github.com/go-sql-driver/mysql"><code>go-sql-driver/mysql</code></a> driver.</p>
+<p>You can find a comprehensive <a href="https://github.com/golang/go/wiki/SQLDrivers">list of available drivers</a> on the Go wiki, but for our application we&rsquo;ll use the popular <a href="https://github.com/go-sql-driver/mysql"><code>go-sql-driver/mysql</code></a> driver.
+<br>
+"Go 위키에서 사용 가능한 드라이버의 포괄적인 목록을 찾을 수 있지만, 우리의 응용 프로그램에서는 인기 있는 <code>go-sql-driver/mysql</code> 드라이버를 사용할 것입니다."
+</p>
 
-<p>To download it, go to your project directory and run the <code>go get</code> command like so:</p>
+<p>To download it, go to your project directory and run the <code>go get</code> command like so: 
+"다운로드하려면 프로젝트 디렉토리로 이동하고 다음과 같이 <code>go get</code> 명령을 실행하세요:"</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -42,17 +49,29 @@ $ go get github.com/go-sql-driver/mysql@v1
 <samp>go: downloading github.com/go-sql-driver/mysql v1.7.1</samp></pre>
 </figure>
 
-<p>Notice here that we&rsquo;re postfixing the package path with <code>@v1</code> to indicate that we want to download the <a href="https://github.com/go-sql-driver/mysql/releases">latest available version</a> of the package <em>with</em> the major release number 1.</p>
+<p>Notice here that we&rsquo;re postfixing the package path with <code>@v1</code> to indicate that we want to download the <a href="https://github.com/go-sql-driver/mysql/releases">latest available version</a> of the package <em>with</em> the major release number 1.
+<br>
+"이곳에서 주목해야 할 점은 패키지 경로 뒤에 <code>@v1</code> 을 추가하여 주요 릴리스 번호 1을 가진 패키지의 최신 버전을 다운로드하려고 한다는 것입니다."
+</p>
 
-<p>At the time of writing this is <code>v1.7.1</code>, but the version you download might be <code>v1.7.2</code>, <code>v1.8.0</code> or similar &mdash; and that&rsquo;s OK. Because the <code>go-sql-driver/mysql</code> package uses <a href="https://semver.org/">semantic versioning</a> for its releases any <code>v1.x.x</code> version should be compatible with the rest of the code in this book.</p>
+<p>At the time of writing this is <code>v1.7.1</code>, but the version you download might be <code>v1.7.2</code>, <code>v1.8.0</code> or similar &mdash; and that&rsquo;s OK. Because the <code>go-sql-driver/mysql</code> package uses <a href="https://semver.org/">semantic versioning</a> for its releases any <code>v1.x.x</code> version should be compatible with the rest of the code in this book.
+<br>
+"작성 시점에서는 <code>v1.7.1</code>이지만 다운로드하는 버전은 <code>v1.7.2</code>, <code>v1.8.0</code> 또는 유사한 버전이 될 수 있습니다. <code>go-sql-driver/mysql</code> 패키지는 릴리스에 대해 의미 있는 버전을 사용하므로 <code>v1.x.x</code> 버전은 이 책의 나머지 코드와 호환될 것입니다."
+</p>
 
-<p>As an aside, if you want to download the latest version, irrespective of version number, you can simply omit the <code>@version</code> suffix like so:</p>
+<p>As an aside, if you want to download the latest version, irrespective of version number, you can simply omit the <code>@version</code> suffix like so:
+<br>
+"추가로, 버전 번호와 관계없이 최신 버전을 다운로드하려면 <code>@version</code> 접미사를 단순히 생략할 수 있습니다. 다음과 같이:"
+</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/go-sql-driver/mysql</pre>
 </figure>
 
-<p>Or if you want to download a specific version of a package, you can use the full version number. For example:</p>
+<p>Or if you want to download a specific version of a package, you can use the full version number. For example:
+<br>
+"또는 특정 버전의 패키지를 다운로드하려면 전체 버전 번호를 사용할 수 있습니다. 예를 들어:"
+</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/go-sql-driver/mysql@v1.0.3</pre>
