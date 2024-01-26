@@ -30,9 +30,16 @@
 			<div class="chapter">Chapter 6.3.</div>
 			<h2 id="request-logging">Request logging</h2>
 
-<p>Let&rsquo;s continue in the same vein and add some middleware to <em>log HTTP requests</em>. Specifically, we&rsquo;re going to use the structured logger that we created earlier to record the IP address of the user, and the method, URI and HTTP version for the request.</p>
+<p>Let&rsquo;s continue in the same vein and add some middleware to <em>log HTTP requests</em>. Specifically, we&rsquo;re going to use the structured logger that we created earlier to record the IP address of the user, and the method, URI and HTTP version for the request.
+<br>
+"이어서 동일한 방식으로 진행하여 <mark><em>HTTP 요청을 로깅하는</em></mark> 미들웨어를 추가해보겠습니다. 구체적으로는 이전에 만든 구조화된 로거를 사용하여 사용자의 IP 주소 및 요청에 대한 메서드, URI 및 HTTP 버전을 기록할 것입니다."
+</p>
 
-<p>Open your <code>middleware.go</code> file and create a <code>logRequest()</code> method using the standard middleware pattern, like so:</p>
+<p>Open your <code>middleware.go</code> file and create a <code>logRequest()</code> method using the standard middleware pattern, like so:
+<br>
+"<code>middleware.go</code> 파일을 열고 다음과 같이 표준 미들웨어 패턴을 사용하여 <code>logRequest()</code> 메서드를 생성하세요."
+
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/middleware.go</figcaption>
@@ -57,14 +64,23 @@
 </pre>
 </figure>
 
-<p>Notice that this time we&rsquo;re implementing the middleware as a method on <code>application</code>?</p>
+<p>Notice that this time we&rsquo;re implementing the middleware as a method on <code>application</code>?
+<br>
+"이번에는 미들웨어를 <code>application</code> 구조체의 메서드로 구현하고 있다는 점에 주목하세요."
+</p>
 
-<p>This is perfectly valid to do. Our middleware method has the same signature as before, but because it is a method against <code>application</code> it <em>also</em> has access to the handler dependencies including the structured logger.</p>
+<p>This is perfectly valid to do. Our middleware method has the same signature as before, but because it is a method against <code>application</code> it <em>also</em> has access to the handler dependencies including the structured logger.
+<br>
+"이것은 완전히 유효한 작업입니다. 우리의 미들웨어 메서드는 이전과 동일한 서명을 가지고 있지만, 이것은 <code>application</code> 에 대한 메서드로 구현되어 있기 때문에 구조화된 로거를 포함한 핸들러 의존성에 액세스할 수 있습니다."
+</p>
 
-<p>Now let&rsquo;s update our <code>routes.go</code> file so that the <code>logRequest</code> middleware is executed first, and for all requests, so that the flow of control (reading from left to right) looks like this:</p>
+<p>Now let&rsquo;s update our <code>routes.go</code> file so that the <code>logRequest</code> middleware is executed first, and for all requests, so that the flow of control (reading from left to right) looks like this:
+<br>
+"이제 <code>routes.go</code> 파일을 업데이트하여 <code>logRequest</code> 미들웨어가 처음에 실행되도록 하고, 모든 요청에 대해 실행되도록 설정해봅시다. 이렇게 하면 제어 흐름(왼쪽에서 오른쪽으로 읽는 방향)이 다음과 같이 보일 것입니다:"
+</p>
 
 <figure class="code plain">
-<pre>logRequest ↔ secureHeaders ↔ servemux ↔ application handler</pre>
+<pre><mark>logRequest</mark> ↔ secureHeaders ↔ servemux ↔ application handler</pre>
 </figure>
 
 <figure class="code go">
@@ -88,9 +104,12 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>Alright&hellip; let&rsquo;s give it a try!</p>
+<p>Alright&hellip; let&rsquo;s give it a try! "좋아요... 한 번 시도해보세요!"</p>
 
-<p>Restart your application, browse around, and then check your terminal window. You should see log output which looks a bit like this:</p>
+<p>Restart your application, browse around, and then check your terminal window. You should see log output which looks a bit like this:
+<br>
+"애플리케이션을 다시 시작하고 주변을 둘러보신 후 터미널 창을 확인해보세요. 다음과 같이 보이는 로그 출력을 확인해야 합니다:"
+</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web
@@ -105,6 +124,9 @@ time=2023-09-06T16:23:51.687+02:00 level=INFO msg=&#34;received request&#34; ip=
 
 <aside class="note"><p>
 <strong>Note:</strong> Depending on how your browser caches static files, you might need to do a hard refresh (or open a new incognito/private browsing tab) to see any requests for static files.
+<br>
+"<strong>Note:</strong> 브라우저가 정적 파일을 어떻게 캐시하는지에 따라 정적 파일에 대한 요청을 보려면 강제 새로고침 (or open a new incognito/private browsing tab) 을 해야 할 수 있습니다."
+
 </p></aside>
 
 		</main>
