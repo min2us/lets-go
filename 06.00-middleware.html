@@ -30,18 +30,39 @@
 			<div class="chapter">Chapter 6.</div>
 			<h1 id="middleware">Middleware</h1>
 
-<p>When you&rsquo;re building a web application there&rsquo;s probably some shared functionality that you want to use for many (or even all) HTTP requests. For example, you might want to log every request, compress every response, or check a cache before passing the request to your handlers.</p>
+<p>When you&rsquo;re building a web application there&rsquo;s probably some shared functionality that you want to use for many (or even all) HTTP requests. For example, you might want to log every request, compress every response, or check a cache before passing the request to your handlers.
+<br>
+"웹 애플리케이션을 개발할 때 여러 (또는 모든) HTTP 요청에 대해 사용하려는 몇 가지 공통 기능이 있을 것입니다. 예를 들어 모든 요청을 기록하고, 모든 응답을 압축하거나, 핸들러에 요청을 전달하기 전에 캐시를 확인하고 싶을 수 있습니다."
+</p>
 
-<p>A common way of organizing this shared functionality is to set it up as <dfn>middleware</dfn>. This is essentially some self-contained code which independently acts on a request before or after your normal application handlers.</p>
+<p>A common way of organizing this shared functionality is to set it up as <dfn>middleware</dfn>. This is essentially some self-contained code which independently acts on a request before or after your normal application handlers.
+<br>
+"이러한 공통 기능을 구성하는 일반적인 방법은 <dfn>middleware</dfn> 로 설정하는 것입니다. 이는 기본적으로 일반 애플리케이션 핸들러 전후의 요청에 대해 독립적으로 작동하는 일부 자체 포함 코드입니다."
+</p>
 
-<p>In this section of the book you&rsquo;ll learn:</p>
+<p>In this section of the book you&rsquo;ll learn: "이 책의 이 부분에서는 다음을 배우게 됩니다:"</p>
 
 <ul>
-<li>An idiomatic pattern for <a href="06.01-how-middleware-works.html">building and using custom middleware</a> which is compatible with <code>net/http</code> and many third-party packages.</li>
-<li>How to create middleware which <a href="06.02-setting-security-headers.html">sets useful security headers</a> on every HTTP response.</li>
-<li>How to create middleware which <a href="06.03-request-logging.html">logs the requests</a> received by your application.</li>
-<li>How to create middleware which <a href="06.04-panic-recovery.html">recovers panics</a> so that they are gracefully handled by your application.</li>
-<li>How to create and use composable <a href="06.05-composable-middleware-chains.html">middleware chains</a> to help manage and organize your middleware.</li>
+<li>An idiomatic pattern for <a href="06.01-how-middleware-works.html">building and using custom middleware</a> which is compatible with <code>net/http</code> and many third-party packages.
+<br>
+"1. 커스텀 미들웨어를 구축하고 사용하는 관용적인 패턴으로, <code>net/http</code> 및 여러 <code>third-party</code> 패키지와 호환되는 방법에 대한 내용입니다."
+</li>
+<li>How to create middleware which <a href="06.02-setting-security-headers.html">sets useful security headers</a> on every HTTP response.
+<br>
+"2. 모든 HTTP 응답에 유용한 보안 헤더를 설정하는 미들웨어를 생성하는 방법에 대한 내용입니다."
+</li>
+<li>How to create middleware which <a href="06.03-request-logging.html">logs the requests</a> received by your application.
+<br>
+"3. 응용 프로그램에서 수신한 요청을 기록하는 미들웨어를 생성하는 방법에 대한 내용입니다."
+</li>
+<li>How to create middleware which <a href="06.04-panic-recovery.html">recovers panics</a> so that they are gracefully handled by your application.
+<br>
+"4. 패닉을 복구하여 응용 프로그램에서 우아하게 처리되도록 하는 미들웨어를 생성하는 방법에 대한 내용입니다."
+</li>
+<li>How to create and use composable <a href="06.05-composable-middleware-chains.html">middleware chains</a> to help manage and organize your middleware.
+<br>
+"5. 미들웨어 체인을 생성하고 사용하여 미들웨어를 효과적으로 관리하고 조직하는 방법에 대한 내용입니다."
+</li>
 </ul>
 
 		</main>

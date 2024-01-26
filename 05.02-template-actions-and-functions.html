@@ -30,9 +30,15 @@
 			<div class="chapter">Chapter 5.2.</div>
 			<h2 id="template-actions-and-functions">Template actions and functions</h2>
 
-<p>In this section we&rsquo;re going to look at the template <dfn>actions</dfn> and <dfn>functions</dfn> that Go provides.</p>
+<p>In this section we&rsquo;re going to look at the template <dfn>actions</dfn> and <dfn>functions</dfn> that Go provides.
+<br>
+"이 섹션에서는 Go에서 제공하는 template <dfn>actions</dfn> 과 <dfn>functions</dfn> 를 살펴보겠습니다."
+</p>
 
-<p>We&rsquo;ve already talked about some of the actions &mdash; <code>{{define}}</code>, <code>{{template}}</code> and <code>{{block}}</code> &mdash; but there are three more which you can use to control the display of dynamic data &mdash; <code>{{if}}</code>, <code>{{with}}</code> and <code>{{range}}</code>.</p>
+<p>We&rsquo;ve already talked about some of the actions &mdash; <code>{{define}}</code>, <code>{{template}}</code> and <code>{{block}}</code> &mdash; but there are three more which you can use to control the display of dynamic data &mdash; <code>{{if}}</code>, <code>{{with}}</code> and <code>{{range}}</code>.
+<br>
+"이미 몇 가지 액션인 <code>{{define}}</code>, <code>{{template}}</code>, 그리고 <code>{{block}}</code> 에 대해 언급했지만, 동적 데이터의 표시를 제어하는 데 사용할 수 있는 <code>{{if}}</code>, <code>{{with}}</code>, 그리고 <code>{{range}}</code> 라는 3가지 액션이 더 있습니다."
+</p>
 
 <table>
 <thead>
@@ -45,31 +51,53 @@
 <tbody>
 <tr>
 <td><code>{{if .Foo}} C1 {{else}} C2 {{end}}</code></td>
-<td>If <code>.Foo</code> is not empty then render the content C1, otherwise render the content C2.</td>
+<td>If <code>.Foo</code> is not empty then render the content C1, otherwise render the content C2.
+<br>
+"<code>.Foo</code>가 비어있지 않다면 콘텐츠 C1을 렌더링하고, 그렇지 않으면 콘텐츠 C2를 렌더링하세요."
+</td>
 </tr>
 
 <tr>
 <td><code>{{with .Foo}} C1 {{else}} C2 {{end}}</code></td>
-<td>If <code>.Foo</code> is not empty, then set dot to the value of <code>.Foo</code> and render the content C1, otherwise render the content C2.</td>
+<td>If <code>.Foo</code> is not empty, then set dot to the value of <code>.Foo</code> and render the content C1, otherwise render the content C2.
+<br>
+"<code>.Foo</code> 가 비어있지 않다면 dot을 <code>.Foo</code>의 값으로 설정하고 콘텐츠 C1을 렌더링하고, 그렇지 않으면 콘텐츠 C2를 렌더링하세요."
+</td>
 </tr>
 
 <tr>
 <td><code>{{range .Foo}} C1 {{else}} C2 {{end}}</code></td>
-<td>If the length of <code>.Foo</code> is greater than zero then loop over each element, setting dot to the value of each element and rendering the content C1. If the length of <code>.Foo</code> is zero then render the content C2. The underlying type of <code>.Foo</code> must be an array, slice, map, or channel.</td>
+<td>If the length of <code>.Foo</code> is greater than zero then loop over each element, setting dot to the value of each element and rendering the content C1. If the length of <code>.Foo</code> is zero then render the content C2. The underlying type of <code>.Foo</code> must be an array, slice, map, or channel.
+<br>
+"<code>.Foo</code>의 길이가 0보다 크다면 각 요소를 순회하면서 dot을 각 요소의 값으로 설정하고 콘텐츠 C1을 렌더링하세요. 만약 <code>.Foo</code>의 길이가 0이라면 콘텐츠 C2를 렌더링하세요. <code>.Foo</code>의 기본 유형은 배열, 슬라이스, 맵 또는 채널이어야 합니다."
+</td>
 </tr>
 </tbody>
 </table>
-<p>There are a few things about these actions to point out:</p>
+<p>There are a few things about these actions to point out: "이러한 액션들에 대해 몇 가지 주목할 점이 있습니다:"</p>
 
 <ul>
-<li><p>For all three actions the <code>{{else}}</code> clause is optional. For instance, you can write <code>{{if .Foo}} C1 {{end}}</code> if there&rsquo;s no <code>C2</code> content that you want to render.</p></li>
+<li><p>For all three actions the <code>{{else}}</code> clause is optional. For instance, you can write <code>{{if .Foo}} C1 {{end}}</code> if there&rsquo;s no <code>C2</code> content that you want to render.
+<br>
+"3가지 액션 모두 <code>{{else}}</code> 절이 선택적입니다. 예를 들어 <code>C2</code> 콘텐츠를 렌더링하고 싶지 않다면 <code>{{if .Foo}} C1 {{end}}</code> 와 같이 작성할 수 있습니다."
+</p></li>
 
-<li><p>The <em>empty</em> values are false, 0, any nil pointer or interface value, and any array, slice, map, or string of length zero.</p></li>
+<li><p>The <em>empty</em> values are false, 0, any nil pointer or interface value, and any array, slice, map, or string of length zero.
+<br>
+"<em>empty</em> 값은 false, 0, 모든 nil 포인터 또는 인터페이스 값, 그리고 길이가 0인 배열, 슬라이스, 맵 또는 문자열입니다."
+</p></li>
 
-<li><p>It&rsquo;s important to grasp that the <code>with</code> and <code>range</code> actions change the value of dot. Once you start using them, <em>what dot represents can be different depending on where you are in the template and what you&rsquo;re doing.</em></p></li>
+<li><p>It&rsquo;s important to grasp that the <code>with</code> and <code>range</code> actions change the value of dot. Once you start using them, <em>what dot represents can be different depending on where you are in the template and what you&rsquo;re doing.</em>
+<br>
+"<code>with</code>와 <code>range</code> 액션은 dot의 값을 변경한다는 것을 이해하는 것이 중요합니다. 이를 사용하기 시작하면 템플릿의 위치와 수행 중인 작업에 따라 dot이 나타내는 내용이 다를 수 있습니다."
+
+</p></li>
 </ul>
 
-<p>The <code>html/template</code> package also provides some template functions which you can use to add extra logic to your templates and control what is rendered at runtime. You can find a complete listing of functions <a href="https://pkg.go.dev/text/template/#hdr-Functions">here</a>, but the most important ones are:</p>
+<p>The <code>html/template</code> package also provides some template functions which you can use to add extra logic to your templates and control what is rendered at runtime. You can find a complete listing of functions <a href="https://pkg.go.dev/text/template/#hdr-Functions">here</a>, but the most important ones are:
+<br>
+"<code>html/template</code> 패키지는 몇 가지 템플릿 함수도 제공합니다. 이 함수들을 사용하여 템플릿에 추가적인 논리를 추가하고 실행 시 렌더링되는 내용을 제어할 수 있습니다. 여기에서 함수의 완전한 목록을 찾을 수 있지만, 가장 중요한 몇 가지는 다음과 같습니다:"
+</p>
 
 <table>
 <thead>
@@ -121,7 +149,10 @@
 </tr>
 </tbody>
 </table>
-<p>The final row is an example of declaring a <dfn>template variable</dfn>. Template variables are particularly useful if you want to store the result from a function and use it in multiple places in your template. Variable names must be prefixed by a dollar sign and can contain alphanumeric characters only.</p>
+<p>The final row is an example of declaring a <dfn>template variable</dfn>. Template variables are particularly useful if you want to store the result from a function and use it in multiple places in your template. Variable names must be prefixed by a dollar sign and can contain alphanumeric characters only.
+<br>
+"마지막 행은 <dfn>템플릿 변수(template variable)</dfn>를 선언하는 예시입니다. 템플릿 변수는 특히 함수의 결과를 저장하고 템플릿의 여러 위치에서 사용하려는 경우에 유용합니다. 변수 이름은 반드시 달러 기호로 접두사를 붙여야 하며 영숫자 문자만 포함될 수 있습니다."
+</p>
 
 <h3 id="using-the-with-action">Using the with action</h3>
 
