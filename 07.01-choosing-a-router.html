@@ -30,29 +30,55 @@
 			<div class="chapter">Chapter 7.1.</div>
 			<h2 id="choosing-a-router">Choosing a router</h2>
 
-<p>There a literally hundreds of third-party routers for Go to pick from. And (fortunately or unfortunately, depending on your perspective) they all work a bit differently. They have different APIs, different logic for matching routes, and different behavioral quirks.</p>
+<p>There a literally hundreds of third-party routers for Go to pick from. And (fortunately or unfortunately, depending on your perspective) they all work a bit differently. They have different APIs, different logic for matching routes, and different behavioral quirks.
+<br>
+Go에서 선택할 수 있는 수백 개의 third-party 라우터가 있습니다. 그리고 (당신의 관점에 따라 다행이거나 불행이지만) 이들은 모두 조금씩 다르게 작동합니다. 서로 다른 API, 라우트 일치를 위한 다른 로직, 그리고 다른 행동적 특이점을 가지고 있습니다.
+</p>
 
-<p>Out of all the third-party routers I&rsquo;ve tried there are three that I recommend as a starting point: <a href="https://github.com/julienschmidt/httprouter"><code>julienschmidt/httprouter</code></a>, <a href="https://github.com/go-chi/chi"><code>go-chi/chi</code></a> and <a href="https://github.com/gorilla/mux"><code>gorilla/mux</code></a>. They all have good documentation, decent test coverage, and work well with the standard patterns for handlers and middleware that we&rsquo;ve used in this book.</p>
+<p>Out of all the third-party routers I&rsquo;ve tried there are three that I recommend as a starting point: <a href="https://github.com/julienschmidt/httprouter"><code>julienschmidt/httprouter</code></a>, <a href="https://github.com/go-chi/chi"><code>go-chi/chi</code></a> and <a href="https://github.com/gorilla/mux"><code>gorilla/mux</code></a>. They all have good documentation, decent test coverage, and work well with the standard patterns for handlers and middleware that we&rsquo;ve used in this book.
+<br>
+내가 시도해 본 모든 third-party 라우터 중에서 시작점으로 추천하는 것은 <code>julienschmidt/httprouter</code>, <code>go-chi/chi</code>, 그리고 <code>gorilla/mux</code> 입니다. 이들은 모두 훌륭한 문서, 괜찮은 테스트 커버리지, 그리고 이 책에서 사용한 핸들러와 미들웨어에 대한 표준 패턴과 잘 호환됩니다.
+</p>
 
-<p>All three routers also support method-based routing and clean URLs, but beyond that they have slightly different behaviors and features. You should pick between them depending on the specific requirements that your project has.</p>
+<p>All three routers also support method-based routing and clean URLs, but beyond that they have slightly different behaviors and features. You should pick between them depending on the specific requirements that your project has.
+<br>
+세 라우터 모두 메서드 기반 라우팅과 Clean URL을 지원하지만, 그 이외에도 약간 다른 동작과 기능을 가지고 있습니다. 프로젝트의 특정 요구 사항에 따라 이 중 하나를 선택해야 합니다.
+</p>
 
-<p>In summary:</p>
+<p>In summary: 요약하자면</p>
 
 <ul>
-<li><p><code>julienschmidt/httprouter</code> is the most focused, lightweight and fastest of the three packages, and is about as close to &lsquo;perfect&rsquo; as any third-party router gets in terms of its compliance with the HTTP specs. It automatically handles <code>OPTIONS</code> requests and sends <code>405</code> responses correctly, and allows you to set custom handlers for <code>404</code> and <code>405</code> responses too.</p></li>
+<li><p><code>julienschmidt/httprouter</code> is the most focused, lightweight and fastest of the three packages, and is about as close to &lsquo;perfect&rsquo; as any third-party router gets in terms of its compliance with the HTTP specs. It automatically handles <code>OPTIONS</code> requests and sends <code>405</code> responses correctly, and allows you to set custom handlers for <code>404</code> and <code>405</code> responses too.
+<br>
+<code>julienschmidt/httprouter</code>는 세 패키지 중에서 가장 집중적이고 가벼우며 가장 빠르며, HTTP 사양을 준수하는 측면에서 제3자 라우터 중에서 가장 '완벽'에 가까운 것 중 하나입니다. 이는 <code>OPTIONS</code> 요청을 자동으로 처리하고 <code>405</code> 응답을 올바르게 전송하며, 또한 <code>404</code> 및 <code>405</code> 응답에 대한 사용자 정의 핸들러를 설정할 수 있도록 허용합니다.
+</p></li>
 
-<li><p><code>go-chi/chi</code> is generally similar to <code>httprouter</code> in terms of its features, with the main differences being that it also supports regexp route patterns and &lsquo;grouping&rsquo; of routes which use specific middleware. This route grouping feature is really valuable in larger applications where you have lots routes and middleware to manage. The only real downside of <code>chi</code> is that it doesn&rsquo;t automatically handle <code>OPTIONS</code> requests for you.</p></li>
+<li><p><code>go-chi/chi</code> is generally similar to <code>httprouter</code> in terms of its features, with the main differences being that it also supports regexp route patterns and &lsquo;grouping&rsquo; of routes which use specific middleware. This route grouping feature is really valuable in larger applications where you have lots routes and middleware to manage. The only real downside of <code>chi</code> is that it doesn&rsquo;t automatically handle <code>OPTIONS</code> requests for you.
+<br>
+<code>go-chi/chi</code>는 주로 <code>httprouter</code> 와 유사한 기능을 가지고 있으며, 주된 차이점은 정규식 라우트 패턴과 특정 미들웨어를 사용하는 라우트의 '그루핑'을 지원한다는 것입니다. 이 라우트 그루핑 기능은 많은 라우트와 미들웨어를 관리해야 하는 큰 애플리케이션에서 정말 유용합니다. <code>chi</code> 의 유일한 실질적인 단점은 <code>OPTIONS</code> 요청을 자동으로 처리하지 않는다는 것입니다.
+</p></li>
 
-<li><p><code>gorilla/mux</code> is the most full-featured of the three routers. It supports regexp route patterns, and allows you to route requests based on scheme, host and headers. It&rsquo;s also the only one to support custom routing rules and route &lsquo;reversing&rsquo; (like you get in Django, Rails or Laravel).</p>
+<li><p><code>gorilla/mux</code> is the most full-featured of the three routers. It supports regexp route patterns, and allows you to route requests based on scheme, host and headers. It&rsquo;s also the only one to support custom routing rules and route &lsquo;reversing&rsquo; (like you get in Django, Rails or Laravel).
+<br>
+<code>gorilla/mux</code> 는 세 라우터 중에서 가장 많은 기능을 제공합니다. 정규식 라우트 패턴을 지원하며, scheme, host, 헤더를 기반으로 요청을 라우팅할 수 있습니다. 또한 사용자 정의 라우팅 규칙과 라우트 '역전' (Django, Rails 또는 Laravel에서 제공되는 것과 유사한)을 지원하는 유일한 라우터입니다.
+</p>
 
-<p>The main downside of <code>gorilla/mux</code> is that it&rsquo;s comparatively slow and memory hungry &mdash; although for a database-driven web application like ours the impact over the lifetime of a whole HTTP request is likely to be small. Like <code>chi</code>, it also doesn&rsquo;t automatically handle <code>OPTIONS</code> requests, plus it doesn&rsquo;t set an <code>Allow</code> header in <code>405</code> responses.</p></li>
+<p>The main downside of <code>gorilla/mux</code> is that it&rsquo;s comparatively slow and memory hungry &mdash; although for a database-driven web application like ours the impact over the lifetime of a whole HTTP request is likely to be small. Like <code>chi</code>, it also doesn&rsquo;t automatically handle <code>OPTIONS</code> requests, plus it doesn&rsquo;t set an <code>Allow</code> header in <code>405</code> responses.
+<br>
+<code>gorilla/mux</code> 의 주된 단점은 비교적 느리고 메모리를 많이 사용한다는 것입니다. 그러나 우리와 같은 데이터베이스 기반 웹 애플리케이션의 경우 전체 HTTP 요청 수명 동안의 영향은 작을 것으로 예상됩니다. <code>chi</code> 와 마찬가지로 <code>OPTIONS</code> 요청을 자동으로 처리하지 않으며, <code>405</code> 응답에 <code>Allow</code> 헤더를 설정하지도 않습니다.
+</p></li>
 </ul>
 
 <aside class="note"><p>
 <strong>Note:</strong> If you&rsquo;re interested in a more detailed comparison of these routers I&rsquo;ve written up a  guide and flowchart to help you choose between them in <a href="https://www.alexedwards.net/blog/which-go-router-should-i-use">this blog post</a>.
+<br>
+<strong>참고:</strong> 이 라우터들에 대한 더 자세한 비교에 관심이 있다면, <a href="https://www.alexedwards.net/blog/which-go-router-should-i-use">블로그 글</a>에서 선택하는 데 도움이 되는 가이드와 플로차트를 작성했습니다.
 </p></aside>
 
-<p>In our case, our application is fairly small and we don&rsquo;t need support for anything beyond basic method-based routing and clean URLs. So, for the sake of performance and correctness, we&rsquo;ll opt to use <code>julienschmidt/httprouter</code> in this project.</p>
+<p>In our case, our application is fairly small and we don&rsquo;t need support for anything beyond basic method-based routing and clean URLs. So, for the sake of performance and correctness, we&rsquo;ll opt to use <code>julienschmidt/httprouter</code> in this project.
+<br>
+우리의 경우, 우리의 애플리케이션은 꽤 작고 기본적인 메서드 기반 라우팅과 Clean URL 이외의 것을 지원할 필요가 없습니다. 그러므로 성능과 정확성을 위해 이 프로젝트에서는 <code>julienschmidt/httprouter</code> 를 사용하기로 결정했습니다.
+</p>
 
 		</main>
 		<footer>

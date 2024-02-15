@@ -30,23 +30,38 @@
 			<div class="chapter">Chapter 6.5.</div>
 			<h2 id="composable-middleware-chains">Composable middleware chains</h2>
 
-<p>In this chapter I&rsquo;d like to introduce the <a href="https://github.com/justinas/alice"><code>justinas/alice</code></a> package to help us manage our middleware/handler chains.</p>
+<p>In this chapter I&rsquo;d like to introduce the <a href="https://github.com/justinas/alice"><code>justinas/alice</code></a> package to help us manage our middleware/handler chains.
+<br>
+이 장에서는 미들웨어 및 핸들러 체인을 관리하는 데 도움이 되는 <code>justinas/alice</code> 패키지를 소개하고 싶습니다.
+</p>
 
-<p>You don&rsquo;t <em>need</em> to use this package, but the reason I recommend it is because it makes it easy to create composable, reusable, middleware chains &mdash; and that can be a real help as your application grows and your routes become more complex. The package itself is also small and lightweight, and the code is clear and well written.</p>
+<p>You don&rsquo;t <em>need</em> to use this package, but the reason I recommend it is because it makes it easy to create composable, reusable, middleware chains &mdash; and that can be a real help as your application grows and your routes become more complex. The package itself is also small and lightweight, and the code is clear and well written.
+<br>
+이 패키지를 사용할 필요는 없지만, 추천하는 이유는 구성 가능하고 재사용 가능한 미들웨어 체인을 쉽게 생성할 수 있기 때문입니다. 이는 애플리케이션이 성장하고 라우트가 더 복잡해지는 경우 실질적인 도움이 될 수 있습니다. 또한 패키지 자체는 작고 가벼우며 코드가 명확하고 잘 작성되어 있습니다.
+</p>
 
-<p>To demonstrate its features in one example, it allows you to rewrite a handler chain like this:</p>
+<p>To demonstrate its features in one example, it allows you to rewrite a handler chain like this:
+<br>
+한 예로 이 패키지의 기능을 보여주기 위해 다음과 같은 핸들러 체인을 리팩터링할 수 있습니다.
+</p>
 
 <figure class="code go">
 <pre><span class="k">return</span> <span class="nf">myMiddleware1</span><span class="p">(</span><span class="nf">myMiddleware2</span><span class="p">(</span><span class="nf">myMiddleware3</span><span class="p">(</span><span class="nx">myHandler</span><span class="p">)</span><span class="p">)</span><span class="p">)</span></pre>
 </figure>
 
-<p>Into this, which is a bit clearer to understand at a glance:</p>
+<p>Into this, which is a bit clearer to understand at a glance:
+<br>
+다음처럼 간단히 이해할 수 있는 형태로 리팩터링할 수 있습니다.
+</p>
 
 <figure class="code go">
 <pre><span class="k">return</span> <span class="nx">alice</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">myMiddleware1</span><span class="p">,</span> <span class="nx">myMiddleware2</span><span class="p">,</span> <span class="nx">myMiddleware3</span><span class="p">)</span><span class="p">.</span><span class="nf">Then</span><span class="p">(</span><span class="nx">myHandler</span><span class="p">)</span></pre>
 </figure>
 
-<p>But the real power lies in the fact that you can use it to create middleware chains that can be assigned to variables, appended to, and reused. For example:</p>
+<p>But the real power lies in the fact that you can use it to create middleware chains that can be assigned to variables, appended to, and reused. For example:
+<br>
+하지만 실제 강점은 변수에 할당하고 추가하여 재사용할 수 있는 미들웨어 체인을 생성할 수 있다는 점에 있습니다. 예를 들면:
+</p>
 
 <figure class="code go">
 <pre><span class="nx">myChain</span> <span class="o">:=</span> <span class="nx">alice</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">myMiddlewareOne</span><span class="p">,</span> <span class="nx">myMiddlewareTwo</span><span class="p">)</span>
@@ -54,14 +69,20 @@
 <span class="k">return</span> <span class="nx">myOtherChain</span><span class="p">.</span><span class="nf">Then</span><span class="p">(</span><span class="nx">myHandler</span><span class="p">)</span></pre>
 </figure>
 
-<p>If you&rsquo;re following along, please install the <code>justinas/alice</code> package using <code>go get</code>:</p>
+<p>If you&rsquo;re following along, please install the <code>justinas/alice</code> package using <code>go get</code>:
+<br>
+만약 따라하고 계신다면 <code>go get</code> 명령어를 사용하여 <code>justinas/alice</code> 패키지를 설치하세요
+</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/justinas/alice@v1
 <samp>go: downloading github.com/justinas/alice v1.2.0</samp></pre>
 </figure>
 
-<p>And if you open the <code>go.mod</code> file for your project, you should see a new corresponding <code>require</code> statement, like so:</p>
+<p>And if you open the <code>go.mod</code> file for your project, you should see a new corresponding <code>require</code> statement, like so:
+<br>
+프로젝트의 <code>go.mod</code> 파일을 열면 다음과 같이 새로운 해당 <code>require</code> 문을 볼 수 있어야 합니다
+</p>
 
 <figure class="code plain">
 <figcaption>File: go.mod</figcaption>
@@ -75,7 +96,10 @@ require (
 )</pre>
 </figure>
 
-<p>OK, let&rsquo;s update our <code>routes.go</code> file to use the <code>justinas/alice</code> package as follows:</p>
+<p>OK, let&rsquo;s update our <code>routes.go</code> file to use the <code>justinas/alice</code> package as follows:
+<br>
+좋아요, 이제 <code>routes.go</code> 파일을 다음과 같이 업데이트하여 <code>justinas/alice</code> 패키지를 사용해봅시다
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -106,7 +130,10 @@ require (
 <span class="p">}</span></pre>
 </figure>
 
-<p>If you want, feel free to restart the application at this point. You should find that everything compiles correctly and the application continues to work in the same way as before.</p>
+<p>If you want, feel free to restart the application at this point. You should find that everything compiles correctly and the application continues to work in the same way as before.
+<br>
+원한다면 지금 애플리케이션을 다시 시작해보세요. 모든 것이 올바르게 컴파일되고 애플리케이션이 이전과 동일한 방식으로 작동하는 것을 확인할 수 있어야 합니다.
+</p>
 
 		</main>
 		<footer>

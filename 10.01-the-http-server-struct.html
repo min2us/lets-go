@@ -30,11 +30,20 @@
 			<div class="chapter">Chapter 10.1.</div>
 			<h2 id="the-http-server-struct">The http.Server struct</h2>
 
-<p>So far in this book we&rsquo;ve been using the <code>http.ListenAndServe()</code> shortcut function to start our server.</p>
+<p>So far in this book we&rsquo;ve been using the <code>http.ListenAndServe()</code> shortcut function to start our server.
+<br/><br/>
+이 책에서는 지금까지 서버를 시작하기 위해 <code>http.ListenAndServe()</code> 단축 함수를 사용해 왔습니다.
+</p>
 
-<p>Although <code>http.ListenAndServe()</code> is very useful in short examples and tutorials, in real-world applications it&rsquo;s more common to manually create and use a <a href="https://pkg.go.dev/net/http#Server"><code>http.Server</code></a> struct instead. Doing this opens up the opportunity to customize the behavior of your server, which is exactly that we&rsquo;ll be doing in this section of the book.</p>
+<p>Although <code>http.ListenAndServe()</code> is very useful in short examples and tutorials, in real-world applications it&rsquo;s more common to manually create and use a <a href="https://pkg.go.dev/net/http#Server"><code>http.Server</code></a> struct instead. Doing this opens up the opportunity to customize the behavior of your server, which is exactly that we&rsquo;ll be doing in this section of the book.
+<br/><br/>
+<code>http.ListenAndServe()</code>는 짧은 예제와 튜토리얼에서 매우 유용하지만 실제 애플리케이션에서는 일반적으로 수동으로 <a href="https://pkg.go.dev/net/http#Server"><code>http.Server</code></a> 구조체를 생성하고 사용하는 것이 더 흔합니다. 이렇게 하면 서버의 동작을 사용자 정의할 수 있는 기회가 열리며, 이것이 바로 이 섹션에서 다루게 될 내용입니다.
+</p>
 
-<p>So in preparation for that, let&rsquo;s quickly update our <code>main.go</code> file to stop using the <code>http.ListenAndServe()</code> shortcut, and manually create and use a <code>http.Server</code> struct instead.</p>
+<p>So in preparation for that, let&rsquo;s quickly update our <code>main.go</code> file to stop using the <code>http.ListenAndServe()</code> shortcut, and manually create and use a <code>http.Server</code> struct instead.
+<br/><br/>
+따라서 그에 대비하여 빠르게 <code>main.go</code> 파일을 업데이트하여 <code>http.ListenAndServe()</code> 단축을 사용하지 않고 수동으로 <code>http.Server</code> 구조체를 생성하고 사용하도록 합시다.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -95,7 +104,10 @@
 <span class="o">...</span></pre>
 </figure>
 
-<p>This is a small change which doesn&rsquo;t affect our application behavior (yet!), but it sets us up nicely for the work to come.</p>
+<p>This is a small change which doesn&rsquo;t affect our application behavior (yet!), but it sets us up nicely for the work to come.
+<br/><br/>
+이것은 우리의 애플리케이션 동작에는 영향을 미치지 않는 작은 변경이지만, 이후의 작업에 대비하여 좋은 기반을 마련해 놓습니다.
+</p>
 
 		</main>
 		<footer>

@@ -31,6 +31,7 @@
 			<h2 id="connection-timeouts">Connection timeouts</h2>
 
 <p>Let&rsquo;s take a moment to improve the resiliency of our server by adding some timeout settings, like so:</p>
+<p>서버의 내구성을 향상시키기 위해 몇 가지 타임아웃 설정을 추가해 봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -67,36 +68,54 @@
 </figure>
 
 <p>All three of these timeouts &mdash; <code>IdleTimeout</code>, <code>ReadTimeout</code> and <code>WriteTimeout</code> &mdash; are server-wide settings which act on the underlying connection and apply to all requests irrespective of their handler or URL.</p>
+<p>
+이 세 가지 타임아웃인 <code>IdleTimeout</code>, <code>ReadTimeout</code> 및 <code>WriteTimeout</code>은 기본 연결에 작용하는 서버 전반적인 설정으로, 핸들러나 URL에 관계없이 모든 요청에 적용됩니다.</p>
 
 <h3 id="the-idletimeout-setting">The IdleTimeout setting</h3>
 
 <p>By default, Go enables <a href="https://en.wikipedia.org/wiki/HTTP_persistent_connection">keep-alives</a> on all accepted connections. This helps reduce latency (especially for HTTPS connections) because a client can reuse the same connection for multiple requests without having to repeat the TLS handshake.</p>
+<p>기본적으로 Go는 수락된 모든 연결에 대해 <a href="https://en.wikipedia.org/wiki/HTTP_persistent_connection">keep-alives</a>를 활성화합니다. 이는 클라이언트가 TLS 핸드셰이크를 반복하지 않고 여러 요청에 대해 동일한 연결을 재사용할 수 있도록 하므로 지연 시간을 줄이는 데 도움이 됩니다.</p>
 
 <p>By default, keep-alive connections will be automatically closed after a couple of minutes (the exact time <a href="https://github.com/golang/go/issues/23459#issuecomment-374777402">depends on your operating system</a>). This helps to clear-up connections where the user has disappeared unexpectedly &mdash; e.g. due to a power cut on the client&rsquo;s end.</p>
+<p>기본적으로 keep-alive 연결은 자동으로 몇 분 후에 닫힙니다 (정확한 시간은 <a href="https://github.com/golang/go/issues/23459#issuecomment-374777402">운영 체제에 의존</a>합니다.). 이는 사용자가 예상치 못하게 사라진 경우에 연결을 정리하는 데 도움이 됩니다. 예를 들어 클라이언트 측의 전원 차단으로 인한 경우 등이 있습니다.</p>
 
 <p>There is no way to <em>increase</em> this default (unless you roll your own <code>net.Listener</code>), but you can <em>reduce</em> it via the <code>IdleTimeout</code> setting. In our case, we&rsquo;ve set <code>IdleTimeout</code> to 1 minute, which means that all keep-alive connections will be automatically closed after 1 minute of inactivity.</p>
+<p>이 기본값을 <em>늘리는(increase)</em> 방법은 없습니다(자체 <code>net.Listener</code>를 만들지 않는 한), 그러나 <code>IdleTimeout</code> 설정을 통해 이를 줄일 수 있습니다. 우리의 경우 <code>IdleTimeout</code> 을 1분으로 설정했으므로 모든 keep-alive 연결은 1분 동안 활동이 없으면 자동으로 닫힙니다.</p>
 
 <h3 id="the-readtimeout-setting">The ReadTimeout setting</h3>
 
 <p>In our code we&rsquo;ve also set the <code>ReadTimeout</code> setting to 5 seconds. This means that if the request headers or body are still being read 5 seconds after the request is first accepted, then Go will close the underlying connection. Because this is a &lsquo;hard&rsquo; closure on the connection, the user won&rsquo;t receive any HTTP(S) response.</p>
+<p>우리의 코드에서는 <code>ReadTimeout</code> 설정을 5초로 설정했습니다. 이는 요청 헤더나 본문이 처음 수락된 후 5초 후에도 계속 읽혀지고 있다면 Go가 기본 연결을 닫을 것을 의미합니다. 이것은 연결에 대한 '강력한' 닫음이기 때문에 사용자는 어떠한 HTTP(S) 응답도 받지 않게 됩니다.</p>
 
 <p>Setting a short <code>ReadTimeout</code> period helps to mitigate the risk from  slow-client attacks &mdash; such as <a href="https://en.wikipedia.org/wiki/Slowloris_(computer_security)">Slowloris</a> &mdash; which could otherwise keep a connection open indefinitely by sending partial, incomplete, HTTP(S) requests.</p>
+<p>짧은 <code>ReadTimeout</code> 기간을 설정하면 <a href="https://en.wikipedia.org/wiki/Slowloris_(computer_security)">Slowloris</a> &mdash;와 같은 느린 클라이언트 공격에서의 리스크를 완화할 수 있습니다. 그렇지 않으면 부분적이거나 불완전한 HTTP(S) 요청을 보내어 연결을 무기한으로 열어둘 수 있습니다.</p>
 
 <aside class="important"><p>
 <strong>Important:</strong> If you set <code>ReadTimeout</code> but don&rsquo;t set <code>IdleTimeout</code>, then <code>IdleTimeout</code> will default to using the same setting as <code>ReadTimeout</code>.  For instance, if you set <code>ReadTimeout</code> to 3 seconds, then there is the side-effect that all keep-alive connections will also be closed after 3 seconds of inactivity. Generally, my recommendation is to avoid any ambiguity and always set an explicit <code>IdleTimeout</code> value for your server.
-</p></aside>
+</p>
+<p><strong>중요:</strong>
+<code>ReadTimeout</code>은 설정했지만 <code>IdleTimeout</code>을 설정하지 않으면 <code>IdleTimeout</code>는 기본적으로 <code>ReadTimeout</code>와 동일한 설정을 사용합니다. 예를 들어 <code>ReadTimeout</code>을 3초로 설정하면 모든 keep-alive 연결이 3초 동안 활동이 없으면 닫히는 부작용이 있습니다. 일반적으로 명확성을 유지하고 서버에 명시적인 <code>IdleTimeout</code> 값을 항상 설정하는 것이 권장됩니다.
+</aside>
 
 <h3 id="the-writetimeout-setting">The WriteTimeout setting</h3>
 
 <p>The <code>WriteTimeout</code> setting will close the underlying connection if our server attempts to write to the connection after a given period (in our code, 10 seconds). But this behaves slightly differently depending on the protocol being used.</p>
+<p><code>WriteTimeout</code> 설정은 서버가 주어진 기간 후(우리의 코드에서는 10초)에 연결에 쓰기를 시도하면 기본 연결을 닫을 것입니다. 그러나 사용되는 프로토콜에 따라 약간 다르게 동작합니다.</p>
 
 <ul>
-<li><p>For HTTP connections, if some data is written to the connection more than 10 seconds after the <em>read of the request header</em> finished, Go will close the underlying connection instead of writing the data.</p></li>
+<li><p>For HTTP connections, if some data is written to the connection more than 10 seconds after the <em>read of the request header</em> finished, Go will close the underlying connection instead of writing the data.</p>
+<p>HTTP 연결의 경우, 요청 헤더의 읽기가 완료된 후 10초가 지나도록 연결에 데이터가 쓰여지면 데이터를 쓰지 않고 Go가 기본 연결을 닫습니다.</p>
 
-<li><p>For HTTPS connections, if some data is written to the connection more than 10 seconds after the request is <em>first accepted</em>, Go will close the underlying connection instead of writing the data. This means that if you&rsquo;re using HTTPS (like we are) it&rsquo;s sensible to set <code>WriteTimeout</code> to a value greater than <code>ReadTimeout</code>.</p></li>
+</li>
+
+<li><p>For HTTPS connections, if some data is written to the connection more than 10 seconds after the request is <em>first accepted</em>, Go will close the underlying connection instead of writing the data. This means that if you&rsquo;re using HTTPS (like we are) it&rsquo;s sensible to set <code>WriteTimeout</code> to a value greater than <code>ReadTimeout</code>.</p>
+<p>
+HTTPS 연결의 경우, 요청이 처음 수락된 후 10초가 지난 후에도 연결에 데이터가 쓰여지면 데이터를 쓰지 않고 Go가 기본 연결을 닫습니다. 이것은 HTTPS를 사용하는 경우 (우리가 하는 것처럼) <code>WriteTimeout</code>을 <code>ReadTimeout</code>보다 큰 값으로 설정하는 것이 합리적입니다.</p>
+</li>
 </ul>
 
 <p>It&rsquo;s important to bear in mind that writes made by a handler are buffered and written to the connection as one when the handler returns. Therefore, the idea of <code>WriteTimeout</code> is generally <em>not</em> to prevent long-running handlers, but to prevent the data that the handler returns from taking too long to write.</p>
+<p>핸들러에 의해 수행된 쓰기 작업은 버퍼링되어 핸들러가 반환될 때 한꺼번에 연결에 쓰입니다. 따라서 <code>WriteTimeout</code>의 아이디어는 일반적으로 장기 실행되는 핸들러를 방지하는 것이 아니라 핸들러가 반환하는 데이터가 쓰는 데 너무 오랜 시간이 걸리는 것을 방지하는 데 있습니다.</p>
 
 <hr />
 
@@ -105,16 +124,22 @@
 <h4 id="the-readheadertimeout-setting">The ReadHeaderTimeout setting</h4>
 
 <p><code>http.Server</code> also provides a <code>ReadHeaderTimeout</code> setting, which we haven&rsquo;t used in our application. This works in a similar way to <code>ReadTimeout</code>, except that it applies to the read of the HTTP(S) headers only. So, if you set <code>ReadHeaderTimeout</code> to 3 seconds, a connection will be closed if the request headers are still being read 3 seconds after the request is accepted. However, reading of the request body can still take place after 3 seconds has passed, without the connection being closed.</p>
+<p><code>http.Server</code>는 우리의 애플리케이션에서 사용하지 않은 <code>ReadHeaderTimeout</code> 설정도 제공합니다. 이는 <code>ReadTimeout</code>과 유사하게 작동하지만 HTTP(S) 헤더의 읽기에만 적용됩니다. 따라서 <code>ReadHeaderTimeout</code>을 3초로 설정하면 요청이 수락된 후 3초 동안에도 헤더를 읽는 중이라면 연결이 닫힙니다. 그러나 3초가 지난 후에도 요청 본문의 읽기는 연결이 닫히지 않은 채로 계속될 수 있습니다.</p>
 
 <p>This can be useful if you want to apply a server-wide limit to reading request headers, but want to implement different timeouts on different routes when it comes to reading the request body (possibly using the <a href="https://pkg.go.dev/net/http/#TimeoutHandler"><code>http.TimeoutHandler()</code></a> middleware).</p>
+<p>이것은 요청 헤더 읽기에 대한 서버 전체 제한을 적용하고, 요청 본문을 읽는 데는 다른 경로에서 다른 타임아웃을 적용하려는 경우에 유용할 수 있습니다 (아마도 <code>http.TimeoutHandler()</code> 미들웨어를 사용하여).</p>
+
 
 <p>For our Snippetbox web application we don&rsquo;t have any actions that warrant per-route read timeouts &mdash; reading the request headers and bodies for all our routes should be comfortably completed in 5 seconds, so we&rsquo;ll stick to using <code>ReadTimeout</code>.</p>
+<p>우리의 Snippetbox 웹 애플리케이션에서는 각 경로에 대한 개별 읽기 타임아웃이 필요한 작업이 없습니다. 모든 경로에 대한 요청 헤더와 본문을 읽는 데는 충분히 5초 안에 완료될 것이므로 우리는 <code>ReadTimeout</code>을 계속 사용할 것입니다.</p>
 
 <h4 id="the-maxheaderbytes-setting">The MaxHeaderBytes setting</h4>
 
 <p><code>http.Server</code> includes a <code>MaxHeaderBytes</code> field, which you can use to control the maximum number of bytes the server will read when parsing request headers. By default, Go allows a maximum header length of 1MB.</p>
+<p><code>http.Server</code>에는 요청 헤더를 구문 분석할 때 서버가 읽을 수 있는 최대 바이트 수를 제어하는 <code>MaxHeaderBytes</code> 필드가 포함되어 있습니다. 기본적으로 Go는 최대 헤더 길이를 1MB로 허용합니다.</p>
 
 <p>If you want to limit the maximum header length to 0.5MB, for example, you would write:</p>
+<p>예를 들어 최대 헤더 길이를 0.5MB로 제한하려면 다음과 같이 작성할 수 있습니다</p>
 
 <figure class="code go">
 <pre><span class="nx">srv</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">{</span>
@@ -125,8 +150,10 @@
 </figure>
 
 <p>If <code>MaxHeaderBytes</code> is exceeded, then the user will automatically be sent a <code>431 Request Header Fields Too Large</code> response.</p>
+<p>만약 <code>MaxHeaderBytes</code> 가 초과되면 사용자에게 자동으로 <code>431 Request Header Fields Too Large</code> 응답이 전송됩니다.</p>
 
 <p>There&rsquo;s a gotcha to point out here: Go <em>always</em> adds an <a href="https://github.com/golang/go/blob/4b36e129f865f802eb87f7aa2b25e3297c5d8cfd/src/net/http/server.go#L871">additional 4096 bytes</a> of headroom to the figure you set. If you need <code>MaxHeaderBytes</code> to be a precise or very low number you&rsquo;ll need to factor this in.</p>
+<p>여기서 주의할 점이 있습니다: Go는 <em>항상(always)</em> 설정한 숫자에 추가로 4096바이트의 여유 공간을 추가합니다. 따라서 <code>MaxHeaderBytes</code>를 정확하게 설정해야 하거나 아주 낮은 숫자로 설정해야 하는 경우에는 이를 고려해야 합니다.</p>
 
 		</main>
 		<footer>

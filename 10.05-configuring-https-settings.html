@@ -31,10 +31,13 @@
 			<h2 id="configuring-https-settings">Configuring HTTPS settings</h2>
 
 <p>Go has good default settings for its HTTPS server, but it&rsquo;s possible to optimize and customize how the server behaves.</p>
+<p>Go는 HTTPS 서버를 위한 기본 설정이 좋지만, 서버의 동작을 최적화하고 사용자 정의할 수 있습니다.</p>
 
 <p>One change, which is almost always a good idea to make, is to restrict the <em>elliptic curves</em> that can potentially be used during the TLS handshake. Go supports a few elliptic curves, but as of Go 1.21 only <code>tls.CurveP256</code> and <code>tls.X25519</code> have assembly implementations. The others are very CPU intensive, so omitting them helps ensure that our server will remain performant under heavy loads.</p>
+<p>수정할 수 있는 중요한 부분 중 하나는 거의 항상 좋은 생각인 TLS 핸드셰이크 중에 사용될 수 있는 <em>타원 곡선(elliptic curves)</em>을 제한하는 것입니다. Go는 몇 가지 타원 곡선을 지원하지만, Go 1.21의 경우 <code>tls.CurveP256</code> 및 <code>tls.X25519</code> 만 어셈블리 구현을 가지고 있습니다. 다른 타원 곡선은 CPU 집약적이므로 이러한 타원 곡선을 제외하면 서버가 과부하 상태에서도 성능이 유지될 수 있도록 도와줍니다.</p>
 
 <p>To make this tweak, we can create a <a href="https://pkg.go.dev/crypto/tls#Config"><code>tls.Config</code></a> struct containing our non-default TLS settings, and add it to our <code>http.Server</code> struct before we start the server.</p>
+<p>이 조정을 하려면, 기본이 아닌 TLS 설정을 포함하는 <code>tls.Config</code></a> 구조체를 만들고 서버를 시작하기 전에 <code>http.Server</code> 구조체에 추가하면 됩니다.</p>
 
 <p>I&rsquo;ll demonstrate:</p>
 
@@ -107,8 +110,10 @@
 <h4 id="tls-versions">TLS versions</h4>
 
 <p>TLS versions are also <a href="https://pkg.go.dev/crypto/tls/#pkg-constants">defined as constants</a> in the <code>crypto/tls</code> package, and Go&rsquo;s HTTPS server supports TLS versions 1.0 to 1.3.</p>
+<p>TLS 버전은 <code>crypto/tls</code>  패키지에 상수로 정의되어 있으며, Go의 HTTPS 서버는 TLS 버전 1.0에서 1.3까지 지원합니다.</p>
 
 <p>You can configure the minimum and maximum TLS versions via the <code>tls.Config.MinVersion</code> and <code>MaxVersion</code> fields. For instance, if you know that all computers in your user base support TLS 1.2, but not TLS 1.3, then you may wish to use a configuration like so:</p>
+<p>최소 및 최대 TLS 버전은 <code>tls.Config.MinVersion</code> 및 <code>MaxVersion</code> 필드를 통해 구성할 수 있습니다. 예를 들어, 사용자 기반의 모든 컴퓨터가 TLS 1.2를 지원하지만 TLS 1.3은 지원하지 않는다면 다음과 같은 구성을 사용하고 싶을 것입니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">tlsConfig</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">tls</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
@@ -120,8 +125,10 @@
 <h4 id="restricting-cipher-suites">Restricting cipher suites</h4>
 
 <p>The cipher suites that Go supports are also defined in the <code>crypto/tls</code> <a href="https://pkg.go.dev/crypto/tls/#pkg-constants">package constants</a>.</p>
+<p>Go에서 지원하는 암호 스위트도 <code>crypto/tls</code> 패키지의 상수로 정의되어 있습니다.</p>
 
 <p>For some applications, it may be desirable to limit your HTTPS server to only support a subset of the available cipher suites. For example, you might want to <em>only support</em> cipher suites which use ECDHE (forward secrecy) and <em>not support</em> weak cipher suites that use RC4, 3DES or CBC. You can do this via the <code>tls.Config.CipherSuites</code> field like so:</p>
+<p>일부 응용 프로그램에서는 HTTPS 서버를 사용 가능한 암호 스위트의 하위 집합만 지원하도록 제한하는 것이 좋을 수 있습니다. 예를 들어 ECDHE (forward secrecy)를 사용하는 암호 스위트만 지원하고 RC4, 3DES 또는 CBC를 사용하는 약한 암호 스위트를 지원하지 않도록 하려면 <code>tls.Config.CipherSuites</code> 필드를 사용할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">tlsConfig</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">tls</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
@@ -137,14 +144,20 @@
 </figure>
 
 <p>Go will automatically choose <em>which</em> of these cipher suites is actually used at runtime based on the cipher security, performance, and client/server hardware support.</p>
+<p>Go는 실행 시점에 암호의 보안, 성능 및 클라이언트/서버 하드웨어 지원을 기반으로 이러한 암호 스위트 중 실제로 사용할 스위트를 자동으로 선택합니다.</p>
 
 <aside class="important"><p>
 <strong>Important:</strong> Restricting the supported cipher suites to only include strong, modern, ciphers can mean that users with certain older browsers won&rsquo;t be able to use your website. There&rsquo;s a balance to be struck between security and backwards-compatibility and the right decision for you will depend on the technology typically used by your user base. Mozilla&rsquo;s <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">recommended configurations</a> for modern, intermediate and old browsers may assist you in making a decision here.
-</p></aside>
+</p>
+<p><strong>중요:</strong>
+지원하는 암호 스위트를 강력하고 현대적인 암호로만 제한하면 일부 오래된 브라우저를 사용하는 사용자가 웹사이트를 사용할 수 없게 될 수 있습니다. 여기에서는 보안과 역호환성 사이의 균형을 맞추어야 합니다. 사용자 기술에 따라 적절한 결정이 달라질 것이며, Mozilla의 <a href="https://wiki.mozilla.org/Security/Server_Side_TLS">권장 설정(recommended configurations)</a>인 현대, 중간 및 오래된 브라우저에 대한 구성이 여러분이 결정하는 데 도움이 될 수 있습니다.</p>
+</aside>
 
 <p>It&rsquo;s also important (and interesting) to note that if a TLS 1.3 connection is negotiated, any <code>CipherSuites</code> field in your <code>tls.Config</code> will be ignored. The reason for this is that all the cipher suites that Go supports for TLS 1.3 connections are considered to be <em>safe</em>, so there isn&rsquo;t much point in providing a mechanism to configure them.</p>
+<p>또한 TLS 1.3 연결이 협상되면 <code>tls.Config</code> 의 모든 <code>CipherSuites</code> 필드가 무시된다는 것을 알아두는 것이 중요하고 흥미로운 사실입니다. 이유는 Go가 TLS 1.3 연결에 대해 지원하는 모든 암호 스위트가 <em>안전(safe)</em>하다고 간주되기 때문에 이를 구성하는 메커니즘을 제공하는 것이 별로 의미가 없기 때문입니다.</p>
 
 <p>Basically, using <code>tls.Config</code> to set a custom list of supported cipher suites will affect TLS 1.0-1.2 connections only.</p>
+<p>기본적으로 <code>tls.Config</code> 를 사용하여 지원하는 암호 스위트의 사용자 정의 목록을 설정하면 TLS 1.0-1.2 연결에만 영향을 미칩니다.</p>
 
 		</main>
 		<footer>

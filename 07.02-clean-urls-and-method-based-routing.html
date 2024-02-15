@@ -30,41 +30,71 @@
 			<div class="chapter">Chapter 7.2.</div>
 			<h2 id="clean-urls-and-method-based-routing">Clean URLs and method-based routing</h2>
 
-<p>If you&rsquo;re following along, please go ahead and install the latest version of <code>httprouter</code> like so:</p>
+<p>If you&rsquo;re following along, please go ahead and install the latest version of <code>httprouter</code> like so:
+<br>
+만약 따라하고 있다면, 다음과 같이 <code>httprouter</code> 의 최신 버전을 설치해주세요
+</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/julienschmidt/httprouter@v1
 <samp>go: downloading github.com/julienschmidt/httprouter v1.3.0</samp></pre>
 </figure>
 
-<p>Before we get into the nitty-gritty of actually using <code>httprouter</code>, let&rsquo;s begin with a simple example to help demonstrate and explain its syntax:</p>
+<p>Before we get into the nitty-gritty of actually using <code>httprouter</code>, let&rsquo;s begin with a simple example to help demonstrate and explain its syntax:
+<br>
+<code>httprouter</code> 를 실제로 사용하는 세부 사항에 들어가기 전에 구문을 보여주고 설명하기 위해 간단한 예제부터 시작해보겠습니다.
+</p>
 
 <figure class="code go">
 <pre><span class="nx">router</span> <span class="o">:=</span> <span class="nx">httprouter</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="p">)</span>
 <span class="nx">router</span><span class="p">.</span><span class="nf">HandlerFunc</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">MethodGet</span><span class="p">,</span> <span class="s">&#34;/snippet/view/:id&#34;</span><span class="p">,</span> <span class="nx">app</span><span class="p">.</span><span class="nx">snippetView</span><span class="p">)</span></pre>
 </figure>
 
-<p>In this example:</p>
+<p>In this example: 이 예제에서</p>
 
 <ul>
-<li><p>We initialize the <code>httprouter</code> router with the <code>New()</code> function, and then use the <a href="https://pkg.go.dev/github.com/julienschmidt/httprouter?utm_source=godoc#Router.HandlerFunc"><code>HandlerFunc()</code></a> method to add a new route which dispatches requests to our <code>snippetView</code> handler function.</p>
+<li><p>We initialize the <code>httprouter</code> router with the <code>New()</code> function, and then use the <a href="https://pkg.go.dev/github.com/julienschmidt/httprouter?utm_source=godoc#Router.HandlerFunc"><code>HandlerFunc()</code></a> method to add a new route which dispatches requests to our <code>snippetView</code> handler function.
+<br>
+우리는 <code>New()</code> 함수를 사용하여 <code>httprouter</code> 라우터를 초기화하고, 그런 다음 <code>HandlerFunc()</code>메서드를 사용하여 <code>snippetView</code> 핸들러 함수로 요청을 전달하는 새로운 라우트를 추가합니다.
+</p>
 
 <aside class="note"><p>
 <strong>Note:</strong> <code>httprouter</code> also provides a <a href="https://pkg.go.dev/github.com/julienschmidt/httprouter?utm_source=godoc#Router.Handler"><code>Handler()</code></a> method that you can use to dispatch requests to a regular <code>http.Handler</code> (like our static file server).
+<br>
+<strong>노트:</strong> <code>httprouter</code> 는 정적 파일 서버와 같은 일반적인 <code>http.Handler</code> 로 요청을 전달하는 데 사용할 수 있는 <code>Handler()</code> 메서드도 제공합니다.
+
 </p></aside></li>
 
-<li><p>The first argument to <code>HandlerFunc()</code> is the HTTP method that the request needs to have to be considered a matching request. Note that we&rsquo;re using the constant <code>http.MethodGet</code> here rather than the string <code>&quot;GET&quot;</code>.</p></li>
+<li><p>The first argument to <code>HandlerFunc()</code> is the HTTP method that the request needs to have to be considered a matching request. Note that we&rsquo;re using the constant <code>http.MethodGet</code> here rather than the string <code>&quot;GET&quot;</code>.
+<br>
+<code>HandlerFunc()</code> 의 첫 번째 인자는 해당 요청이 일치하는 요청으로 간주되기 위해 가져야 하는 HTTP 메서드입니다. 여기서 문자열 <code>&quot;GET&quot;</code> 대신에 상수 <code>http.MethodGet</code> 을 사용하고 있음에 주의하세요.
+</p></li>
 
-<li><p>The second argument is the pattern that the request URL path must match.</p>
+<li><p>The second argument is the pattern that the request URL path must match.
+<br>
+두 번째 인자는 요청 URL 경로가 일치해야 하는 패턴입니다.
+</p>
 
-<p>Patterns can include <em>named parameters</em> in the form <code>:name</code>, which act like a wildcard for a specific path segment. A request with a URL path like <code>/snippet/view/123</code> or <code>/snippet/view/foo</code> would match our example pattern <code>/snippet/view/:id</code>, but a request for <code>/snippet/bar</code> or <code>/snippet/view/foo/baz</code> wouldn&rsquo;t.</p>
+<p>Patterns can include <em>named parameters</em> in the form <code>:name</code>, which act like a wildcard for a specific path segment. A request with a URL path like <code>/snippet/view/123</code> or <code>/snippet/view/foo</code> would match our example pattern <code>/snippet/view/:id</code>, but a request for <code>/snippet/bar</code> or <code>/snippet/view/foo/baz</code> wouldn&rsquo;t.
+<br>
+패턴에는 <code>:name</code> 형식의 <em>named parameters</em>가 포함될 수 있습니다. 이는 특정 경로 세그먼트에 대한 와일드카드처럼 작동합니다. <code>/snippet/view/123</code> 또는 <code>/snippet/view/foo</code> 와 같은 URL 경로를 갖는 요청은 예제 패턴 <code>/snippet/view/:id</code> 과 일치하지만, <code>/snippet/bar</code> 또는 <code>/snippet/view/foo/baz</code> 와 같은 요청은 일치하지 않습니다.
+</p>
 
-<p>Patterns can also include a single <em>catch-all</em> parameter in the form <code>*name</code>. These match <em>everything</em> and should be used at the end of a pattern, like <code>/static/*filepath</code>.</p>
+<p>Patterns can also include a single <em>catch-all</em> parameter in the form <code>*name</code>. These match <em>everything</em> and should be used at the end of a pattern, like <code>/static/*filepath</code>.
+<br>
+패턴에는 <code>*name</code> 형식의 단일 <em>catch-all</em> parameter 도 포함될 수 있습니다. 이들은 <em>모든 것</em>과 일치하며 패턴의 끝에 사용되어야 합니다. 예를 들면 <code>/static/*filepath</code> 입니다.
+</p>
 
-<p>The pattern <code>&quot;/&quot;</code> will only match requests where the URL path is exactly <code>&quot;/&quot;</code>.</p></li>
+<p>The pattern <code>&quot;/&quot;</code> will only match requests where the URL path is exactly <code>&quot;/&quot;</code>.
+<br>
+패턴 <code>&quot;/&quot;</code> 은 URL 경로가 정확히 <code>&quot;/&quot;</code> 인 요청만 일치합니다.
+</p></li>
 </ul>
 
-<p>With all that in mind, let&rsquo;s head over to our <code>routes.go</code> file and update it so it uses <code>httprouter</code> and supports the following routes:</p>
+<p>With all that in mind, let&rsquo;s head over to our <code>routes.go</code> file and update it so it uses <code>httprouter</code> and supports the following routes:
+<br>
+이 모든 것을 고려하여 <code>routes.go</code> 파일로 이동하여 h<code>httprouter</code>를 사용하고 다음과 같은 라우트를 지원하도록 업데이트해보겠습니다:
+</p>
 
 <table>
 <thead>
@@ -148,7 +178,10 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>Now that&rsquo;s done, there&rsquo;s are a few changes we need to make to our <code>handlers.go</code> file. Go ahead and update it as follows:</p>
+<p>Now that&rsquo;s done, there&rsquo;s are a few changes we need to make to our <code>handlers.go</code> file. Go ahead and update it as follows:
+<br>
+이제 라우트를 업데이트했으니 <code>handlers.go</code> 파일에 몇 가지 변경 사항이 필요합니다. 다음과 같이 업데이트하세요:
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -239,7 +272,10 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>Finally, we need to update the table in our <code>home.tmpl</code> file so that the links in the HTML also use the new clean URL style of <code>/snippet/view/:id</code>.</p>
+<p>Finally, we need to update the table in our <code>home.tmpl</code> file so that the links in the HTML also use the new clean URL style of <code>/snippet/view/:id</code>.
+<br>
+마지막으로, <code>home.tmpl</code> 파일의 테이블을 업데이트하여 HTML의 링크도 <code>/snippet/view/:id</code> 와 같은 새로운 Clean URL 스타일을 사용하도록 해야합니다.
+</p>
 
 <figure class="code html">
 <pre>{{define &#34;title&#34;}}Home{{end}}
@@ -268,13 +304,19 @@
 {{end}}</pre>
 </figure>
 
-<p>With that done, restart the application and you should now be able to  view the text snippets via the clean URLs. For instance: <a href="http://localhost:4000/snippet/view/1"><code>http://localhost:4000/snippet/view/1</code></a>.</p>
+<p>With that done, restart the application and you should now be able to  view the text snippets via the clean URLs. For instance: <a href="http://localhost:4000/snippet/view/1"><code>http://localhost:4000/snippet/view/1</code></a>.
+<br>
+이렇게 하면 애플리케이션을 다시 시작하고 이제 Clean URL을 통해 텍스트 스니펫을 볼 수 있게 됩니다. 예를 들어: <code>http://localhost:4000/snippet/view/1</code>.
+</p>
 
 <figure class="img">
 <img src="assets/img/07.02-01.png" alt="07.02-01.png" />
 </figure>
 
-<p>You can also see that requests using an unsupported HTTP method are met with a <code>405 Method Not Allowed</code> response. For example, try making a <code>POST</code> request to the same URL using curl:</p>
+<p>You can also see that requests using an unsupported HTTP method are met with a <code>405 Method Not Allowed</code> response. For example, try making a <code>POST</code> request to the same URL using curl:
+<br>
+또한 지원되지 않는 HTTP 메서드를 사용한 요청은 <code>405 Method Not Allowed</code> 응답으로 처리되는 것을 확인할 수 있습니다. 예를 들어 curl을 사용하여 동일한 URL로 <code>POST</code> 요청을 시도해보세요
+</p>
 
 <figure class="code bash">
 <pre>$ curl -i -X POST http://localhost:4000/snippet/view/1
@@ -294,7 +336,10 @@ Method Not Allowed</samp></pre>
 
 <h3 id="custom-error-handlers">Custom error handlers</h3>
 
-<p>Before we continue, you might also like to try making the following two requests:</p>
+<p>Before we continue, you might also like to try making the following two requests:
+<br>
+계속 진행하기 전에 다음 두 가지 요청을 시도해보고 싶을 것입니다
+</p>
 
 <figure class="code bash">
 <pre>$ curl http://localhost:4000/snippet/view/99
@@ -304,11 +349,20 @@ $ curl http://localhost:4000/missing
 <samp>404 page not found</samp></pre>
 </figure>
 
-<p>So that&rsquo;s a bit strange. We can see that both requests result in <code>404</code> responses, but they have slightly different response bodies.</p>
+<p>So that&rsquo;s a bit strange. We can see that both requests result in <code>404</code> responses, but they have slightly different response bodies.
+<br>
+그것은 조금 이상한 것 같습니다. 두 요청 모두 <code>404</code> 응답을 확인할 수 있지만, 약간 다른 응답 본문이 있는 것 같습니다.
+</p>
 
-<p>This is happening because the first request ends up calling out to our <code>app.notFound()</code> helper when no snippet with ID <code>99</code> can be found, whereas the second response is returned automatically by <code>httprouter</code> when no matching route is found.</p>
+<p>This is happening because the first request ends up calling out to our <code>app.notFound()</code> helper when no snippet with ID <code>99</code> can be found, whereas the second response is returned automatically by <code>httprouter</code> when no matching route is found.
+<br>
+이것은 첫 번째 요청에서 ID가 <code>99</code> 인 스니펫을 찾을 수 없을 때 <code>app.notFound()</code> 헬퍼가 호출되기 때문에 발생하는 것입니다. 반면에 두 번째 응답은 일치하는 라우트가 없을 때 <code>httprouter</code> 에서 자동으로 반환됩니다.
+</p>
 
-<p>Fortunately <code>httprouter</code> makes it easy to set a custom handler for dealing with <code>404</code> responses, like so:</p>
+<p>Fortunately <code>httprouter</code> makes it easy to set a custom handler for dealing with <code>404</code> responses, like so:
+<br>
+다행히 <code>httprouter</code> 는 다음과 같이 <code>404</code>  응답을 처리하기 위한 사용자 정의 핸들러를 설정하기 쉽게 만들어줍니다.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -345,7 +399,10 @@ $ curl http://localhost:4000/missing
 <span class="p">}</span></pre>
 </figure>
 
-<p>If you restart the application and try making the same requests again, you&rsquo;ll find that the responses now match.</p>
+<p>If you restart the application and try making the same requests again, you&rsquo;ll find that the responses now match.
+<br>
+애플리케이션을 다시 시작하고 동일한 요청을 다시 시도하면 응답이 일치하는 것을 확인할 것입니다.
+</p>
 
 <figure class="code bash">
 <pre>$ curl http://localhost:4000/snippet/view/99
@@ -361,21 +418,41 @@ $ curl http://localhost:4000/missing
 
 <h4 id="conflicting-route-patterns">Conflicting route patterns</h4>
 
-<p>It&rsquo;s important to be aware that <code>httprouter</code> doesn&rsquo;t allow <em>conflicting route patterns</em> which potentially match the same request. So, for example, you cannot register a route like <code>GET /foo/new</code> <em>and</em> another route with a named parameter segment or catch-all parameter that conflicts with it &mdash; like <code>GET /foo/:name</code> or <code>GET /foo/*name</code>.</p>
+<p>It&rsquo;s important to be aware that <code>httprouter</code> doesn&rsquo;t allow <em>conflicting route patterns</em> which potentially match the same request. So, for example, you cannot register a route like <code>GET /foo/new</code> <em>and</em> another route with a named parameter segment or catch-all parameter that conflicts with it &mdash; like <code>GET /foo/:name</code> or <code>GET /foo/*name</code>.
+<br>
+중요한 점은 <code>httprouter</code> 가 동일한 요청을 일치시킬 가능성이 있는 충돌하는 라우트 패턴을 허용하지 않는다는 것입니다. 예를 들어 <code>GET /foo/new</code> 와 같은 라우트를 등록하고, 다른 명명된 매개변수 세그먼트나 이와 충돌하는 catch-all parameter 를 가진 다른 라우트를 등록할 수 없습니다. (예: <code>GET /foo/:name</code>  또는 <code>GET /foo/*name</code>).
 
-<p>In most cases this is a positive thing. Because conflicting routes aren&rsquo;t allowed, there are no routing-priority rules that you need to worry about, and it reduces the risk of bugs and unintended behavior in your application.</p>
+</p>
 
-<p>But if you do need to support conflicting routes (for example, you might need to replicate the endpoints of an existing application exactly for backwards-compatibility), then I would recommend using <code>chi</code> or <code>gorilla/mux</code> instead &mdash; both of which <em>do</em> permit conflicting routes.</p>
+<p>In most cases this is a positive thing. Because conflicting routes aren&rsquo;t allowed, there are no routing-priority rules that you need to worry about, and it reduces the risk of bugs and unintended behavior in your application.
+<br>
+대부분의 경우 이것은 긍정적인 점입니다. 충돌하는 라우트가 허용되지 않기 때문에 우려해야 할 라우팅 우선순위 규칙이 없으며, 애플리케이션에서의 버그 및 의도치 않은 동작의 위험을 줄입니다.
+</p>
+
+<p>But if you do need to support conflicting routes (for example, you might need to replicate the endpoints of an existing application exactly for backwards-compatibility), then I would recommend using <code>chi</code> or <code>gorilla/mux</code> instead &mdash; both of which <em>do</em> permit conflicting routes.
+<br>
+
+그러나 충돌하는 라우트를 지원해야 하는 경우 (예: 기존 애플리케이션의 엔드포인트를 정확히 복제해야 하는 경우), 그럴 경우에는 <code>chi</code> 또는 <code>gorilla/mux</code> 를 사용하는 것이 좋습니다. 이 두 라우터는 충돌하는 라우트를 허용합니다.
+</p>
 
 <h4 id="customizing-httprouter-behavior">Customizing httprouter behavior</h4>
 
-<p>The <code>httprouter</code> package provides a few configuration options that you can use to customize the behavior of your application further, including enabling <em>trailing slash redirects</em> and enabling <em>automatic URL path cleaning</em>.</p>
+<p>The <code>httprouter</code> package provides a few configuration options that you can use to customize the behavior of your application further, including enabling <em>trailing slash redirects</em> and enabling <em>automatic URL path cleaning</em>.
+<br>
+<code>httprouter</code> 패키지는 후행 슬래시 리디렉션 활성화 및 자동 URL 경로 정리 활성화와 같은 몇 가지 구성 옵션을 제공하여 애플리케이션의 동작을 더욱 사용자 정의할 수 있습니다.
+</p>
 
-<p>More information about the available settings can be found <a href="https://pkg.go.dev/github.com/julienschmidt/httprouter?tab=doc#Router">here</a>.</p>
+<p>More information about the available settings can be found <a href="https://pkg.go.dev/github.com/julienschmidt/httprouter?tab=doc#Router">here</a>.
+<br>
+사용 가능한 설정에 대한 자세한 정보는 여기에서 확인할 수 있습니다.
+</p>
 
 <h4 id="restful-routing">Restful routing</h4>
 
-<p>If you&rsquo;ve got a background in Ruby-on-Rails, Laravel or similar, you might be wondering why we aren&rsquo;t structuring our routes and handlers to be more &lsquo;RESTful&rsquo; and look like this:</p>
+<p>If you&rsquo;ve got a background in Ruby-on-Rails, Laravel or similar, you might be wondering why we aren&rsquo;t structuring our routes and handlers to be more &lsquo;RESTful&rsquo; and look like this:
+<br>
+Ruby-on-Rails, Laravel 또는 유사한 백그라운드가 있다면 왜 우리가 라우트와 핸들러를 더 'RESTful'하게 구성하고 다음과 같이 보이게 하지 않는지 궁금할 수 있습니다
+</p>
 
 <table>
 <thead>
@@ -424,17 +501,29 @@ $ curl http://localhost:4000/missing
 </tr>
 </tbody>
 </table>
-<p>There are a couple of reasons.</p>
+<p>There are a couple of reasons. 몇가지 이유가 있습니다.</p>
 
-<p>The first reason is that the <code>GET /snippets/:id</code> and <code>GET /snippets/new</code> routes <em>conflict</em> with each other &mdash; a HTTP request to <code>/snippets/new</code> potentially matches both routes (with the <code>id</code> value being set to the string <code>&quot;new&quot;</code>). As mentioned above, <code>httprouter</code> doesn&rsquo;t allow conflicting route patterns, and it&rsquo;s generally good practice to avoid them anyway because they are a potential source of bugs.</p>
+<p>The first reason is that the <code>GET /snippets/:id</code> and <code>GET /snippets/new</code> routes <em>conflict</em> with each other &mdash; a HTTP request to <code>/snippets/new</code> potentially matches both routes (with the <code>id</code> value being set to the string <code>&quot;new&quot;</code>). As mentioned above, <code>httprouter</code> doesn&rsquo;t allow conflicting route patterns, and it&rsquo;s generally good practice to avoid them anyway because they are a potential source of bugs.
+<br>
+첫 번째 이유는 <code>GET /snippets/:id</code> 및 <code>GET /snippets/new</code> 라우트가 서로 충돌한다는 것입니다. HTTP 요청 <code>/snippets/new</code> 는 두 라우트 모두에 일치할 수 있습니다 (<code>id</code> 값이 문자열 <code>&quot;new&quot;</code>로 설정되는 경우). 앞에서 언급했듯이 <code>httprouter</code>  는 충돌하는 라우트 패턴을 허용하지 않으며, 일반적으로 충돌은 버그의 잠재적인 원인이 될 수 있기 때문에 피하는 것이 좋은 관행입니다.
+</p>
 
-<p>The second reason is that the HTML form presented on <code>/snippets/new</code> would need to post to <code>/snippets</code> when submitted. This means that when we re-render the HTML form to show any validation errors, the URL in the user&rsquo;s browser will also change to <code>/snippets</code>. YMMV on whether you consider this a problem or not. Most users don&rsquo;t look at URLs, but I think it&rsquo;s a bit clunky and confusing in terms of UX &mdash; especially if a <code>GET</code> request to <code>/snippets</code> normally renders something else (like a list of all snippets).</p>
+<p>The second reason is that the HTML form presented on <code>/snippets/new</code> would need to post to <code>/snippets</code> when submitted. This means that when we re-render the HTML form to show any validation errors, the URL in the user&rsquo;s browser will also change to <code>/snippets</code>. YMMV on whether you consider this a problem or not. Most users don&rsquo;t look at URLs, but I think it&rsquo;s a bit clunky and confusing in terms of UX &mdash; especially if a <code>GET</code> request to <code>/snippets</code> normally renders something else (like a list of all snippets).
+<br>
+두 번째 이유는 <code>/snippets/new</code> 에서 제시된 HTML 폼이 제출될 때 <code>/snippets</code>로 게시되어야 한다는 것입니다. 이것은 우리가 HTML 폼을 다시 렌더링하여 유효성 검사 오류를 표시할 때 사용자 브라우저의 URL도 <code>/snippets</code>로 변경된다는 것을 의미합니다. 이것이 문제인지 여부는 상황에 따라 다르겠지만, 대부분의 사용자는 URL을 살펴보지 않습니다. 그러나 나는 이것이 UX 측면에서 다소 어색하고 혼란스러울 수 있다고 생각합니다. 특히 <code>/snippets</code>로의 <code>GET</code> 요청이 일반적으로 다른 내용 (예: 모든 스니펫 목록)을 렌더링하는 경우에는 더 그렇습니다.
+</p>
 
 <h4 id="handler-naming">Handler naming</h4>
 
-<p>I&rsquo;d also like to emphasize that there is no right or wrong way to name your handlers in Go.</p>
+<p>I&rsquo;d also like to emphasize that there is no right or wrong way to name your handlers in Go.
+<br>
+또한 Go에서 핸들러의 이름을 지정하는 올바른 방법이나 잘못된 방법이 없다는 것을 강조하고 싶습니다.
+</p>
 
-<p>In this project, we&rsquo;ll follow the convention of postfixing the names of any handlers that deal with <code>POST</code> requests with the word &lsquo;Post&rsquo;. Like so:</p>
+<p>In this project, we&rsquo;ll follow the convention of postfixing the names of any handlers that deal with <code>POST</code> requests with the word &lsquo;Post&rsquo;. Like so:
+<br>
+이 프로젝트에서는 <code>POST</code> 요청을 처리하는 모든 핸들러의 이름 뒤에 &lsquo;Post&rsquo; 단어를 붙이는 관례를 따를 것입니다.
+</p>
 
 <table>
 <thead>
@@ -462,7 +551,10 @@ $ curl http://localhost:4000/missing
 </tr>
 </tbody>
 </table>
-<p>Alternatively, you could postfix the names of any handlers that display forms with the word &lsquo;Form&rsquo; or &lsquo;View&rsquo;, like this:</p>
+<p>Alternatively, you could postfix the names of any handlers that display forms with the word &lsquo;Form&rsquo; or &lsquo;View&rsquo;, like this:
+<br>
+또는 폼을 표시하는 핸들러의 이름 뒤에 &lsquo;Form&rsquo;또는 &lsquo;View&rsquo;와 같은 단어를 붙일 수 있습니다
+</p>
 
 <table>
 <thead>
@@ -490,7 +582,10 @@ $ curl http://localhost:4000/missing
 </tr>
 </tbody>
 </table>
-<p>Or even prefix handler names with the words &lsquo;show&rsquo; and &lsquo;do&rsquo;&hellip;</p>
+<p>Or even prefix handler names with the words &lsquo;show&rsquo; and &lsquo;do&rsquo;&hellip;
+<br>
+또는 handler 이름을 &lsquo;show&rsquo;와 &lsquo;do&rsquo;&hellip;로 접두사를 붙일 수도 있습니다
+</p>
 
 <table>
 <thead>
@@ -518,7 +613,10 @@ $ curl http://localhost:4000/missing
 </tr>
 </tbody>
 </table>
-<p>Basically, you have the freedom in Go to choose a naming convention which works for you and fits with your brain.</p>
+<p>Basically, you have the freedom in Go to choose a naming convention which works for you and fits with your brain.
+<br>
+기본적으로 Go에서는 자신에게 적합하고 두뇌에 맞는 네이밍 규칙을 자유롭게 선택할 수 있습니다.
+</p>
 
 		</main>
 		<footer>

@@ -30,9 +30,15 @@
 			<div class="chapter">Chapter 9.3.</div>
 			<h2 id="working-with-session-data">Working with session data</h2>
 
-<p>In this chapter let&rsquo;s put the session functionality to work and use it to persist the confirmation flash message between HTTP requests that we <a href="09.00-stateful-http.html">discussed earlier</a>.</p>
+<p>In this chapter let&rsquo;s put the session functionality to work and use it to persist the confirmation flash message between HTTP requests that we <a href="09.00-stateful-http.html">discussed earlier</a>.
+<br>
+이 장에서는 세션 기능을 활용하여 <a href="09.00-stateful-http.html">이전에 논의한</a> HTTP 요청 간에 확인 플래시 메시지(confirmation flash message)를 유지하는 방법을 적용해 보겠습니다.
+</p>
 
-<p>We&rsquo;ll begin in our <code>cmd/web/handlers.go</code> file and update our <code>snippetCreatePost</code> method so that a flash message is added to the user&rsquo;s session data if &mdash; and only if &mdash; the snippet was created successfully. Like so:</p>
+<p>We&rsquo;ll begin in our <code>cmd/web/handlers.go</code> file and update our <code>snippetCreatePost</code> method so that a flash message is added to the user&rsquo;s session data if &mdash; and only if &mdash; the snippet was created successfully. Like so:
+<br>
+<code>cmd/web/handlers.go</code> 파일에서 시작하여 <code>snippetCreatePost</code> 메서드를 업데이트하겠습니다. 이를 통해 Snippet이 성공적으로 생성된 경우에만 사용자 세션 데이터에 flash message 가 추가되도록 할 것입니다.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -75,19 +81,37 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>That&rsquo;s nice and simple, but there are a couple of things to point out:</p>
+<p>That&rsquo;s nice and simple, but there are a couple of things to point out:
+<br>
+이것은 좋고 간단하지만 몇 가지 지적할 점이 있습니다.
+</p>
 
 <ul>
-<li><p>The first parameter that we pass to <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.Put"><code>app.sessionManager.Put()</code></a> is the <em>current request context</em>. We&rsquo;ll talk properly about what the request context is and how to use it later in the book, but for now you can just think of it as somewhere that the session manager temporarily stores information while your handlers are dealing with the request.</p></li>
+<li><p>The first parameter that we pass to <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.Put"><code>app.sessionManager.Put()</code></a> is the <em>current request context</em>. We&rsquo;ll talk properly about what the request context is and how to use it later in the book, but for now you can just think of it as somewhere that the session manager temporarily stores information while your handlers are dealing with the request.
+<br/><br/>
+<code>app.sessionManager.Put()</code>에 전달하는 첫 번째 매개변수는 <em>현재 요청 컨텍스트(current request context)</em>입니다. 이 책에서 나중에 <em>요청 컨텍스트(request context)</em>가 무엇이며 어떻게 사용하는지에 대해 제대로 다룰 것이지만, 현재로서는 이를 단순히 핸들러가 요청을 처리하는 동안 <em>세션 매니저(session manager)</em>가 정보를 일시적으로 저장하는 곳으로 생각할 수 있습니다.
+</p></li>
 
-<li><p>The second parameter (in our case the string <code>&quot;flash&quot;</code>) is the <em>key</em> for the specific message that we are adding to the session data. We&rsquo;ll subsequently retrieve the message from the session data using this key too.</p></li>
+<li><p>The second parameter (in our case the string <code>&quot;flash&quot;</code>) is the <em>key</em> for the specific message that we are adding to the session data. We&rsquo;ll subsequently retrieve the message from the session data using this key too.
+<br/><br/>
+두 번째 매개변수(우리의 경우 문자열 <code>&quot;flash&quot;</code>)는 세션 데이터에 추가하는 특정 메시지에 대한 <em>키(key)</em>입니다. 이 <em>키(key)</em>를 사용하여 나중에 세션 데이터에서 메시지를 조회할 것입니다.
+</p></li>
 
-<li><p>If there&rsquo;s no existing session for the current user (or their session has expired) then a new, empty, session for them will automatically be created by the session middleware.</p></li>
+<li><p>If there&rsquo;s no existing session for the current user (or their session has expired) then a new, empty, session for them will automatically be created by the session middleware.
+<br/><br/>
+현재 사용자에 대한 기존 세션이 없거나 세션이 만료된 경우 세션 미들웨어에서 자동으로 새로운(new), 빈(empty) 세션이 자동으로 생성됩니다.
+</p></li>
 </ul>
 
-<p>Next up we want our <code>snippetView</code> handler to retrieve the flash message (if one exists in the session for the current user) and pass it to the HTML template for subsequent display.</p>
+<p>Next up we want our <code>snippetView</code> handler to retrieve the flash message (if one exists in the session for the current user) and pass it to the HTML template for subsequent display.
+<br/><br/>
+다음으로 <code>snippetView</code> 핸들러에서는 플래시 메시지를 검색하고(현재 사용자의 세션에 존재하는 경우), 이를 HTML 템플릿에 전달하여 이후에 표시하도록 하고 싶습니다.
+</p>
 
-<p>Because we want to display the flash message once only, we actually want to retrieve <em>and remove</em> the message from the session data. We can do both these operations at the same time by using the <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.PopString"><code>PopString()</code></a> method.</p>
+<p>Because we want to display the flash message once only, we actually want to retrieve <em>and remove</em> the message from the session data. We can do both these operations at the same time by using the <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.PopString"><code>PopString()</code></a> method.
+<br/><br/>
+플래시 메시지를 한 번만 표시하기 위해서 세션 데이터에서 메시지를 검색하고 <em>제거(remove)</em>하려고 합니다. 이러한 두 작업을 동시에 수행하기 위해 <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.PopString"><code>PopString()</code></a> 메서드를 사용할 수 있습니다.
+</p>
 
 <p>I&rsquo;ll demonstrate:</p>
 
@@ -136,9 +160,15 @@
 
 <aside class="hint"><p>
 <strong>Info:</strong> If you want to retrieve a value from the session data only (and leave it in there) you can use the <code>GetString()</code> method instead. The <code>scs</code> package also provides methods for retrieving other common data types, including <code>GetInt()</code>, <code>GetBool()</code>,  <code>GetBytes()</code> and <code>GetTime()</code>.
+<br/><br/>
+<strong>정보:</strong> 세션 데이터에서 값을 검색하고 그대로 두려면 <code>GetString()</code> 메서드를 사용할 수 있습니다. 또한 <code>scs</code> 패키지는 <code>GetInt()</code>, <code>GetBool()</code>,  <code>GetBytes()</code> and <code>GetTime()</code>과 같은 다른 일반 데이터 유형을 검색하기 위한 메서드도 제공합니다.
 </p></aside>
 
-<p>If you try to run the application now, the compiler will (rightly) grumble that the <code>Flash</code> field isn&rsquo;t defined in our <code>templateData</code> struct. Go ahead and add it in like so:</p>
+<p>If you try to run the application now, the compiler will (rightly) grumble that the <code>Flash</code> field isn&rsquo;t defined in our <code>templateData</code> struct. Go ahead and add it in like so:
+<br/><br/>
+현재 애플리케이션을 실행하려고 하면 컴파일러가 (올바르게) 템플릿 데이터 구조체에서 <code>Flash</code> 필드가 정의되지 않았다고 불평할 것입니다.
+계속해서 다음과 같이 추가해주세요.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -163,7 +193,10 @@
 <span class="o">...</span></pre>
 </figure>
 
-<p>And now, we can update our <code>base.tmpl</code> file to display the flash message, if one exists.</p>
+<p>And now, we can update our <code>base.tmpl</code> file to display the flash message, if one exists.
+<br/><br/>
+이제 flash message 가 존재하는 경우 <code>base.tmpl</code> 파일을 업데이트하여 해당 메시지를 표시할 수 있습니다.
+</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/base.tmpl</figcaption>
@@ -198,31 +231,52 @@
 {{end}}</pre>
 </figure>
 
-<p>Remember, the <code>{{with .Flash}}</code> block will only be executed if the value of <code>.Flash</code> is <a href="05.02-template-actions-and-functions.html">not the empty string</a>. So, if there&rsquo;s no <code>&quot;flash&quot;</code> key in the current user&rsquo;s session, the result is that the chunk of new markup simply won&rsquo;t be displayed.</p>
+<p>Remember, the <code>{{with .Flash}}</code> block will only be executed if the value of <code>.Flash</code> is <a href="05.02-template-actions-and-functions.html">not the empty string</a>. So, if there&rsquo;s no <code>&quot;flash&quot;</code> key in the current user&rsquo;s session, the result is that the chunk of new markup simply won&rsquo;t be displayed.
+<br/><br/>
+기억하세요, <code>{{with .Flash}}</code> 블록은 <code>.Flash</code> 의 값이 빈 문자열이 아닌 경우에만 실행됩니다. 따라서 현재 사용자 세션에 <code>&quot;flash&quot;</code> 키가 없는 경우 새로운 마크업 부분은 간단히 표시되지 않습니다.
+</p>
 
-<p>Once that&rsquo;s done, save all your files and restart the application. Try adding a new snippet like so&hellip;</p>
+<p>Once that&rsquo;s done, save all your files and restart the application. Try adding a new snippet like so&hellip;
+<br/><br/>
+이 작업이 완료되면 모든 파일을 저장하고 애플리케이션을 다시 시작하세요. 다음과 같이 새로운 Snippet을 추가해 보세요...
+</p>
 
 <figure class="img">
 <img src="assets/img/09.03-01.png" alt="09.03-01.png" />
 </figure>
 
-<p>And after redirection you should see the flash message now being displayed:</p>
+<p>And after redirection you should see the flash message now being displayed:
+<br/><br/>
+리디렉션 후에는 flash message가 표시되는 것을 확인할 수 있어야 합니다:
+</p>
 
 <figure class="img">
 <img src="assets/img/09.03-02.png" alt="09.03-02.png" />
 </figure>
 
-<p>If you try refreshing the page, you can confirm that the flash message is no longer shown &mdash; it was a one-off message for the current user immediately after they created the snippet.</p>
+<p>If you try refreshing the page, you can confirm that the flash message is no longer shown &mdash; it was a one-off message for the current user immediately after they created the snippet.
+<br><br>
+페이지를 새로고침하면 플래시 메시지가 더 이상 표시되지 않는 것을 확인할 수 있습니다. 이것은 현재 사용자가 스니펫을 만든 직후에만 발생하는 일회성 메시지였습니다.
+</p>
 
 <figure class="img">
 <img src="assets/img/09.03-03.png" alt="09.03-03.png" />
 </figure>
 
-<h3 id="auto-displaying-flash-messages">Auto-displaying flash messages</h3>
+<h3 id="auto-displaying-flash-messages">Auto-displaying flash messages
+<br/><br/>플래시 메시지 자동 표시
+</h3>
 
-<p>A little improvement we can make (which will save us some work later in the project) is to automate the display of flash messages, so that any message is automatically included the next time <em>any page is rendered</em>.</p>
+<p>A little improvement we can make (which will save us some work later in the project) is to automate the display of flash messages, so that any message is automatically included the next time <em>any page is rendered</em>.
+<br/><br/>
+우리가 할 수 있는 작은 개선점 중 하나는 (프로젝트 후반에 일부 작업을 절약할 수 있도록) flash messages의 자동 표시를 자동화하여 다음 페이지가 렌더링될 때 자동으로 모든 메시지가 포함되도록 하는 것입니다.
+</p>
 
-<p>We can do this by adding any flash message to the template data via the <code>newTemplateData()</code> helper method that we made earlier, like so:</p>
+<p>We can do this by adding any flash message to the template data via the <code>newTemplateData()</code> helper method that we made earlier, like so:
+<br/><br/>
+이를 수행하기 위해 이전에 만든 <code>newTemplateData()</code> 헬퍼 메서드를 사용하여 어떤 flash message든 템플릿 데이터에 추가할 수 있습니다. 예를 들면 다음과 같습니다:
+
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -241,7 +295,10 @@
 <span class="o">...</span></pre>
 </figure>
 
-<p>Making that change means that we no longer need to check for the flash message within the <code>snippetView</code> handler, and the code can be reverted to look like this:</p>
+<p>Making that change means that we no longer need to check for the flash message within the <code>snippetView</code> handler, and the code can be reverted to look like this:
+<br/><br/>
+이 변경을 하면 더 이상 <code>snippetView</code> 핸들러에서 flash message를 확인할 필요가 없으며, 코드는 다음과 같이 되돌릴 수 있습니다.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -277,7 +334,10 @@
 <span class="o">...</span></pre>
 </figure>
 
-<p>Feel free to try running the application again and creating another snippet. You should find that the flash message functionality still works as expected.</p>
+<p>Feel free to try running the application again and creating another snippet. You should find that the flash message functionality still works as expected.
+<br/><br/>
+언제든지 애플리케이션을 다시 실행하고 다른 Snippet을 만들어 보세요. 여전히 flash message 기능이 예상대로 작동하는 것을 확인할 수 있을 것입니다.
+</p>
 
 <hr />
 
@@ -285,21 +345,40 @@
 
 <h4 id="behind-the-scenes-of-session-management">Behind-the-scenes of session management</h4>
 
-<p>I&rsquo;d like to take a moment to unpack some of the &lsquo;magic&rsquo; behind session management and explain how it works behind-the-scenes.</p>
+<p>I&rsquo;d like to take a moment to unpack some of the &lsquo;magic&rsquo; behind session management and explain how it works behind-the-scenes.
+<br/><br/>
+세션 관리 뒷면의 &lsquo;마법(magic)&rsquo; 중 일부를 해체하고 그 작동 방식에 대해 설명하고 싶습니다.
 
-<p>If you like, open up the developer tools in your web browser and take a look at the cookie data for one of the pages. You should see a cookie named <code>session</code> in the request data, similar to this:</p>
+</p>
+
+<p>If you like, open up the developer tools in your web browser and take a look at the cookie data for one of the pages. You should see a cookie named <code>session</code> in the request data, similar to this:
+<br/><br/>
+원한다면 웹 브라우저에서 개발자 도구를 열고 페이지 중 하나의 쿠키 데이터를 살펴보세요. 요청 데이터에 <code>session</code> 이라는 이름의 쿠키가 있는 것을 확인할 수 있을 것입니다. 다음과 유사한 모습일 것입니다.
+</p>
 
 <figure class="img">
 <img src="assets/img/09.03-04.png" alt="09.03-04.png" />
 </figure>
 
-<p>This is the <em>session cookie</em>, and it will be sent back to the Snippetbox application with every request that your browser makes.</p>
+<p>This is the <em>session cookie</em>, and it will be sent back to the Snippetbox application with every request that your browser makes.
+<br/><br/>
+이것이 <em>세션 쿠키(session cookie)</em>이며, 브라우저가 만드는 모든 요청과 함께 Snippetbox 애플리케이션으로 다시 전송될 것입니다.
+</p>
 
-<p>The session cookie contains the <em>session token</em> &mdash; also sometimes known as the <em>session ID</em>. The session token is a high-entropy random string, which in my case is the value <code>y9y1-mXyQUoAM6V5s9lXNjbZ_vXSGkO7jy-KL-di7A4</code> (yours will be different).</p>
+<p>The session cookie contains the <em>session token</em> &mdash; also sometimes known as the <em>session ID</em>. The session token is a high-entropy random string, which in my case is the value <code>y9y1-mXyQUoAM6V5s9lXNjbZ_vXSGkO7jy-KL-di7A4</code> (yours will be different).
+<br/><br/>
+세션 쿠키(session cookie)에는 <em>세션 토큰(session token)</em>, 때로는 <em>세션 ID(session ID)</em>로도 불리는 값이 포함되어 있습니다. 세션 토큰은 고엔트로피의 높은 난수 문자열로, 제 경우에는 <code>y9y1-mXyQUoAM6V5s9lXNjbZ_vXSGkO7jy-KL-di7A4</code> 입니다 (당신의 경우 다를 것입니다).
+</p>
 
-<p>It&rsquo;s important to emphasize that the session token is just a random string. In itself, it doesn&rsquo;t carry or convey any <em>session data</em> (like the flash message that we set in this chapter).</p>
+<p>It&rsquo;s important to emphasize that the session token is just a random string. In itself, it doesn&rsquo;t carry or convey any <em>session data</em> (like the flash message that we set in this chapter).
+<br/><br/>
+세션 토큰은 무작위 문자열일 뿐이라는 점을 강조하는 것이 중요합니다. 그 자체로는 이 장에서 설정한 플래시 메시지(flash message)와 같은 <em>세션 데이터(session data)</em>를 전달하거나 함유하지 않습니다.
+</p>
 
-<p>Next, you might like to open up a terminal to MySQL and run a <code>SELECT</code> query against the <code>sessions</code> table to lookup the session token that you see in your browser. Like so:</p>
+<p>Next, you might like to open up a terminal to MySQL and run a <code>SELECT</code> query against the <code>sessions</code> table to lookup the session token that you see in your browser. Like so:
+<br/><br/>
+다음으로, 터미널을 열어 MySQL에 연결하고 세션 토큰을 조회하기 위해 <code>sessions</code> 테이블에 대한 <code>SELECT</code> 쿼리를 실행할 수 있습니다.
+</p>
 
 <figure class="code bash">
 <pre>mysql&gt; SELECT * FROM sessions WHERE token = &#39;y9y1-mXyQUoAM6V5s9lXNjbZ_vXSGkO7jy-KL-di7A4&#39;;
@@ -311,15 +390,31 @@
 1 row in set (0.00 sec)</samp></pre>
 </figure>
 
-<p>This should return one record. The <code>data</code> value here is the thing that <em>actually contains the user&rsquo;s session data</em>. Specifically, what we&rsquo;re looking at is a MySQL <code>BLOB</code> (binary large object) containing a <a href="https://pkg.go.dev/encoding/gob">gob-encoded</a> representation of the session data.</p>
+<p>This should return one record. The <code>data</code> value here is the thing that <em>actually contains the user&rsquo;s session data</em>. Specifically, what we&rsquo;re looking at is a MySQL <code>BLOB</code> (binary large object) containing a <a href="https://pkg.go.dev/encoding/gob">gob-encoded</a> representation of the session data.
+<br/><br/>
+이렇게 하면 하나의 레코드가 반환됩니다. 여기서 <code>data</code> 값은 <em>실제로 사용자의 세션 데이터를 포함</em>하고 있는 것입니다. 구체적으로 보면 이것은 세션 데이터의 <a href="https://pkg.go.dev/encoding/gob">gob-encoded</a> 표현을 포함하는 MySQL <code>BLOB</code>(binary large object)입니다.
+</p>
 
-<p>Each and every time we make a change to our session data, this <code>data</code> value will be updated to reflect the changes.</p>
+<p>Each and every time we make a change to our session data, this <code>data</code> value will be updated to reflect the changes.
+<br/><br/>
+세션 데이터를 변경할 때마다 이 <code>data</code> 값은 변경 사항을 반영하기 위해 업데이트됩니다.
+</p>
 
-<p>Lastly, the final column in the database is the <code>expiry</code> time, after which the session will no longer be considered valid.</p>
+<p>Lastly, the final column in the database is the <code>expiry</code> time, after which the session will no longer be considered valid.
+<br/><br/>
+마지막으로 데이터베이스의 마지막 열은 세션이 더 이상 유효하지 않게 간주되는 <code>expiry</code> 시간입니다.
+</p>
 
-<p>So, what happens in our application is that the <code>LoadAndSave()</code> middleware checks each incoming request for a session cookie. If a session cookie is present, it reads the session token from the cookie and retrieves the corresponding session data from the database (while also checking that the session hasn&rsquo;t expired). It then adds the session data to the <em>request context</em> so it can be used in your handlers.</p>
+<p>So, what happens in our application is that the <code>LoadAndSave()</code> middleware checks each incoming request for a session cookie. If a session cookie is present, it reads the session token from the cookie and retrieves the corresponding session data from the database (while also checking that the session hasn&rsquo;t expired). It then adds the session data to the <em>request context</em> so it can be used in your handlers.
+<br/><br/>
+따라서 우리의 애플리케이션에서는 <code>LoadAndSave()</code> 미들웨어가 각 들어오는 요청에서 세션 쿠키를 확인합니다. 세션 쿠키가 있는 경우 미들웨어는 쿠키에서 세션 토큰을 읽고 데이터베이스에서 해당 세션 데이터를 검색합니다(동시에 세션이 만료되지 않았는지 확인합니다). 그런 다음 미들웨어는 세션 데이터를 <em>요청 컨텍스트(request context)</em>에 추가하여 핸들러에서 사용할 수 있게 합니다.
+</p>
 
-<p>Any changes that you make to the session data in your handlers are updated in the request context, and then the <code>LoadAndSave()</code> middleware updates the database with any changes to the session data before it returns.</p>
+<p>Any changes that you make to the session data in your handlers are updated in the request context, and then the <code>LoadAndSave()</code> middleware updates the database with any changes to the session data before it returns.
+<br/><br/>
+핸들러에서 세션 데이터를 변경하면 해당 변경 사항이 요청 컨텍스트에 업데이트되고, 그런 다음 <code>LoadAndSave()</code> 미들웨어가 세션 데이터의 변경 사항을 반환하기 전에 데이터베이스를 업데이트합니다.
+
+</p>
 
 		</main>
 		<footer>

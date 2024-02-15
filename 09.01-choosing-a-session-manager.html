@@ -30,23 +30,49 @@
 			<div class="chapter">Chapter 9.1.</div>
 			<h2 id="choosing-a-session-manager">Choosing a session manager</h2>
 
-<p>There are a lot of <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html">security considerations</a> when it comes to working with sessions, and proper implementation is not trivial. Unless you really need to roll your own implementation, it&rsquo;s a good idea to use an existing, well-tested, third-party package here.</p>
+<p>There are a lot of <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html">security considerations</a> when it comes to working with sessions, and proper implementation is not trivial. Unless you really need to roll your own implementation, it&rsquo;s a good idea to use an existing, well-tested, third-party package here.
+<br>
+세션 작업에는 많은 보안 고려 사항이 있으며, 적절한 구현은 간단하지 않습니다. 직접 구현이 필요한 경우가 아니라면 여기서 기존에 검증된 써드파티 패키지를 사용하는 것이 좋은 아이디어입니다.
+</p>
 
-<p>I recommend using either <a href="https://github.com/gorilla/sessions"><code>gorilla/sessions</code></a>, or <a href="https://github.com/alexedwards/scs"><code>alexedwards/scs</code></a>, depending on your project&rsquo;s needs.</p>
+<p>I recommend using either <a href="https://github.com/gorilla/sessions"><code>gorilla/sessions</code></a>, or <a href="https://github.com/alexedwards/scs"><code>alexedwards/scs</code></a>, depending on your project&rsquo;s needs.
+<br>
+프로젝트의 요구 사항에 따라 <code>gorilla/sessions</code> 또는 <code>alexedwards/scs</code> 를 사용하는 것을 추천합니다.
+</p>
 
 <ul>
-<li><p><code>gorilla/sessions</code> is the most established and well-known session management package for Go. It has a simple and easy-to-use API, and let&rsquo;s you store session data client-side (in signed and encrypted cookies) or server-side (in a database like MySQL, PostgreSQL or Redis).</p>
+<li><p><code>gorilla/sessions</code> is the most established and well-known session management package for Go. It has a simple and easy-to-use API, and let&rsquo;s you store session data client-side (in signed and encrypted cookies) or server-side (in a database like MySQL, PostgreSQL or Redis).
+<br>
+<code>gorilla/sessions</code> 는 Go를 위한 가장 확립되고 잘 알려진 세션 관리 패키지 중 하나입니다. 간단하고 사용하기 쉬운 API를 갖추고 있으며, 세션 데이터를 클라이언트 측(서명 및 암호화된 쿠키 내) 또는 서버 측(MySQL, PostgreSQL 또는 Redis와 같은 데이터베이스 내)에 저장할 수 있습니다.
+</p>
 
-<p>However &mdash; importantly &mdash; it doesn&rsquo;t provide a mechanism to renew session IDs (which is necessary to reduce risks <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change">associated with session fixation attacks</a> if you&rsquo;re using one of the server-side session stores).</p></li>
+<p>However &mdash; importantly &mdash; it doesn&rsquo;t provide a mechanism to renew session IDs (which is necessary to reduce risks <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change">associated with session fixation attacks</a> if you&rsquo;re using one of the server-side session stores).
+<br>
+그러나 중요한 점은, <code>gorilla/sessions</code> 은 세션 ID를 갱신하는 메커니즘을 제공하지 않습니다(서버 측 세션 저장소 중 하나를 사용하는 경우 세션 고정 공격과 관련된 위험을 감소시키기 위해 필요합니다)
 
-<li><p><code>alexedwards/scs</code> lets you store session data server-side only. It supports automatic loading and saving of session data via middleware, has a nice interface for type-safe manipulation of data, and <em>does</em> allow renewal of session IDs. Like <code>gorilla/sessions</code>, it also supports a variety of databases (including MySQL, PostgreSQL and Redis).</p></li>
+</p></li>
+
+<li><p><code>alexedwards/scs</code> lets you store session data server-side only. It supports automatic loading and saving of session data via middleware, has a nice interface for type-safe manipulation of data, and <em>does</em> allow renewal of session IDs. Like <code>gorilla/sessions</code>, it also supports a variety of databases (including MySQL, PostgreSQL and Redis).
+<br>
+<code>alexedwards/scs</code> 는 세션 데이터를 서버 측에만 저장할 수 있게 해줍니다. 미들웨어를 통한 세션 데이터의 자동로딩 및 저장을 지원하며 데이터를 안전하게 조작하기 위한 좋은 인터페이스를 갖추고 있으며, 세션 ID를 갱신하는 기능도 제공합니다. <code>gorilla/sessions</code> 와 마찬가지로 MySQL, PostgreSQL 및 Redis를 포함한 다양한 데이터베이스를 지원합니다.
+
+</p></li>
 </ul>
 
-<p>In summary, if you want to store session data client-side in a cookie then <code>gorilla/sessions</code> is a good choice, but otherwise <code>alexedwards/scs</code> is generally the better option due to the ability to renew session IDs.</p>
+<p>In summary, if you want to store session data client-side in a cookie then <code>gorilla/sessions</code> is a good choice, but otherwise <code>alexedwards/scs</code> is generally the better option due to the ability to renew session IDs.
+<br>
+요약하면, 세션 데이터를 쿠키 내에서 클라이언트 측에 저장하려면 <code>gorilla/sessions</code> 가 좋은 선택이지만, 그렇지 않으면 일반적으로 세션 ID를 갱신할 수 있는 능력 때문에 <code>alexedwards/scs</code> 가 더 나은 옵션입니다.
+</p>
 
-<p>For this project we&rsquo;ve already got a MySQL database set up, so we&rsquo;ll opt to use <code>alexedwards/scs</code> and store the session data server-side in MySQL.</p>
+<p>For this project we&rsquo;ve already got a MySQL database set up, so we&rsquo;ll opt to use <code>alexedwards/scs</code> and store the session data server-side in MySQL.
+<br>
+이 프로젝트에서는 이미 MySQL 데이터베이스를 설정했으므로, <code>alexedwards/scs</code> 를 선택하고 세션 데이터를 MySQL 데이터베이스에 서버 측에 저장하겠습니다.
+</p>
 
-<p>If you&rsquo;re following along, make sure that you&rsquo;re in your project directory and install the necessary packages like so:</p>
+<p>If you&rsquo;re following along, make sure that you&rsquo;re in your project directory and install the necessary packages like so:
+<br>
+만약 여러분이 따라하고 있다면, 프로젝트 디렉토리에 있는지 확인하고 다음과 같이 필요한 패키지를 설치하세요.
+</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/alexedwards/scs/v2@v2

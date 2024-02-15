@@ -30,11 +30,21 @@
 			<div class="chapter">Chapter 10.2.</div>
 			<h2 id="the-server-error-log">The server error log</h2>
 
-<p>It&rsquo;s important to be aware that Go&rsquo;s <code>http.Server</code> may write its own log entries relating to things like unrecovered panics, or problems accepting or writing to HTTP connections.</p>
+<p>It&rsquo;s important to be aware that Go&rsquo;s <code>http.Server</code> may write its own log entries relating to things like unrecovered panics, or problems accepting or writing to HTTP connections.
+<br/><br/>
+Go의 <code>http.Server</code>는 복구되지 않은 패닉, HTTP 연결 수락 또는 쓰기 문제와 관련된 로그 항목을 자체로 작성할 수 있음을 알아두는 것이 중요합니다.
+</p>
 
-<p>By default, it writes these entries using the standard logger &mdash; which means they will be written to the standard error stream (instead of standard out like our other log entries), and they won&rsquo;t be in the same format as the rest of our nice structured log entries.</p>
+<p>By default, it writes these entries using the standard logger &mdash; which means they will be written to the standard error stream (instead of standard out like our other log entries), and they won&rsquo;t be in the same format as the rest of our nice structured log entries.
+<br/><br/>
+기본적으로 이러한 항목은 표준 로거를 사용하여 작성되므로 이것들은 표준 에러 스트림에 기록될 것입니다(다른 로그 항목처럼 표준 출력에 기록되지 않음) 그리고 나머지 멋진 구조화된 로그 항목과 동일한 형식이 아닐 것입니다.
+</p>
 
-<p>To demonstrate this, let&rsquo;s add a deliberate error to our application and set a <code>Content-Length</code> header with an invalid value on our responses. Go ahead and update the <code>render()</code> helper like so:</p>
+<p>To demonstrate this, let&rsquo;s add a deliberate error to our application and set a <code>Content-Length</code> header with an invalid value on our responses. Go ahead and update the <code>render()</code> helper like so:
+<br/><br/>
+이를 보여주기 위해 의도적인 오류를 애플리케이션에 추가하고 응답에 잘못된 값의 <code>Content-Length</code> 헤더를 설정해 봅시다.
+앞으로 진행하기 전에 다음과 같이 <code>render()</code> 도우미를 업데이트하세요.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -70,7 +80,10 @@
 <span class="o">...</span></pre>
 </figure>
 
-<p>Then run the application, make a request to <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>, and check the application log. You should see that it looks similar to this:</p>
+<p>Then run the application, make a request to <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>, and check the application log. You should see that it looks similar to this:
+<br/><br/>
+그런 다음 애플리케이션을 실행하고 <code>http://localhost:4000</code> 에 요청을 보내서 애플리케이션 로그를 확인하세요. 결과는 다음과 유사할 것입니다
+</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web/
@@ -81,9 +94,16 @@ time=2023-09-06T18:40:58.754+02:00 level=INFO msg=&#34;received request&#34; ip=
 time=2023-09-06T18:40:59.014+02:00 level=INFO msg=&#34;received request&#34; ip=127.0.0.1:60830 proto=HTTP/1.1 method=GET uri=/static/img/logo.png</samp></pre>
 </figure>
 
-<p>We can see that the third log entry here, which informs us of the <code>Content-Length</code> problem, is in a very different format to the others. That&rsquo;s not great, especially if you want to filter your logs to look for errors, or use an external service to monitor them and send you alerts.</p>
+<p>We can see that the third log entry here, which informs us of the <code>Content-Length</code> problem, is in a very different format to the others. That&rsquo;s not great, especially if you want to filter your logs to look for errors, or use an external service to monitor them and send you alerts.
+<br/><br/>
+여기서 우리는 <code>Content-Length</code> 문제에 대해 알려주는 세 번째 로그 항목이 다른 로그와는 매우 다른 형식임을 확인할 수 있습니다. 이는 특히 로그를 오류를 찾거나 외부 서비스를 사용하여 모니터링하고 알림을 받고 싶을 때 좋지 않습니다.
+</p>
 
-<p>Unfortunately, it&rsquo;s not possible to configure <code>http.Server</code> to use our new structured logger directly. Instead, we have to convert our structured logger <em>handler</em> into a <code>*log.Logger</code> which writes log entries at a specific fixed level, and then register that with the <code>http.Server</code>. We can do this conversion using the <a href="https://pkg.go.dev/log/slog@master#NewLogLogger"><code>slog.NewLogLogger()</code></a> function, like so:</p>
+<p>Unfortunately, it&rsquo;s not possible to configure <code>http.Server</code> to use our new structured logger directly. Instead, we have to convert our structured logger <em>handler</em> into a <code>*log.Logger</code> which writes log entries at a specific fixed level, and then register that with the <code>http.Server</code>. We can do this conversion using the <a href="https://pkg.go.dev/log/slog@master#NewLogLogger"><code>slog.NewLogLogger()</code></a> function, like so:
+<br/><br/>
+불행히도 <code>http.Server</code> 를 직접적으로 새로운 구조화된 로거를 사용하도록 구성하는 것은 불가능합니다. 대신 구조화된 로거 핸들러를 특정 고정된 수준에서 로그 항목을 작성하는 <code>*log.Logger</code>로 변환하고, 그런 다음 이를 <code>http.Server</code>에 등록해야 합니다.
+이 변환은 <code>slog.NewLogLogger()</code> 함수를 사용하여 다음과 같이 수행할 수 있습니다.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -120,7 +140,10 @@ time=2023-09-06T18:40:59.014+02:00 level=INFO msg=&#34;received request&#34; ip=
 <span class="o">...</span></pre>
 </figure>
 
-<p>With that in place, any log messages that <code>http.Server</code> automatically writes will now be written using our structured logger at <code>Error</code> level. If you restart the application and make another request to <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>, you should see that the log entries now look like this:</p>
+<p>With that in place, any log messages that <code>http.Server</code> automatically writes will now be written using our structured logger at <code>Error</code> level. If you restart the application and make another request to <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>, you should see that the log entries now look like this:
+<br/><br/>
+이렇게 하면 <code>http.Server</code>가 자동으로 작성하는 모든 로그 메시지가 이제 <code>Error</code> 수준에서 우리의 구조화된 로거를 사용하여 작성됩니다. 애플리케이션을 다시 시작하고 <code>http://localhost:4000</code> 에 다른 요청을 보내면 로그 항목이 이제 다음과 같이 나타나는 것을 볼 수 있어야 합니다.
+</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web/
@@ -129,7 +152,10 @@ time=2023-09-06T18:42:54.808+02:00 level=INFO msg=&#34;received request&#34; ip=
 time=2023-09-06T18:42:54.809+02:00 level=ERROR msg=&#34;http: invalid Content-Length of \&#34;this isn&#39;t an integer!\&#34;&#34;</samp></pre>
 </figure>
 
-<p>Before we go any further, head back to your <code>cmd/web/helpers.go</code> file and remove the deliberate error from the <code>render()</code> method:</p>
+<p>Before we go any further, head back to your <code>cmd/web/helpers.go</code> file and remove the deliberate error from the <code>render()</code> method:
+<br/><br/>
+더 진행하기 전에 <code>cmd/web/helpers.go</code> 파일로 돌아가서 <code>render()</code> 메서드에서 의도적인 오류를 제거하세요.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
