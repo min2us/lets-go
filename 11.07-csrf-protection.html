@@ -31,38 +31,54 @@
 			<h2 id="csrf-protection">CSRF protection</h2>
 
 <p>In this chapter we&rsquo;ll look at how to protect our application from <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">cross-site request forgery</a> (CSRF) attacks.</p>
+<p>이 장에서는 애플리케이션을 크로스 사이트 요청 위조(CSRF) 공격으로부터 보호하는 방법에 대해 살펴보겠습니다.</p>
 
 <p>If you&rsquo;re not familiar with the principles of CSRF, it’s a type of attack where a malicious third-party website sends state-changing HTTP requests to your website. A great explanation of the basic CSRF attack can be <a href="http://www.gnucitizen.org/blog/csrf-demystified/">found here</a>.</p>
+<p>CSRF의 기본 원리에 대해 잘 모르는 경우, 이는 악성 써드파티 웹 사이트가 상태를 변경하는 HTTP 요청을 당신의 웹 사이트로 보내는 유형의 공격입니다. 기본 CSRF 공격에 대한 훌륭한 설명은 여기에서 찾을 수 있습니다.</p>
 
-<p>In our application, the main risk is this:</p>
+<p>In our application, the main risk is this: 우리의 응용 프로그램에서 주요 위험은 다음과 같습니다.</p>
 
 <ul>
-<li><p>A user logs into our application. Our session cookie is set to persist for 12 hours, so they will remain logged in even if they navigate away from the application.</p></li>
+<li><p>A user logs into our application. Our session cookie is set to persist for 12 hours, so they will remain logged in even if they navigate away from the application.</p>
+<p>사용자가 응용 프로그램에 로그인합니다. 세션 쿠키가 12시간 유지되도록 설정되어 있으므로 응용 프로그램을 벗어나도 로그인 상태가 유지됩니다.</p>
+</li>
 
-<li><p>The user then goes to another website, which contains some malicious code that sends a cross-site request to our <code>POST /snippet/create</code> endpoint to add a new snippet to our database. The user&rsquo;s session cookie for our application will be sent along with this request.</p></li>
+<li><p>The user then goes to another website, which contains some malicious code that sends a cross-site request to our <code>POST /snippet/create</code> endpoint to add a new snippet to our database. The user&rsquo;s session cookie for our application will be sent along with this request.</p>
+<p>그런 다음 사용자는 다른 웹 사이트로 이동하며 해당 웹 사이트에는 데이터베이스에 새로운 스니펫을 추가하도록 우리의 <code>POST /snippet/create</code> 엔드포인트로 크로스 사이트 요청을 보내는 악성 코드가 포함되어 있습니다. 이 요청과 함께 사용자의 응용 프로그램 세션 쿠키가 전송됩니다.</p>
+</li>
 
-<li><p>Because the request includes the session cookie, our application will interpret the request as coming from a logged-in user and it will  process the request with that user&rsquo;s privileges. So completely unknown to the user, a new snippet will be added to our database.</p></li>
+<li><p>Because the request includes the session cookie, our application will interpret the request as coming from a logged-in user and it will  process the request with that user&rsquo;s privileges. So completely unknown to the user, a new snippet will be added to our database.</p>
+<p>요청에 세션 쿠키가 포함되어 있으므로 응용 프로그램은 해당 요청을 로그인한 사용자에서 온 것으로 해석하고 해당 사용자의 권한으로 요청을 처리합니다. 사용자에게는 알려지지 않은 채로 데이터베이스에 새로운 스니펫이 추가됩니다.</p>
+</li>
 </ul>
 
 <p>As well as &lsquo;traditional&rsquo; CSRF attacks like the above (where a request is processed with a logged-in user’s privileges) your application may also be at risk from <a href="https://stackoverflow.com/questions/6412813/do-login-forms-need-tokens-against-csrf-attacks">login and logout</a> CSRF attacks.</p>
+<p>위와 같은 &lsquo;전통적인(traditional)&rsquo; CSRF 공격뿐만 아니라 (로그인한 사용자의 권한으로 요청이 처리되는 경우), 응용 프로그램은 로그인 및 로그아웃 CSRF 공격에서도 위험에 노출될 수 있습니다.</p>
 
 <h3 id="samesite-cookies">SameSite cookies</h3>
 
 <p>One mitigation that we can take to prevent CSRF attacks is to make sure that the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#samesite-cookie-attribute"><code>SameSite</code></a> attribute is appropriately set on our session cookie.</p>
+<p>CSRF 공격을 방지하기 위해 취할 수 있는 한 가지 방법은 세션 쿠키의 <code>SameSite</code> 속성이 적절히 설정되어 있는지 확인하는 것입니다.</p>
 
 <p>By default the <code>alexedwards/scs</code> package that we&rsquo;re using always sets <code>SameSite=Lax</code> on the session cookie. This means that the session cookie <em>won&rsquo;t</em> be sent by the user&rsquo;s browser for any cross-site requests with the HTTP methods <code>POST</code>, <code>PUT</code> or <code>DELETE</code>.</p>
+<p>기본적으로 사용 중인 <code>alexedwards/scs</code> 패키지는 세션 쿠키에 항상 <code>SameSite=Lax</code>를 설정합니다. 이는 HTTP 메소드 <code>POST</code>, <code>PUT</code> 또는 <code>DELETE</code>와 관련된 어떠한 크로스 사이트 요청에 대해서도 사용자의 브라우저가 세션 쿠키를 전송하지 않도록합니다.</p>
 
 <p>So long as our application uses the <code>POST</code> method for any state-changing HTTP requests (like we are for our <em>login</em>, <em>signup</em>, <em>logout</em> and <em>create snippet</em> form submissions), it means that the session cookie won&rsquo;t be sent for these requests if they come from another website &mdash; thereby preventing the CSRF attack.</p>
+<p>우리의 응용 프로그램이 로그인, 가입, 로그아웃 및 스니펫 생성 폼 제출과 같은 상태 변경 HTTP 요청에 <code>POST</code> 메서드를 사용하는 한, 다른 웹 사이트에서 이러한 요청이 온 경우 세션 쿠키가 전송되지 않아 CSRF 공격이 방지됩니다.</p>
 
 <p>However, the <code>SameSite</code> attribute is still relatively new and only fully supported by <a href="https://caniuse.com/#feat=same-site-cookie-attribute">93% of browsers</a> worldwide. So, although it&rsquo;s something that we can (and should) use as a defensive measure, we can&rsquo;t rely on it for all users.</p>
+<p>그러나 <code>SameSite</code> 속성은 여전히 상대적으로 새로운 속성이며 전 세계 브라우저 중 93%에서 완전히 지원됩니다. 따라서 이는 방어적인 조치로 사용할 수 있지만 모든 사용자에게 의존할 수는 없습니다.</p>
 
 <h3 id="token-based-mitigation">Token-based mitigation</h3>
 
 <p>To mitigate the risk of CSRF for all users we&rsquo;ll also need to implement some form of <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#token-based-mitigation">token check</a>. Like session management and password hashing, when it comes to this there&rsquo;s a lot that you can get wrong&hellip; so it&rsquo;s probably safest to use a tried-and-tested third-party package instead of rolling your own implementation.</p>
+<p>모든 사용자에 대한 CSRF 위험을 완화하려면 어떤 형태의 토큰 검사를 구현해야 할 것입니다. 세션 관리 및 비밀번호 해싱과 마찬가지로 이 부분에서도 잘못 구현할 수 있는 여지가 많기 때문에 자체 구현 대신 검증된 타사 패키지를 사용하는 것이 안전할 것입니다.</p>
 
 <p>The two most popular packages for stopping CSRF attacks in Go web applications are <a href="https://github.com/gorilla/csrf"><code>gorilla/csrf</code></a> and <a href="https://github.com/justinas/nosurf"><code>justinas/nosurf</code></a>. They both do roughly the same thing, using the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie">double-submit cookie</a> pattern to prevent attacks. In this pattern a random <dfn>CSRF token</dfn> is generated and sent to the user in a <dfn>CSRF cookie</dfn>. This CSRF token is then added to a hidden field in each HTML form that is potentially vulnerable to CSRF. When the form is submitted, both packages use some middleware to check that the hidden field value and cookie value match.</p>
+<p>Go 웹 응용 프로그램에서 CSRF 공격을 막기위한 두 가지 인기있는 패키지는 <code>gorilla/csrf</code>와 <code>justinas/nosurf</code>입니다. 이 두 패키지는 대략 동일한 일을 수행하며 공격을 방지하기 위해 이중 제출 쿠키 패턴을 사용합니다. 이 패턴에서는 무작위 <dfn>CSRF token</dfn>이 생성되어 <dfn>CSRF cookie</dfn>로 사용자에게 전송됩니다. 그런 다음 이 CSRF 토큰이 CSRF에 취약할 수 있는 각 HTML 폼의 숨겨진 필드에 추가됩니다. 폼이 제출되면 두 패키지 모두 미들웨어를 사용하여 숨겨진 필드 값과 쿠키 값이 일치하는지 확인합니다.</p>
 
 <p>Out of the two packages, we’ll opt to use <code>justinas/nosurf</code> in this book. I prefer it primarily because it’s self-contained and doesn’t have any additional dependencies. If you&rsquo;re following along, you can install the latest version like so:</p>
+<p>이 두 패키지 중에서 이 책에서는 <code>justinas/nosurf</code>를 사용하겠습니다. 주로 자체 포함되어 있으며 추가 종속성이 없기 때문에 이것을 선호합니다. 함께 진행하고 있다면 다음과 같이 최신 버전을 설치할 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/justinas/nosurf@v1
@@ -73,6 +89,7 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 <h3 id="using-the-nosurf-package">Using the nosurf package</h3>
 
 <p>To use <code>justinas/nosurf</code>, open up your <code>cmd/web/middleware.go</code> file and create a new <code>noSurf()</code> middleware function like so:</p>
+<p><code>justinas/nosurf</code>를 사용하려면 <code>cmd/web/middleware.go</code> 파일을 열고 다음과 같이 새로운 <code>noSurf()</code> 미들웨어 함수를 만듭니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/middleware.go</figcaption>
@@ -102,8 +119,10 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>One of the forms that we need to protect from CSRF attacks is our logout form, which is included in our <code>nav.tmpl</code> partial and could potentially appear on any page of our application. So, because of this, we need to use our <code>noSurf()</code> middleware on <em>all</em> of our application routes (apart from <code>/static/*filepath</code>).</p>
+<p>CSRF 공격으로부터 보호해야 하는 폼 중 하나는 로그아웃 폼입니다. 이 폼은 <code>nav.tmpl</code> 부분에 포함되어 있으며 응용 프로그램의 모든 페이지에서 나타날 수 있습니다. 따라서 이에 따라 모든 응용 프로그램 루트에 <code>noSurf()</code> 미들웨어를 사용해야 합니다 (<code>/static/*filepath</code> 를 제외한 모든 루트).</p>
 
 <p>So, let&rsquo;s update the <code>cmd/web/routes.go</code> file to add this <code>noSurf()</code> middleware to the <code>dynamic</code> middleware chain that we made earlier:</p>
+<p>그러면 <code>cmd/web/routes.go</code> 파일을 업데이트하여 이전에 만든 <code>dynamic</code> 미들웨어 체인에 이 <code>noSurf()</code> 미들웨어를 추가하겠습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -145,12 +164,14 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>At this point, you might like to fire up the application and try submitting one of the forms. When you do, the request should be intercepted by the <code>noSurf()</code> middleware and you should receive a <code>400 Bad Request</code> response.</p>
+<p>이 단계에서 응용 프로그램을 시작하여 양식을 제출해 보는 것이 좋습니다. 그러면 요청이 <code>noSurf()</code> 미들웨어에 의해 가로채져 4<code>400 Bad Request</code> 응답을 받아야 합니다.</p>
 
 <figure class="img">
 <img src="assets/img/11.07-01.png" alt="11.07-01.png" />
 </figure>
 
 <p>To make the form submissions work, we need to use the <a href="https://pkg.go.dev/github.com/justinas/nosurf?utm_source=godoc#Token"><code>nosurf.Token()</code></a> function to get the CSRF token and add it to a hidden <code>csrf_token</code> field in each of our forms. So the next step is to add a new <code>CSRFToken</code> field to our <code>templateData</code> struct:</p>
+<p>양식 제출을 작동하려면 <code>nosurf.Token()</code> 함수를 사용하여 CSRF 토큰을 가져와 각각의 양식에 숨겨진 <code>csrf_token</code> 필드에 추가해야 합니다. 다음 단계는 <code>templateData</code> 구조체에 새로운 <code>CSRFToken</code> 필드를 추가하는 것입니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -178,8 +199,10 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>And because the logout form can potentially appear on every page, it makes sense to add the CSRF token to the template data automatically via our <code>newTemplateData()</code> helper. This will mean that it will be available to our templates each time we render a page.</p>
+<p>로그아웃 폼이 모든 페이지에 나타날 수 있기 때문에 <code>newTemplateData()</code> 헬퍼를 통해 템플릿 데이터에 자동으로 CSRF 토큰을 추가하는 것이 합리적입니다. 이렇게 하면 페이지를 렌더링할 때마다 템플릿에서 사용할 수 있게 됩니다.</p>
 
 <p>Please go ahead and update the <code>cmd/web/helpers.go</code> file as follows:</p>
+<p>다음과 같이 <code>cmd/web/helpers.go</code> 파일을 업데이트하십시오.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -211,6 +234,7 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>Finally, we need to update all the forms in our application to include this CSRF token in a hidden field.</p>
+<p>마지막으로 응용 프로그램의 모든 양식을 업데이트하여 이 CSRF 토큰을 숨겨진 필드에 포함해야 합니다.</p>
 
 <p>Like so:</p>
 
@@ -347,12 +371,14 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>Go ahead and run the application again, then <em>view source</em> of one of the forms. You should see that it now has a CSRF token included in a hidden field, like so.</p>
+<p>응용 프로그램을 다시 실행하고 양식 중 하나의 소스를 보십시오. 이제 숨겨진 필드에 CSRF 토큰이 포함되어 있는 것을 확인할 수 있습니다.</p>
 
 <figure class="img">
 <img src="assets/img/11.07-02.png" alt="11.07-02.png" />
 </figure>
 
 <p>And if you try submitting the forms, it should now work correctly again.</p>
+<p>그리고 양식을 제출하면 이제 올바르게 작동해야 합니다.</p>
 
 <hr />
 
@@ -361,6 +387,7 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 <h4 id="samesite-strict-setting">SameSite &lsquo;Strict&rsquo; setting</h4>
 
 <p>If you want, you can change the session cookie to use the <code>SameSite=Strict</code> setting instead of (the default) <code>SameSite=Lax</code>. Like this:</p>
+<p>원한다면 세션 쿠키를 <code>SameSite=Lax</code> 대신 <code>SameSite=Strict</code> 설정을 사용하도록 변경할 수 있습니다. 다음과 같이</p>
 
 <figure class="code go">
 <pre><span class="nx">sessionManager</span> <span class="o">:=</span> <span class="nx">scs</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="p">)</span>
@@ -368,18 +395,24 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>But it&rsquo;s important to be aware that using <code>SameSite=Strict</code> will block the session cookie being sent by the user&rsquo;s browser for <em>all</em> cross-site usage &mdash; including <a href="https://datatracker.ietf.org/doc/html/rfc7231#section-4.2.1">safe</a> requests with HTTP methods like <code>GET</code> and <code>HEAD</code>.</p>
+<p><code>SameSite=Strict</code>를 사용하면 세션 쿠키가 사용자의 브라우저에서 <em>모든(all)</em> 크로스 사이트 사용을 차단하게 되므로 <code>GET</code> 및 <code>HEAD</code>와 같은 안전한 요청도 포함됩니다. 이에 대해 주의해야 합니다.</p>
 
 <p>While that might sound even safer (and it is!) the downside is that the session cookie won&rsquo;t be sent when a user clicks on a link to your application from another website. In turn, that means that your application would initially treat the user as &lsquo;not logged in&rsquo; even if they have an active session containing their <code>&quot;authenticatedUserID&quot;</code> value.</p>
+<p>이게 더 안전하게 들릴 수 있습니다 (그렇게 맞습니다!) 단점은 사용자가 다른 웹사이트에서 응용 프로그램에 대한 링크를 클릭할 때 세션 쿠키가 전송되지 않을 것입니다. 이에 따라 응용 프로그램은 세션에 <code>&quot;authenticatedUserID&quot;</code> 값을 포함한 활성 세션이 있더라도 사용자를 '로그인하지 않음'으로 초기에 처리할 것입니다.</p>
 
 <p>So if your application will potentially have other websites linking to it (or links to it shared in emails or private messaging services), then <code>SameSite=Lax</code> is generally the more appropriate setting.</p>
+<p>따라서 응용 프로그램에 다른 웹사이트가 링크할 가능성이 있다면 (또는 이메일이나 개인 메시징 서비스에서 공유된 링크), <code>SameSite=Lax</code>가 일반적으로 더 적절한 설정입니다.</p>
 
 <h4 id="samesite-cookies-and-tls-1-3">SameSite cookies and TLS 1.3</h4>
 
 <p>Earlier in this chapter I said that we can&rsquo;t solely rely on the <code>SameSite</code> cookie attribute to prevent CSRF attacks, because it isn&rsquo;t fully supported by all browsers.</p>
+<p>이 장의 앞부분에서 <code>SameSite</code> 쿠키 속성만으로 CSRF 공격을 방지할 수 없다고 말했습니다. 왜냐하면 모든 브라우저에서 완전히 지원되지 않기 때문입니다.</p>
 
 <p>But there is an <a href="https://security.stackexchange.com/a/249636">exception to this</a> rule, due to the fact that no browser exists <em>which supports TLS 1.3 and <u>does not</u> support <code>SameSite</code> cookies</em>.</p>
+<p>그러나 TLS 1.3을 <u>지원하지 않는</u> 브라우저는 <code>SameSite</code> 쿠키를 지원하지 않기 때문에, 이 규칙에는 예외가 있습니다.</p>
 
 <p>In other words, if you were to make TLS 1.3 the minimum supported version in the TLS config for your server, then all browsers able to use your application will support <code>SameSite</code> cookies.</p>
+<p>다시 말하면, 서버의 TLS 구성에서 최소 지원 버전으로 TLS 1.3을 사용하면 응용 프로그램을 사용할 수 있는 모든 브라우저에서 <code>SameSite</code> 쿠키를 지원합니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">tlsConfig</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">tls</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
@@ -388,10 +421,15 @@ go get: added github.com/justinas/nosurf v1.1.1</samp></pre>
 </figure>
 
 <p>So long as you only allow HTTPS requests to your application and enforce TLS 1.3 as the minimum TLS version, you don&rsquo;t need to make any additional mitigation against CSRF attacks (like using the <code>justinas/nosurf</code> package). Just make sure that you always:</p>
+<p>응용 프로그램에 대해 HTTPS 요청만 허용하고 최소 TLS 버전으로 TLS 1.3을 강제하면 CSRF 공격에 대한 추가 대비책이 필요하지 않습니다(<code>justinas/nosurf</code> 패키지 사용과 같은). 항상 다음을 확인하십시오.</p>
 
 <ul>
-<li>Set <code>SameSite=Lax</code> or <code>SameSite=Strict</code> on the session cookie; and</li>
-<li>Use the <code>POST</code>, <code>PUT</code> or <code>DELETE</code> HTTP method for any state-changing requests.</li>
+<li>Set <code>SameSite=Lax</code> or <code>SameSite=Strict</code> on the session cookie; and
+<p>세션 쿠키에 <code>SameSite=Lax</code> 또는 <code>SameSite=Strict</code>를 설정하십시오.</p>
+</li>
+<li>Use the <code>POST</code>, <code>PUT</code> or <code>DELETE</code> HTTP method for any state-changing requests.
+<p>상태를 변경하는 요청에는 <code>POST</code>, <code>PUT</code> 또는 <code>DELETE</code> HTTP 메서드를 사용하십시오.</p>
+</li>
 </ul>
 
 		</main>

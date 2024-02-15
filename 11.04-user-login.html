@@ -31,12 +31,16 @@
 			<h2 id="user-login">User login</h2>
 
 <p>In this chapter were going to focus on creating the user login page for our application.</p>
+<p>이 장에서는 응용 프로그램의 사용자 로그인 페이지를 만드는 데 중점을 둘 것입니다.</p>
 
 <p>Before we get into the main part of this work, let&rsquo;s quickly revisit the <code>internal/validator</code> package that we made earlier and update it to support validation errors <em>which aren&rsquo;t associated with one specific form field</em>.</p>
+<p>이 작업의 본질에 들어가기 전에 이전에 만든 <code>internal/validator</code> 패키지를 빠르게 다시 살펴보고, 하나의 특정 폼 필드와 관련이 없는 유효성 검사 오류를 지원하도록 업데이트하겠습니다.</p>
 
 <p>We&rsquo;ll use this later in the chapter to show the user a generic “<em>your email address or password is wrong”</em> message if their login fails, as this considered <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses">more secure</a> than explicitly indicating why the login failed.</p>
+<p>이를 나중에 이 장에서 사용하여 사용자에게 일반적인 '이메일 주소 또는 비밀번호가 잘못되었습니다' 메시지를 표시하겠습니다. 이것은 로그인 실패 이유를 명시적으로 표시하는 것보다 더 안전하다고 간주됩니다.</p>
 
 <p>Please go ahead and update your <code>internal/validator/validator.go</code> file like so:</p>
+<p>이제 <code>internal/validator/validator.go</code> 파일을 다음과 같이 업데이트해 주세요.</p>
 
 <figure class="code go">
 <figcaption>File: internal/validator/validator.go</figcaption>
@@ -67,6 +71,7 @@
 </figure>
 
 <p>Next let&rsquo;s create a new <code>ui/html/pages/login.tmpl</code> template containing the markup for our login page. We&rsquo;ll follow the same pattern for showing validation errors and re-displaying data that we used for our signup page.</p>
+<p>다음으로 로그인 페이지의 마크업을 포함하는 새로운 <code>ui/html/pages/login.tmpl</code> 템플릿을 만들어보겠습니다. 가입 페이지에서 사용한 유효성 검사 오류 표시 및 데이터 재표시 패턴을 따를 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ touch ui/html/pages/login.tmpl</pre>
@@ -105,6 +110,7 @@
 </figure>
 
 <p>Then let’s head to our <code>cmd/web/handlers.go</code> file and create a new <code>userLoginForm</code> struct (to represent and hold the form data), and adapt our <code>userLogin</code> handler to render the login page.</p>
+<p>그런 다음 <code>cmd/web/handlers.go</code> 파일로 이동하여 새로운 <code>userLoginForm</code> 구조체(양식 데이터를 나타내고 보유할 것입니다)를 만들고 <code>userLogin</code> 핸들러를 로그인 페이지를 렌더링하도록 조정해 보겠습니다.</p>
 
 <p>Like so:</p>
 
@@ -132,6 +138,7 @@
 </figure>
 
 <p>If you run the application and visit <a href="https://localhost:4000/user/login"><code>https://localhost:4000/user/login</code></a>, you should now see the login page looking like this:</p>
+<p>애플리케이션을 실행하고 <code>https://localhost:4000/user/login</code> 에 방문하면 이제 다음과 같이 보이는 로그인 페이지가 표시됩니다.</p>
 
 <figure class="img">
 <img src="assets/img/11.04-01.png" alt="11.04-01.png" />
@@ -140,16 +147,24 @@
 <h3 id="verifying-the-user-details">Verifying the user details</h3>
 
 <p>The next step is the interesting part: <em>how do we verify that the email and password submitted by a user are correct?</em></p>
+<p>다음 단계는 흥미로운 부분입니다: 사용자가 제출한 이메일과 비밀번호가 올바른지 어떻게 확인할까요?</p>
 
 <p>The core part of this verification logic will take place in the <code>UserModel.Authenticate()</code> method of our user model. Specifically, we&rsquo;ll need it to do two things:</p>
+<p>이 확인 로직의 핵심 부분은 사용자 모델의 <code>UserModel.Authenticate()</code> 메서드에서 이루어집니다. 구체적으로 두 가지를 수행해야 합니다.</p>
 
 <ol>
-<li><p>First it should retrieve the hashed password associated with the email address from our MySQL <code>users</code> table. If the email doesn&rsquo;t exist in the database, we will return the <code>ErrInvalidCredentials</code> error that we made earlier.</p></li>
+<li><p>First it should retrieve the hashed password associated with the email address from our MySQL <code>users</code> table. If the email doesn&rsquo;t exist in the database, we will return the <code>ErrInvalidCredentials</code> error that we made earlier.</p>
+<p>먼저 이 메서드는 MySQL <code>users</code> 테이블에서 이메일과 관련된 해시된 비밀번호를 검색해야 합니다. 이메일이 데이터베이스에 존재하지 않는 경우에는 앞에서 만든 <code>ErrInvalidCredentials</code> 오류를 반환할 것입니다.</p>
+</li>
 
-<li><p>Otherwise, we want to compare the hashed password from the <code>users</code> table with the plain-text password that the user provided when logging in. If they don&rsquo;t match, we want to return the <code>ErrInvalidCredentials</code> error again. But if they do match, we want to return the user&rsquo;s <code>id</code> value from the database.</p></li>
+<li><p>Otherwise, we want to compare the hashed password from the <code>users</code> table with the plain-text password that the user provided when logging in. If they don&rsquo;t match, we want to return the <code>ErrInvalidCredentials</code> error again. But if they do match, we want to return the user&rsquo;s <code>id</code> value from the database.</p>
+<p>그렇지 않으면 사용자가 로그인할 때 제공한 평문 비밀번호와 <code>users</code> 테이블에서 가져온 해시된 비밀번호를 비교하고, 일치하지 않으면 다시 <code>ErrInvalidCredentials</code> 오류를 반환하려고 합니다. 그러나 일치하면 데이터베이스에서 사용자의 <code>id</code> 값을 반환하려고 합니다.</p>
+
+</li>
 </ol>
 
 <p>Let&rsquo;s do exactly that. Go ahead and add the following code to your <code>internal/models/users.go</code> file:</p>
+<p>그렇게 하겠습니다. <code>internal/models/users.go</code> 파일에 다음 코드를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: internal/models/users.go</figcaption>
@@ -191,10 +206,13 @@
 </figure>
 
 <p>Our next step involves updating the <code>userLoginPost</code> handler so that it parses the submitted login form data and calls this <code>UserModel.Authenticate()</code> method.</p>
+<p>다음 단계는 <code>userLoginPost</code> 핸들러를 업데이트하여 제출된 로그인 양식 데이터를 구문 분석하고 이 <code>UserModel.Authenticate()</code> 메서드를 호출하는 것입니다.</p>
 
 <p>If the login details are valid, we then want to add the user&rsquo;s <code>id</code> to their session data so that &mdash; for future requests &mdash; we know that they have authenticated successfully and which user they are.</p>
+<p>로그인 세부 정보가 유효한 경우 사용자의 <code>id</code> 를 세션 데이터에 추가하여 &mdash; 미래의 요청에서 &mdash; 그들이 성공적으로 인증되었음과 어떤 사용자인지를 알 수 있도록 해야 합니다</p>
 
 <p>Head over to your <code>handlers.go</code> file and update it as follows:</p>
+<p><code>handlers.go</code> 파일로 이동하여 다음과 같이 업데이트하세요</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -265,23 +283,31 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> The <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.RenewToken"><code>SessionManager.RenewToken()</code></a> method that we&rsquo;re using in the code above will change the ID of the current user&rsquo;s session <em>but retain any data associated with the session</em>. It&rsquo;s good practice to do this before login to mitigate the risk of a session fixation attack. For more background and information on this, please see the <a href="https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Session_Management_Cheat_Sheet.md#renew-the-session-id-after-any-privilege-level-change">OWASP Session Management Cheat Sheet</a>.
-</p></aside>
+</p>
+<p><strong>노트:</strong>
+위의 코드에서 사용하는 <code>SessionManager.RenewToken()</code> 메서드는 현재 사용자 세션의 ID를 변경하지만 세션과 관련된 데이터를 유지합니다. 로그인 전에 이 작업을 수행하여 세션 고정 공격의 위험을 줄이는 것이 좋은 실천입니다. 이에 대한 자세한 내용과 정보는 OWASP 세션 관리 치트 시트를 참조하세요.
+</p>
+</aside>
 
-<p>Alright, let&rsquo;s give this a try!</p>
+<p>Alright, let&rsquo;s give this a try! 좋습니다. 이제 시도해 봅시다!</p>
+
 
 <p>Restart the application and try submitting some invalid user credentials&hellip;</p>
+<p>애플리케이션을 다시 시작하고 일부 유효하지 않은 사용자 자격 증명을 제출해 보세요...</p>
 
 <figure class="img">
 <img src="assets/img/11.04-02.png" alt="11.04-02.png" />
 </figure>
 
 <p>You should get a non-field validation error message which looks like this:</p>
+<p>다음과 같은 필드와 관련이 없는 유효성 검사 오류 메시지를 받아야 합니다.</p>
 
 <figure class="img">
 <img src="assets/img/11.04-03.png" alt="11.04-03.png" />
 </figure>
 
 <p>But when you input some correct credentials (use the email address and password for the user that you created in the previous chapter), the application should log you in and redirect you to the create snippet page, like so:</p>
+<p>그러나 올바른 자격 증명을 입력하면 (이전 장에서 생성한 사용자의 이메일 주소 및 비밀번호를 사용하세요), 응용 프로그램이 로그인하고 스니펫 생성 페이지로 리디렉션되어야 합니다.</p>
 
 <figure class="img">
 <img src="assets/img/11.04-04.png" alt="11.04-04.png" />
@@ -292,11 +318,17 @@
 </figure>
 
 <p>We&rsquo;ve covered a lot of ground in the last two chapters, so let&rsquo;s quickly take stock of where things are at.</p>
+<p>지난 두 장에서 많은 내용을 다뤘으니 빠르게 현재 상황을 정리해 봅시다.</p>
 
 <ul>
-<li><p>Users can now <em>register</em> with the site using the <code>GET /user/signup</code> form. We store the details of registered users (including a hashed version of their password) in the <code>users</code> table of our database.</p></li>
+<li><p>Users can now <em>register</em> with the site using the <code>GET /user/signup</code> form. We store the details of registered users (including a hashed version of their password) in the <code>users</code> table of our database.</p>
+<p>사용자는 이제 <code>GET /user/signup</code> 양식을 사용하여 사이트에 등록할 수 있습니다. 등록된 사용자의 세부 정보(비밀번호의 해시 버전 포함)를 데이터베이스의 <code>users</code> 테이블에 저장합니다.</p>
+</li>
 
-<li><p>Registered users can then <em>authenticate</em> by using the <code>GET /user/login</code> form to provide their email address and password. If these match the details of a registered user, we deem them to have authenticated successfully and add the relevant <code>&quot;authenticatedUserID&quot;</code> value to their session data.</p></li>
+<li><p>Registered users can then <em>authenticate</em> by using the <code>GET /user/login</code> form to provide their email address and password. If these match the details of a registered user, we deem them to have authenticated successfully and add the relevant <code>&quot;authenticatedUserID&quot;</code> value to their session data.</p>
+<p>등록된 사용자는 이제 <code>GET /user/login</code> 양식을 사용하여 이메일 주소와 비밀번호를 제공하여 인증할 수 있습니다. 이 정보가 등록된 사용자의 세부 정보와 일치하면 그들은 성공적으로 인증된 것으로 간주되고 세션 데이터에 해당 <code>&quot;authenticatedUserID&quot;</code> 값을 추가합니다.</p>
+
+</li>
 </ul>
 
 		</main>

@@ -30,18 +30,21 @@
 			<div class="chapter">Chapter 2.7.</div>
 			<h2 id="html-templating-and-inheritance">HTML templating and inheritance</h2>
 
-<p>Let&rsquo;s inject a bit of life into the project and develop a proper home page for our Snippetbox web application. Over the next couple of chapters we&rsquo;ll work towards creating a page which looks like this:"프로젝트에 활기를 불어넣고 Snippetbox 웹 애플리케이션을 위한 적절한 홈페이지를 개발해 보겠습니다. 다음 몇 장 동안 이렇게 보이는 페이지를 만들어 나갈 것입니다."</p>
+<p>Let&rsquo;s inject a bit of life into the project and develop a proper home page for our Snippetbox web application. Over the next couple of chapters we&rsquo;ll work towards creating a page which looks like this:</p>
+<p>프로젝트에 활기를 불어넣고 Snippetbox 웹 애플리케이션을 위한 적절한 홈페이지를 개발해 보겠습니다. 다음 몇 장 동안 이렇게 보이는 페이지를 만들어 나갈 것입니다.</p>
 
 <p><img class="sketch" src="assets/img/02.07-01.png" alt="02.07-01.png"></img></p>
 
-<p>Let&rsquo;s start by creating a <dfn>template file</dfn> at <code>ui/html/pages/home.tmpl</code> to contain the HTML content for the home page. Like so:"우선 <code>ui/html/pages/home.tmpl</code> 파일을 생성하여 홈 페이지의 HTML 콘텐츠를 담을 것입니다. 다음과 같이 작성하겠습니다."</p>
+<p>Let&rsquo;s start by creating a <dfn>template file</dfn> at <code>ui/html/pages/home.tmpl</code> to contain the HTML content for the home page. Like so:</p>
+<p>우선 <code>ui/html/pages/home.tmpl</code> 파일을 생성하여 홈 페이지의 HTML 콘텐츠를 담을 것입니다. 다음과 같이 작성하겠습니다.</p>
 
 <figure class="code bash">
 <pre>$ mkdir ui/html/pages
 $ touch ui/html/pages/home.tmpl</pre>
 </figure>
 
-<p>And add the following HTML markup:"그리고 다음 HTML 마크업을 추가하십시오:"</p>
+<p>And add the following HTML markup:</p>
+<p>그리고 다음 HTML 마크업을 추가하십시오:</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/pages/home.tmpl</figcaption>
@@ -65,16 +68,21 @@ $ touch ui/html/pages/home.tmpl</pre>
 </figure>
 
 <aside class="note"><p>
-<strong>Note:</strong> The <code>.tmpl</code> extension doesn&rsquo;t convey any special meaning or behavior here. I&rsquo;ve only chosen this extension because it&rsquo;s a nice way of making it clear that the file contains a Go template when you&rsquo;re browsing a list of files. But, if you want, you could use the extension <code>.html</code> instead (which may make your text editor recognize the file as HTML for the purpose of syntax highlighting or autocompletion) &mdash; or you could even use a &lsquo;double extension&rsquo; like <code>.tmpl.html</code>. The choice is yours, but we&rsquo;ll stick to using <code>.tmpl</code> for our templates throughout this book."<strong>참고:</strong> 여기서 <code>.tmpl</code> 확장자는 특별한 의미나 동작을 전달하지 않습니다. 파일 목록을 탐색할 때 이 파일이 Go 템플릿을 포함하고 있음을 명확하게 표시하기 좋은 확장자를 선택한 것뿐입니다. 그러나 원한다면 <code>.html</code> 확장자를 대신 사용할 수도 있습니다(이는 텍스트 편집기가 파일을 HTML로 인식하여 구문 강조 또는 자동 완성에 사용할 수 있게 해줄 수 있습니다) — 또는 <code>.tmpl.html</code>과 같은 '더블 확장자'를 사용할 수도 있습니다. 선택은 여러분에 달려 있지만, 이 책 전체에서는 템플릿에 <code>.tmpl</code>을 사용하겠습니다."
-</p></aside>
+<strong>Note:</strong> The <code>.tmpl</code> extension doesn&rsquo;t convey any special meaning or behavior here. I&rsquo;ve only chosen this extension because it&rsquo;s a nice way of making it clear that the file contains a Go template when you&rsquo;re browsing a list of files. But, if you want, you could use the extension <code>.html</code> instead (which may make your text editor recognize the file as HTML for the purpose of syntax highlighting or autocompletion) &mdash; or you could even use a &lsquo;double extension&rsquo; like <code>.tmpl.html</code>. The choice is yours, but we&rsquo;ll stick to using <code>.tmpl</code> for our templates throughout this book.
+</p>
+<p><strong>참고:</strong> 여기서 <code>.tmpl</code> 확장자는 특별한 의미나 동작을 전달하지 않습니다. 파일 목록을 탐색할 때 이 파일이 Go 템플릿을 포함하고 있음을 명확하게 표시하기 좋은 확장자를 선택한 것뿐입니다. 그러나 원한다면 <code>.html</code> 확장자를 대신 사용할 수도 있습니다(이는 텍스트 편집기가 파일을 HTML로 인식하여 구문 강조 또는 자동 완성에 사용할 수 있게 해줄 수 있습니다) — 또는 <code>.tmpl.html</code>과 같은 '더블 확장자'를 사용할 수도 있습니다. 선택은 여러분에 달려 있지만, 이 책 전체에서는 템플릿에 <code>.tmpl</code>을 사용하겠습니다.</p>
+</aside>
 
 <p>Now that we&rsquo;ve created a template file containing the HTML markup for the home page, the next question is <em>how do we get our <code>home</code> handler to render it?</em>
-"이제 홈 페이지의 HTML 마크업을 담은 템플릿 파일을 생성했으니, 다음 질문은 <code>home</code> 핸들러를 어떻게 만들어서 렌더링할 것인가입니다?"</p>
+</p>
+<p>이제 홈 페이지의 HTML 마크업을 담은 템플릿 파일을 생성했으니, 다음 질문은 <code>home</code> 핸들러를 어떻게 만들어서 렌더링할 것인가입니다?</p>
 
 <p>For this we need to use Go&rsquo;s <a href="https://pkg.go.dev/html/template/"><code>html/template</code></a> package, which provides a family of functions for safely parsing and rendering HTML templates. We can use the functions in this package to <dfn>parse</dfn> the template file and then <dfn>execute</dfn> the template.
-"이를 위해 Go의 <code>html/template</code> 패키지를 사용해야 합니다. 이 패키지는 HTML 템플릿을 안전하게 구문 분석하고 렌더링하는 데 사용되는 함수 집합을 제공합니다. 이 패키지의 함수들을 사용하여 템플릿 파일을 구문 분석하고 템플릿을 실행할 수 있습니다."</p>
+</p>
+<p>이를 위해 Go의 <code>html/template</code> 패키지를 사용해야 합니다. 이 패키지는 HTML 템플릿을 안전하게 구문 분석하고 렌더링하는 데 사용되는 함수 집합을 제공합니다. 이 패키지의 함수들을 사용하여 템플릿 파일을 구문 분석하고 템플릿을 실행할 수 있습니다.</p>
 
-<p>I&rsquo;ll demonstrate. Open the <code>cmd/web/handlers.go</code> file and add the following code:"이를 실제로 보여드리겠습니다. <code>cmd/web/handlers.go</code> 파일을 열고 다음 코드를 추가하세요."</p>
+<p>I&rsquo;ll demonstrate. Open the <code>cmd/web/handlers.go</code> file and add the following code:</p>
+<p>이를 실제로 보여드리겠습니다. <code>cmd/web/handlers.go</code> 파일을 열고 다음 코드를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -121,10 +129,12 @@ $ touch ui/html/pages/home.tmpl</pre>
 </figure>
 
 <p>It&rsquo;s important to point out that the file path that you pass to the <code>template.ParseFiles()</code> function must either be relative to your current working directory, or an absolute path. In the code above I’ve made the path relative to the root of the project directory.
-"<code>template.ParseFiles()</code> 함수에 전달하는 파일 경로는 현재 작업 디렉토리를 기준으로 상대 경로이거나 절대 경로이어야 합니다. 위의 코드에서는 경로를 프로젝트 디렉토리의 루트를 기준으로 상대 경로로 지정했습니다."</p>
+</p>
+<p><code>template.ParseFiles()</code> 함수에 전달하는 파일 경로는 현재 작업 디렉토리를 기준으로 상대 경로이거나 절대 경로이어야 합니다. 위의 코드에서는 경로를 프로젝트 디렉토리의 루트를 기준으로 상대 경로로 지정했습니다.</p>
 
 <p>So, with that said, make sure you&rsquo;re in the root of your project directory and restart the application:
-"그렇다면 말씀드린대로 프로젝트 디렉토리의 루트에 있는지 확인하고 애플리케이션을 다시 시작하세요:"</p>
+</p>
+<p>그렇다면 말씀드린대로 프로젝트 디렉토리의 루트에 있는지 확인하고 애플리케이션을 다시 시작하세요:</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -133,7 +143,8 @@ $ go run ./cmd/web
 </figure>
 
 <p>Then open <a href="http://localhost:4000/"><code>http://localhost:4000</code></a> in your web browser. You should find that the HTML homepage is shaping up nicely.
-"그런 다음 웹 브라우저에서 <code>http://localhost:4000</code>을 열어보세요. HTML 홈페이지가 잘 구성되고 있는 것을 확인할 수 있을 것입니다."</p>
+</p>
+<p>그런 다음 웹 브라우저에서 <code>http://localhost:4000</code>을 열어보세요. HTML 홈페이지가 잘 구성되고 있는 것을 확인할 수 있을 것입니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.07-02.png" alt="02.07-02.png" />
@@ -142,19 +153,23 @@ $ go run ./cmd/web
 <h3 id="template-composition">Template composition</h3>
 
 <p>As we add more pages to our web application, there will be some shared, boilerplate, HTML markup that we want to include on every page &mdash; like the header, navigation and metadata inside the <code>&lt;head&gt;</code> HTML element.
-"웹 애플리케이션에 더 많은 페이지를 추가할수록 모든 페이지에 포함하고 싶은 일부 공통된 보일러플레이트 HTML 마크업이 있을 것입니다. 이는 헤더, 내비게이션 및 <code>&lt;head&gt;</code> HTML 요소 내의 메타데이터와 같은 것입니다."</p>
+</p>
+<p>웹 애플리케이션에 더 많은 페이지를 추가할수록 모든 페이지에 포함하고 싶은 일부 공통된 보일러플레이트 HTML 마크업이 있을 것입니다. 이는 헤더, 내비게이션 및 <code>&lt;head&gt;</code> HTML 요소 내의 메타데이터와 같은 것입니다.</p>
 
 <p>To prevent duplication and save typing, it&rsquo;s a good idea to create a <em>base</em> (or <em>master</em>) template which contains this shared content, which we can then <dfn>compose</dfn> with the page-specific markup for the individual pages.
-"중복을 방지하고 타이핑을 절약하기 위해 이러한 공유 콘텐츠를 포함하는 기본(또는 마스터) 템플릿을 만드는 것은 좋은 아이디어입니다. 그런 다음 각 페이지에 대한 페이지별 마크업과 결합할 수 있습니다."</p>
+</p>
+<p>중복을 방지하고 타이핑을 절약하기 위해 이러한 공유 콘텐츠를 포함하는 기본(또는 마스터) 템플릿을 만드는 것은 좋은 아이디어입니다. 그런 다음 각 페이지에 대한 페이지별 마크업과 결합할 수 있습니다.</p>
 
-<p>Go ahead and create a new <code>ui/html/base.tmpl</code> file&hellip;"계속해서 새로운 <code>ui/html/base.tmpl</code> 파일을 만들어 주세요…"</p>
+<p>Go ahead and create a new <code>ui/html/base.tmpl</code> file&hellip;</p>
+<p>계속해서 새로운 <code>ui/html/base.tmpl</code> 파일을 만들어 주세요…</p>
 
 <figure class="code bash">
 <pre>$ touch ui/html/base.tmpl</pre>
 </figure>
 
 <p>And add the following markup (which we want to appear in every page):
-"그리고 다음 마크업을 추가하세요(이것은 모든 페이지에 나타나길 원하는 부분입니다):"</p>
+</p>
+<p>그리고 다음 마크업을 추가하세요(이것은 모든 페이지에 나타나길 원하는 부분입니다):</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/base.tmpl</figcaption>
@@ -178,11 +193,14 @@ $ go run ./cmd/web
 {{end}}</pre>
 </figure>
 
-<p>Hopefully this feels familiar if you&rsquo;ve used templating in other languages before. It&rsquo;s essentially just regular HTML with some extra <em>actions</em> in double curly braces."이전에 다른 언어에서 템플릿을 사용한 적이 있다면 이것은 익숙하게 느껴질 것입니다. 이것은 본질적으로 일반 HTML에 이중 중괄호 내의 몇 가지 추가적인 액션만 추가된 것입니다."</p>
+<p>Hopefully this feels familiar if you&rsquo;ve used templating in other languages before. It&rsquo;s essentially just regular HTML with some extra <em>actions</em> in double curly braces.</p>
+<p>이전에 다른 언어에서 템플릿을 사용한 적이 있다면 이것은 익숙하게 느껴질 것입니다. 이것은 본질적으로 일반 HTML에 이중 중괄호 내의 몇 가지 추가적인 액션만 추가된 것입니다.</p>
 
-<p>We use the <code>{{define &quot;base&quot;}}...{{end}}</code> action as a wrapper to define a distinct <dfn>named template</dfn> called <code>base</code>, which contains the content we want to appear on every page."<code>{{define &quot;base&quot;}}...{{end}}</code> 액션은 <code>base</code>라는 명명된 템플릿을 정의하는 래퍼로 사용되며, 이 템플릿에는 각 페이지에 나타나길 원하는 콘텐츠가 포함되어 있습니다."</p>
+<p>We use the <code>{{define &quot;base&quot;}}...{{end}}</code> action as a wrapper to define a distinct <dfn>named template</dfn> called <code>base</code>, which contains the content we want to appear on every page.</p>
+<p><code>{{define &quot;base&quot;}}...{{end}}</code> 액션은 <code>base</code>라는 명명된 템플릿을 정의하는 래퍼로 사용되며, 이 템플릿에는 각 페이지에 나타나길 원하는 콘텐츠가 포함되어 있습니다.</p>
 
-<p>Inside this we use the <code>{{template &quot;title&quot; .}}</code> and <code>{{template &quot;main&quot; .}}</code> actions to denote that we want to <dfn>invoke</dfn> other named templates (called <code>title</code> and <code>main</code>) at a particular location in the HTML."내부에서는 <code>{{template &quot;title&quot; .}}</code> 및 <code>{{template &quot;main&quot; .}}</code> 액션을 사용하여 HTML의 특정 위치에서 다른 명명된 템플릿(<code>title</code> 및 <code>main</code> 이라는)을 호출하고자 함을 나타냅니다."</p>
+<p>Inside this we use the <code>{{template &quot;title&quot; .}}</code> and <code>{{template &quot;main&quot; .}}</code> actions to denote that we want to <dfn>invoke</dfn> other named templates (called <code>title</code> and <code>main</code>) at a particular location in the HTML.</p>
+<p>내부에서는 <code>{{template &quot;title&quot; .}}</code> 및 <code>{{template &quot;main&quot; .}}</code> 액션을 사용하여 HTML의 특정 위치에서 다른 명명된 템플릿(<code>title</code> 및 <code>main</code> 이라는)을 호출하고자 함을 나타냅니다.</p>
 
 <aside class="note"><p>
 <strong>Note:</strong> If you&rsquo;re wondering, the dot at the end of the <code>{{template &quot;title&quot; .}}</code> action represents any dynamic data that you want to pass to the invoked template. We&rsquo;ll talk more about this later in the book.
@@ -190,7 +208,8 @@ $ go run ./cmd/web
 <strong>참고:</strong> 궁금하다면, <code>{{template &quot;title&quot; .}}</code>에서의 마침표는 호출된 템플릿에 전달하려는 동적 데이터를 나타냅니다. 이에 대해 더 자세히 이야기할 것입니다.
 </p></aside>
 
-<p>Now let&rsquo;s go back to the <code>ui/html/pages/home.tmpl</code> file and update it to define <code>title</code> and <code>main</code> named templates containing the specific content for the home page."이제 <code>ui/html/pages/home.tmpl</code> 파일로 돌아가서 홈 페이지의 특정 콘텐츠를 포함하는 <code>title</code> 및 <code>main</code> 이라는 명명된 템플릿을 정의하도록 업데이트해 보겠습니다."</p>
+<p>Now let&rsquo;s go back to the <code>ui/html/pages/home.tmpl</code> file and update it to define <code>title</code> and <code>main</code> named templates containing the specific content for the home page.</p>
+<p>이제 <code>ui/html/pages/home.tmpl</code> 파일로 돌아가서 홈 페이지의 특정 콘텐츠를 포함하는 <code>title</code> 및 <code>main</code> 이라는 명명된 템플릿을 정의하도록 업데이트해 보겠습니다.</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/pages/home.tmpl</figcaption>
@@ -202,7 +221,8 @@ $ go run ./cmd/web
 {{end}}</pre>
 </figure>
 
-<p>Once that&rsquo;s done, the next step is to update the code in your <code>home</code> handler so that it parses <em>both</em> template files, like so:"이 작업이 완료되면 <code>home</code> 핸들러의 코드를 업데이트하여 두 템플릿 파일을 모두 구문 분석하도록 다음과 같이 수행하세요:"</p>
+<p>Once that&rsquo;s done, the next step is to update the code in your <code>home</code> handler so that it parses <em>both</em> template files, like so:</p>
+<p>이 작업이 완료되면 <code>home</code> 핸들러의 코드를 업데이트하여 두 템플릿 파일을 모두 구문 분석하도록 다음과 같이 수행하세요:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -247,17 +267,20 @@ $ go run ./cmd/web
 </figure>
 
 <p>So now, instead of containing HTML directly, our template set contains 3 named templates &mdash; <code>base</code>, <code>title</code> and <code>main</code>. We use the <code>ExecuteTemplate()</code> method to tell Go that we specifically want to respond using the content of the <code>base</code> template (which in turn invokes our <code>title</code> and <code>main</code> templates).
-"이제 HTML을 직접 포함하는 대신 템플릿 세트에는 <code>base</code>, <code>title</code> 및 <code>main</code> 이라는 3개의 명명된 템플릿이 포함되어 있습니다. <code>ExecuteTemplate()</code> 메서드를 사용하여 Go에게 특히 <code>base</code> 템플릿의 내용을 사용하여 응답하도록 지시합니다(이는 결국 <code>title</code> 및 <code>main</code> 템플릿을 호출합니다)."</p>
+</p>
+<p>이제 HTML을 직접 포함하는 대신 템플릿 세트에는 <code>base</code>, <code>title</code> 및 <code>main</code> 이라는 3개의 명명된 템플릿이 포함되어 있습니다. <code>ExecuteTemplate()</code> 메서드를 사용하여 Go에게 특히 <code>base</code> 템플릿의 내용을 사용하여 응답하도록 지시합니다(이는 결국 <code>title</code> 및 <code>main</code> 템플릿을 호출합니다).</p>
 
-<p>Feel free to restart the server and give this a try. You should find that it renders the same output as before (although there will be some extra whitespace in the HTML source where the actions are)."서버를 다시 시작하고 시도해보세요. 이전과 동일한 출력이 렌더링되는 것을 확인할 수 있을 것입니다(액션이 있는 곳에는 몇 가지 추가 공백이 있을 수 있습니다)."</p>
+<p>Feel free to restart the server and give this a try. You should find that it renders the same output as before (although there will be some extra whitespace in the HTML source where the actions are).</p>
+<p>서버를 다시 시작하고 시도해보세요. 이전과 동일한 출력이 렌더링되는 것을 확인할 수 있을 것입니다(액션이 있는 곳에는 몇 가지 추가 공백이 있을 수 있습니다).</p>
 
 <h3 id="embedding-partials">Embedding partials</h3>
 
 <p>For some applications you might want to break out certain bits of HTML into <dfn>partials</dfn> that can be reused in different pages or layouts. To illustrate, let&rsquo;s create a partial containing the primary navigation bar for our web application.
-"일부 애플리케이션에서는 다른 페이지나 레이아웃에서 재사용할 수 있는 HTML 일부를 부분적으로 분리하고 싶을 수 있습니다. 예를 들어 웹 애플리케이션의 기본 내비게이션 바를 포함하는 부분을 만들어보겠습니다."
 </p>
+<p>일부 애플리케이션에서는 다른 페이지나 레이아웃에서 재사용할 수 있는 HTML 일부를 부분적으로 분리하고 싶을 수 있습니다. 예를 들어 웹 애플리케이션의 기본 내비게이션 바를 포함하는 부분을 만들어보겠습니다.</p>
 
-<p>Create a new <code>ui/html/partials/nav.tmpl</code> file containing a named template called <code>&quot;nav&quot;</code>, like so:"새로운 <code>ui/html/partials/nav.tmpl</code> 파일을 만들어 <code>&quot;nav&quot;</code> 라는 명명된 템플릿을 포함하도록 하세요:"</p>
+<p>Create a new <code>ui/html/partials/nav.tmpl</code> file containing a named template called <code>&quot;nav&quot;</code>, like so:</p>
+<p>새로운 <code>ui/html/partials/nav.tmpl</code> 파일을 만들어 <code>&quot;nav&quot;</code> 라는 명명된 템플릿을 포함하도록 하세요:</p>
 
 <figure class="code bash">
 <pre>$ mkdir ui/html/partials
@@ -274,7 +297,8 @@ $ touch ui/html/partials/nav.tmpl</pre>
 </figure>
 
 <p>Then update the <code>base</code> template so that it invokes the navigation partial using the <code>{{template &quot;nav&quot; .}}</code> action:
-"그런 다음 <code>base</code> 템플릿을 업데이트하여 <code>{{template &quot;nav&quot; .}}</code> 액션을 사용하여 내비게이션 부분을 호출하도록 하세요:"</p>
+</p>
+<p>그런 다음 <code>base</code> 템플릿을 업데이트하여 <code>{{template &quot;nav&quot; .}}</code> 액션을 사용하여 내비게이션 부분을 호출하도록 하세요:</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/base.tmpl</figcaption>
@@ -300,8 +324,9 @@ $ touch ui/html/partials/nav.tmpl</pre>
 {{end}}</pre>
 </figure>
 
-<p>Finally, we need to update the <code>home</code> handler to include the new <code>ui/html/partials/nav.tmpl</code> file when parsing the template files:"
-마지막으로 템플릿 파일을 구문 분석할 때 새로운 <code>ui/html/partials/nav.tmpl</code> 파일을 포함하도록 <code>home</code> 핸들러를 업데이트해야 합니다:"</p>
+<p>Finally, we need to update the <code>home</code> handler to include the new <code>ui/html/partials/nav.tmpl</code> file when parsing the template files:</p>
+<p>
+마지막으로 템플릿 파일을 구문 분석할 때 새로운 <code>ui/html/partials/nav.tmpl</code> 파일을 포함하도록 <code>home</code> 핸들러를 업데이트해야 합니다:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -339,7 +364,8 @@ $ touch ui/html/partials/nav.tmpl</pre>
 <span class="o">...</span></pre>
 </figure>
 
-<p>Once you restart the server, the <code>base</code> template should now invoke the <code>nav</code> template and your home page should look like this:"서버를 다시 시작하면 <code>base</code> 템플릿이 이제 <code>nav</code> 템플릿을 호출하고 홈 페이지는 다음과 같이 보일 것입니다:"</p>
+<p>Once you restart the server, the <code>base</code> template should now invoke the <code>nav</code> template and your home page should look like this:</p>
+<p>서버를 다시 시작하면 <code>base</code> 템플릿이 이제 <code>nav</code> 템플릿을 호출하고 홈 페이지는 다음과 같이 보일 것입니다:</p>
 
 <figure class="img">
 <img src="assets/img/02.07-03.png" alt="02.07-03.png" />
@@ -352,14 +378,14 @@ $ touch ui/html/partials/nav.tmpl</pre>
 <h4 id="the-block-action">The block action</h4>
 
 <p>In the code above we&rsquo;ve used the <code>{{template}}</code> action to invoke one template from another. But Go also provides a <code>{{block}}...{{end}}</code> action which you can use instead. This acts like the <code>{{template}}</code> action, except it allows you to specify some default content if the template being invoked <em>doesn&rsquo;t exist in the current template set</em>.
-"
-위의 코드에서는 <code>{{template}}</code> 액션을 사용하여 다른 템플릿을 호출했습니다. 그러나 Go는 대신에 사용할 수 있는 <code>{{block}}...{{end}}</code> 액션을 제공합니다. 이는 <code>{{template}}</code> 액션처럼 작동하지만 호출된 템플릿이 현재 템플릿 세트에 존재하지 않는 경우 일부 기본 콘텐츠를 지정할 수 있습니다."
 </p>
+<p>위의 코드에서는 <code>{{template}}</code> 액션을 사용하여 다른 템플릿을 호출했습니다. 그러나 Go는 대신에 사용할 수 있는 <code>{{block}}...{{end}}</code> 액션을 제공합니다. 이는 <code>{{template}}</code> 액션처럼 작동하지만 호출된 템플릿이 현재 템플릿 세트에 존재하지 않는 경우 일부 기본 콘텐츠를 지정할 수 있습니다.</p>
 
-<p>In the context of a web application, this is useful when you want to provide some default content (such as a sidebar) which individual pages can override on a case-by-case basis if they need to."
-웹 애플리케이션의 맥락에서는 이것이 유용합니다. 개별 페이지가 필요한 경우에는 케이스별로 오버라이드할 수 있는 기본 콘텐츠(예: 사이드바)를 제공하고 싶을 때입니다."</p>
+<p>In the context of a web application, this is useful when you want to provide some default content (such as a sidebar) which individual pages can override on a case-by-case basis if they need to.</p>
+<p>
+웹 애플리케이션의 맥락에서는 이것이 유용합니다. 개별 페이지가 필요한 경우에는 케이스별로 오버라이드할 수 있는 기본 콘텐츠(예: 사이드바)를 제공하고 싶을 때입니다.</p>
 
-<p>Syntactically you use it like this:"구문적으로는 다음과 같이 사용합니다:"</p>
+<p>Syntactically you use it like this: 구문적으로는 다음과 같이 사용합니다:</p>
 
 <figure class="code html">
 <pre>{{define &#34;base&#34;}}
@@ -371,8 +397,8 @@ $ touch ui/html/partials/nav.tmpl</pre>
 </figure>
 
 <p>But &mdash; if you want &mdash; you don&rsquo;t <em>need</em> to include any default content between the <code>{{block}}</code> and <code>{{end}}</code> actions. In that case, the invoked template acts like it&rsquo;s &lsquo;optional&rsquo;. If the template exists in the template set, then it will be rendered. But if it doesn&rsquo;t, then nothing will be displayed.
-"그러나 원한다면 <code>{{block}}</code> 과 <code>{{end}}</code> 액션 사이에 어떤 기본 콘텐츠도 포함시키지 않아도 됩니다. 이 경우 호출된 템플릿은 '선택 사항'처럼 작동합니다. 템플릿 세트에 템플릿이 존재하면 렌더링됩니다. 그러나 존재하지 않으면 아무 것도 표시되지 않습니다."
 </p>
+<p>그러나 원한다면 <code>{{block}}</code> 과 <code>{{end}}</code> 액션 사이에 어떤 기본 콘텐츠도 포함시키지 않아도 됩니다. 이 경우 호출된 템플릿은 '선택 사항'처럼 작동합니다. 템플릿 세트에 템플릿이 존재하면 렌더링됩니다. 그러나 존재하지 않으면 아무 것도 표시되지 않습니다.</p>
 
 		</main>
 		<footer>

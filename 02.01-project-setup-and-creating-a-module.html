@@ -32,11 +32,11 @@
 
 <p>Before we write any code, you&rsquo;ll need to create a <code>snippetbox</code> directory on your computer to act as the top-level &lsquo;home&rsquo; for this project. All the Go code we write throughout the book will live in here, along with other project-specific assets like HTML templates and CSS files.</p>
 
-<p>"코드를 작성하기 전에 이 프로젝트를 위한 최상위 홈인 snippetbox 디렉토리를 생성할 필요가 있습니다."</p>
+<p>코드를 작성하기 전에 이 프로젝트의 최상위 &lsquo;home&rsquo;으로 작동하는 컴퓨터의 <code>snippetbox</code> 디렉토리를 만들어야 합니다. 이 책 전체를 통해 작성하는 모든 Go 코드는 여기에 있으며, HTML 템플릿 및 CSS 파일과 같은 다른 프로젝트 특정 자산도 여기에 위치합니다.</p>
 
 <p>So, if you&rsquo;re following along, open your terminal and create a new project directory called <code>snippetbox</code> anywhere on your computer. I&rsquo;m going to locate my project directory under <code>$HOME/code</code>, but you can choose a different location if you wish.</p>
 
-<p>"터미널을 열고 snippetbox 라는 새 프로젝트 디렉토리를 생성합니다."</p>
+<p>그러니 만약 따라하고 있다면 터미널을 열어 원하는 곳에 <code>snippetbox</code> 라는 새로운 프로젝트 디렉토리를 만들어 주세요. 이 책에서는 프로젝트 디렉토리를 $HOME/code 아래에 위치시킬 것이지만, 원한다면 다른 위치를 선택할 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ mkdir -p $HOME/code/snippetbox</pre>
@@ -45,22 +45,23 @@
 <h3 id="creating-a-module">Creating a module</h3>
 
 <p>The next thing you need to do is decide on a <dfn>module path</dfn> for your project.</p>
-<p>"다음으로 할 일은 프로젝트의 모듈 경로를 결정하는 것입니다."</p>
+<p>다음으로 할 일은 프로젝트의 모듈 경로를 결정하는 것입니다.</p>
 
 <p>If you&rsquo;re not already familiar with <a href="https://github.com/golang/go/wiki/Modules">Go modules</a>, you can think of a module path as basically being a canonical name or <em>identifier</em> for your project.</p>
+<p><a href="https://github.com/golang/go/wiki/Modules">Go 모듈</a>에 익숙하지 않다면, 모듈 경로를 본질적으로 프로젝트의 정식 이름 또는 식별자로 생각할 수 있습니다.</p>
 
 <p>You can pick <a href="https://golang.org/ref/mod#go-mod-file-ident">almost any string</a> as your module path, but the important thing to focus on is <em>uniqueness</em>. To avoid potential import conflicts with other people&rsquo;s projects or the standard library in the future, you want to pick a module path that is globally unique and unlikely to be used by anything else. In the Go community, a common convention is to base your module paths on a URL that you own.</p>
-<p>"Go 커뮤니티에서는 자신이 소유한 URL을 기반으로 모듈 경로를 지정하는 것이 일반적인 컨벤션입니다."</p>
+<p>모듈 경로로는 <a href="https://golang.org/ref/mod#go-mod-file-ident">거의 모든 문자열</a>을 선택할 수 있지만 중요한 것은 고유성입니다. 나중에 다른 사람의 프로젝트나 향후 표준 라이브러리와의 잠재적인 가져오기 충돌을 피하려면 전역적으로 고유하고 다른 어떤 것에도 사용되기 어려운 모듈 경로를 선택해야 합니다. Go 커뮤니티에서는 자신이 소유한 URL을 기반으로 모듈 경로를 지정하는 것이 일반적인 컨벤션입니다.</p>
 
 <p>In my case, a clear, succinct and <em>unlikely-to-be-used-by-anything-else</em> module path for this project would be <code>snippetbox.alexedwards.net</code>, and I&rsquo;ll use this throughout the rest of the book. If possible, you should swap this for something that&rsquo;s unique to you instead.</p>
-<p>"이 책에서는 모듈 경로로 snippetbox.alexedwards.net 을 사용하겠습니다."</p>
+<p>이 책에서는 이 프로젝트에 대한 명확하고 간결하며 다른 곳에서 사용될 가능성이 거의 없는 모듈 경로로 <code>snippetbox.alexedwards.net</code> 을 선택했습니다. 이를 책의 나머지 부분 동안 계속 사용할 것입니다. 가능하다면 여러분은 이를 고유한 것으로 교체해야 합니다.</p>
 
 <p>Once you&rsquo;ve decided on a unique module path, the next thing you need to do is turn your project directory into a module.</p>
-<p>"고유한 모듈 경로를 결정했다면, 다음으로 프로젝트 디렉토리를 모듈로 변환해야 합니다."</p>
+<p>고유한 모듈 경로를 결정했다면, 다음으로 프로젝트 디렉토리를 모듈로 변환해야 합니다.</p>
 
 <p>Make sure that you&rsquo;re in the root of your project directory and then run the <code>go mod init</code> command &mdash; passing in your chosen module path as a parameter like so:</p>
 
-<p>"프로젝트 디렉토리의 홈에서 go mod init snippetbox.alexedwards.net 을 실행합니다."</p>
+<p>프로젝트 디렉토리의 루트에 있는지 확인한 후에 <code>go mod init</code> 명령을 실행하고, 선택한 모듈 경로를 매개변수로 전달해야 합니다. 다음과 같이 진행하세요</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -69,14 +70,14 @@ $ go mod init snippetbox.alexedwards.net
 </figure>
 
 <p>At this point your project directory should look a bit like the screenshot below. Notice the <code>go.mod</code> file which has been created?</p>
-<p>"생성된 go.mod 파일을 확인하세요."</p>
+<p>이 시점에서 프로젝트 디렉토리는 아래의 스크린샷과 비슷해야 합니다. 생성된 <code>go.mod</code> 파일을 주목하셨나요?</p>
 
 <figure class="img">
 <img src="assets/img/02.01-01.png" alt="02.01-01.png" />
 </figure>
 
 <p>At the moment there&rsquo;s not much going on in this file, and if you open it up in your text editor it should look like this (but preferably with your own unique module path instead):</p>
-<p>"파일의 내용은 아래와 같습니다."</p>
+<p>현재 이 파일에는 별다른 내용이 없으며, 텍스트 편집기에서 열면 다음과 같이 보일 것입니다 (다만 가능하면 여러분 고유의 모듈 경로를 사용하길 권장합니다).</p>
 
 <figure class="code plain">
 <figcaption>File: go.mod</figcaption>
@@ -87,12 +88,12 @@ go 1.21.0</pre>
 
 <p>We&rsquo;ll talk about modules in more detail later in the book, but for now it&rsquo;s enough to know that when there is a valid <code>go.mod</code> file in the root of your project directory, your project <em>is a module</em>. Setting up your project as a module has <mark>a number of advantages</mark> &mdash; <u>including making it much easier to manage third-party dependencies, <a href="https://go.dev/blog/supply-chain">avoid supply-chain attacks</a>, and ensure reproducible builds of your application in the future.</u></p>
 
-<p>"지금은 프로젝트 디렉토리의 홈에 유효한 go.mod 파일이 있으면 프로젝트가 모듈로 설정된다는 것만 알아도 충분합니다. 프로젝트를 모듈로 설정하는 것은 여러 가지 장점이 있습니다."</p>
+<p>나중에 책에서 모듈에 대해 더 자세히 다룰 것이지만, 지금은 프로젝트 디렉토리의 루트에 유효한 <code>go.mod</code> 파일이 있으면 프로젝트가 모듈임을 알 수 있다는 것만으로 충분합니다. 프로젝트를 모듈로 설정하면 여러 가지 이점이 있습니다. 이는 써드파티 종속성을 효과적으로 관리하고, 공급망 공격을 피하며, 앞으로 애플리케이션의 재현 가능한 빌드를 보장하는 데 많은 도움이 됩니다.</p>
 
 <h3 id="hello-world">Hello world!</h3>
 
 <p>Before we continue, let&rsquo;s quickly check that everything is set up correctly. Go ahead and create a new  <code>main.go</code> in your project directory containing the following code:</p>
-<p>"프로젝트 디렉토리 홈에 다음의 코드를 포함하는 main.go 파일을 생성해 주세요."</p>
+<p>계속 진행하기 전에 모든 것이 올바르게 설정되었는지 빠르게 확인해 봅시다. 프로젝트 디렉토리에 다음 코드를 포함하는 새로운 <code>main.go</code> 파일을 만들어주세요.</p>
 
 <figure class="code bash">
 <pre>$ touch main.go</pre>
@@ -110,7 +111,7 @@ go 1.21.0</pre>
 </figure>
 
 <p>Save this file, then use the <code>go run .</code> command in your terminal to compile and execute the code in the current directory. All being well, you will see the following output:</p>
-<p>"터미널에서 go run . 명령어를 사용하여 현재 디렉토리의 코드를 컴파일 하고 실행합니다."</p>
+<p>이 파일을 저장한 후에 터미널에서 <code>go run .</code> 명령을 사용하여 현재 디렉토리의 코드를 컴파일하고 실행하세요. 모든 것이 잘되면 다음과 같은 출력이 나타날 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ go run .
@@ -125,11 +126,11 @@ go 1.21.0</pre>
 
 <p>If you&rsquo;re creating a project which can be downloaded and used by other people and programs, then it&rsquo;s good practice for your module path to equal the location that the code can be downloaded from.</p>
 
-<p>"다른 사람 및 프로그램에서 사용할 수 있는 프로젝트를 생성하는 경우, 모듈 경로를 코드를 다운로드할 수 있는 위치와 동일하게 설정하는 것이 좋습니다."</p>
+<p>다른 사람 및 프로그램에서 사용할 수 있는 프로젝트를 생성하는 경우, 모듈 경로를 코드를 다운로드할 수 있는 위치와 동일하게 설정하는 것이 좋습니다.</p>
 
 <p>For instance, if your package is hosted at <code>https://github.com/foo/bar</code> then the module path for the project should be <code>github.com/foo/bar</code>.</p>
 
-<p>"패키지가 https://github.com/foo/bar 에 호스팅이 되는 경우에 프로젝트의 모듈 경로는 github.com/foo/bar 여야 합니다."</p>
+<p>패키지가 <code>https://github.com/foo/bar</code> 에 호스팅이 되는 경우에 프로젝트의 모듈 경로는 <code>github.com/foo/bar</code> 여야 합니다.</p>
 
 		</main>
 		<footer>

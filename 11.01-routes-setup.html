@@ -29,8 +29,10 @@
 		<main class="wrapper text">
 			<div class="chapter">Chapter 11.1.</div>
 			<h2 id="routes-setup">Routes setup</h2>
+			<h3>경로 설정</h3>
 
 <p>Let&rsquo;s begin this section by adding five new routes to our application, so that it looks like this:</p>
+<p>이 섹션을 시작하려면 응용 프로그램에 다섯 개의 새로운 경로를 추가하여 다음과 같이 보이도록 합시다.</p>
 
 <table>
 <thead>
@@ -115,8 +117,10 @@
 </tbody>
 </table>
 <p>Note that the new state-changing actions &mdash; <code>userSignupPost</code>, <code>userLoginPost</code> and <code>userLogoutPost</code> &mdash; are all using <code>POST</code> requests, not <code>GET</code>.</p>
+<p>새로운 상태 변경 작업 &mdash; <code>userSignupPost</code>, <code>userLoginPost</code> 및 <code>userLogoutPost</code> &mdash; 은 모두 <code>GET</code> 이 아닌 <code>POST</code> 요청을 사용한다는 것에 주목하세요.</p>
 
 <p>If you&rsquo;re following along, open up your <code>handlers.go</code> file and add placeholders for the five new handler functions as follows:</p>
+<p>따라오고 있다면, <code>handlers.go</code> 파일을 열고 다음과 같이 다섯 개의 새 핸들러 함수에 대한 자리 표시자를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -146,6 +150,7 @@
 </figure>
 
 <p>Then when that&rsquo;s done, let&rsquo;s create the corresponding routes in the <code>routes.go</code> file:</p>
+<p>그런 다음, 작업이 완료되면 <code>routes.go</code> 파일에 해당하는 경로를 생성합시다</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -183,6 +188,7 @@
 </figure>
 
 <p>Finally, we&rsquo;ll also need to update the <code>nav.tmpl</code> partial to include navigation items for the new pages:</p>
+<p>마지막으로, 새로운 페이지를 위한 내비게이션 항목을 포함하는 <code>nav.tmpl</code> 부분을 업데이트해야 합니다</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/partials/nav.tmpl</figcaption>
@@ -204,12 +210,15 @@
 </figure>
 
 <p>If you like, you can run the application at this point and you should see the new items in the navigation bar like this:</p>
+<p>
+원한다면, 이 시점에서 응용 프로그램을 실행할 수 있으며 다음과 같이 내비게이션 바에 새 항목이 표시됩니다</p>
 
 <figure class="img">
 <img src="assets/img/11.01-01.png" alt="11.01-01.png" />
 </figure>
 
 <p>If you click the new links, they should respond with the relevant placeholder plain-text response. For example, if you click the &lsquo;Signup&rsquo; link you should see a response similar to this:</p>
+<p>새로운 링크를 클릭하면 해당하는 자리 표시자 플레인 텍스트 응답이 표시되어야 합니다. 예를 들어 &lsquo;Signup&rsquo; 링크를 클릭하면 다음과 유사한 응답이 표시됩니다</p>
 
 <figure class="img">
 <img src="assets/img/11.01-02.png" alt="11.01-02.png" />

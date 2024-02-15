@@ -31,16 +31,22 @@
 			<h1 id="conclusion">Conclusion</h1>
 
 <p>Over the course of this book we&rsquo;ve explicitly covered a lot of topics, including routing, templating, working with a database, authentication/authorization, using HTTPS, using Go&rsquo;s testing package and more.</p>
+<p>이 책을 통해 라우팅, 템플릿, 데이터베이스 작업, 인증/인가, HTTPS 사용, Go의 테스팅 패키지 사용 등 다양한 주제를 명시적으로 다루었습니다.</p>
 
 <p>But there have been some other, more tacit, lessons too. The patterns that we&rsquo;ve used to implement features &mdash; and the way that our project code is organized and links together &mdash; is something that you should be able to take and apply in your future work.</p>
+<p>하지만 명시적으로 다룬 주제 외에도 몇 가지 암시적인 교훈이 있었습니다. 기능을 구현하는 데 사용한 패턴과 프로젝트 코드의 구조, 그리고 코드 간의 연결 방식은 향후 작업에서 적용할 수 있는 것입니다.</p>
 
 <p>Importantly, I also wanted the book to convey that <em>you don&rsquo;t need a framework to build web applications in Go</em>. Go&rsquo;s standard library contains almost all the tools that you need&hellip; even for a moderately complex application. For the times that you do need help with a specific task &mdash; like session management, routing or password hashing &mdash; there are lightweight and focused third-party packages that you can reach for.</p>
+<p>중요한 것은 이 책을 통해 Go에서 웹 애플리케이션을 구축하는 데 프레임워크가 필요하지 않다는 점을 전달하고 싶었습니다. Go의 표준 라이브러리에는 거의 모든 필요한 도구가 포함되어 있습니다. 적당히 복잡한 응용 프로그램에 대해서도 그렇습니다. 특정 작업에 도움이 필요한 경우 세션 관리, 라우팅 또는 비밀번호 해싱과 같은 작업에 대한 경량이면서도 특화된 서드파티 패키지가 있습니다.</p>
 
 <p>At this point, if you&rsquo;ve coded along with the book, I recommend taking a bit of time to review the code that you&rsquo;ve written so far. As you go through it, make sure that you&rsquo;re clear in your mind about what each part of the codebase does, and how it fits in with the project as a whole.</p>
+<p>이 시점에서 책에 따라 코드를 작성했다면, 이제 소요된 시간을 투자하여 작성한 코드를 검토하는 것이 좋습니다. 코드베이스의 각 부분이 무엇을 하는지, 그리고 전체 프로젝트와 어떻게 조화를 이루는지에 대해 명확하게 이해하도록 하세요.</p>
 
 <p>You might also want to circle back to any parts of the book that you found difficult to understand the first-time around. For example, now that you&rsquo;re more familiar with Go, <a href="02.09-the-http-handler-interface.html">the <code>http.Handler</code> interface</a> chapter might be easier to digest. Or, now that you&rsquo;ve seen how testing is handled in our application, the decisions we made in the <a href="04.05-designing-a-database-model.html">designing a database model</a> chapter might click into place.</p>
+<p>또한 처음에 이해하기 어려웠던 책의 어떤 부분이라도 다시 확인해 볼 수 있습니다. 예를 들어 이제 Go에 더 익숙해졌으므로 <code>http.Handler</code> 인터페이스 챕터를 이해하기가 더 쉬워질 수 있습니다. 또는 애플리케이션에서 테스트가 처리되는 것을 보았으므로 데이터베이스 모델 설계 챕터에서 내린 결정이 이해하기 쉬워질 수 있습니다.</p>
 
 <p>If you bought the <em>Professional Package</em> version of this book, then I strongly recommend working through the guided exercises in chapter 17 (right at the end of this book, after this conclusion). The exercises should help to consolidate what you&rsquo;ve learned &mdash; and working through them semi-independently will give you some extra practice with the patterns and techniques from this book before you use them again in your own projects.</p>
+<p>만약 이 책의 <em>Professional Package</em> 버전을 구매했다면, 권장 사항으로는 챕터 17의 안내형 연습문제를 진행하는 것을 강력히 권합니다(이 책의 마지막에 위치한 이 결론 이후에 있습니다). 연습문제를 통해 학습한 내용을 정리하는 데 도움이 되며, 이를 반 독립적으로 해결하면 본 책에서 다룬 패턴과 기술에 대한 추가적인 연습을 할 수 있어 향후 프로젝트에서 사용할 때 도움이 될 것입니다.</p>
 
 <h3 class="break">Let's Go Further</h3>
 
@@ -49,26 +55,31 @@
 </figure>
 
 <p>If you&rsquo;d like to continue learning more, then you might want to check out <a href="https://lets-go-further.alexedwards.net/">Let&rsquo;s Go Further</a>. It&rsquo;s written as a follow-up to this book, and it covers more advanced patterns for developing, managing and deploying APIs and web applications.</p>
+<p>더 많이 학습하고 싶다면 <a href="https://lets-go-further.alexedwards.net/">Let&rsquo;s Go Further</a>를 확인해보세요. 이 책은 이 책을 계속해서 학습하기 위한 후속작으로, API 및 웹 애플리케이션을 개발, 관리 및 배포하기 위한 더 고급 패턴을 다룹니다.</p>
 
 <p>It guides you through the start-to-finish build and deployment of a RESTful JSON API, and includes topics like:</p>
+<p>이 책은 RESTful JSON API의 처음부터 끝까지 구축 및 배포를 안내하며 다음과 같은 주제를 다룹니다.</p>
 
 <ul>
-<li>Sending and receiving JSON</li>
-<li>Working with SQL migrations</li>
-<li>Managing background tasks</li>
-<li>Performing partial updates and using optimistic locking</li>
-<li>Permission-based authorization</li>
-<li>Controlling CORS requests</li>
-<li>Graceful shutdowns</li>
-<li>Exposing application metrics</li>
-<li>Automating build and deployment steps</li>
+<li>Sending and receiving JSON JSON 전송 및 수신</li>
+<li>Working with SQL migrations SQL 마이그레이션 작업</li>
+<li>Managing background tasks 백그라운드 작업 관리</li>
+<li>Performing partial updates and using optimistic locking 부분 업데이트 수행 및 낙관적인 잠금 사용</li>
+<li>Permission-based authorization 권한 기반 인가</li>
+<li>Controlling CORS requests CORS 요청 제어</li>
+<li>Graceful shutdowns 우아한 종료</li>
+<li>Exposing application metrics 응용 프로그램 메트릭 노출</li>
+<li>Automating build and deployment steps 빌드 및 배포 단계 자동화</li>
 </ul>
 
 <p>You can check out a sample of the book, and get more information and FAQ answers at <a href="https://lets-go-further.alexedwards.net">https://lets-go-further.alexedwards.net</a>.</p>
+<p>책의 샘플을 확인하고 더 많은 정보 및 FAQ 답변을  <a href="https://lets-go-further.alexedwards.net">https://lets-go-further.alexedwards.net</a> 에서 찾아볼 수 있습니다.</p>
 
 <aside class="hint"><p>
 As a small gift for readers of <em>Let&rsquo;s Go</em>, you can also use the discount code <strong>FURTHER15</strong> at checkout to get <strong>15% off</strong> the regular list price.
-</p></aside>
+</p>
+<p>Let’s Go의 독자를 위한 작은 선물로, 결제 시 할인 코드 <strong>FURTHER15</strong>를 사용하여 정상 가격에서 <strong>15% 할인된</strong> 가격으로 구매할 수 있습니다.</p>
+</aside>
 
 		</main>
 		<footer>

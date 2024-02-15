@@ -35,20 +35,22 @@
 <p><code>main.go</code> 파일에 더 많은 코드를 추가하기 전에, 이 프로젝트를 어떻게 구성하고 구조화할지 생각해볼 좋은 시간입니다.</p>
 
 <p>It&rsquo;s important to explain upfront that there&rsquo;s no single right &mdash; or even recommended &mdash; way to structure web applications in Go. And that&rsquo;s both good and bad. It means that you have freedom and flexibility over how you organize your code, but it&rsquo;s also easy to get stuck down a rabbit-hole of uncertainty when trying to decide what the best structure should be.
-
-"가장 적합한 또는 권장되는 방법으로 Go 언어로 웹 애플리케이션을 구조화하는 유일한 올바른 방법이 없다는 것을 미리 설명하는 것이 중요합니다. 이것은 코드를 어떻게 구성할지에 대한 자유와 유연성을 의미하지만, 동시에 어떤 구조가 최선인지 결정하려고 할 때 불확실성의 미로에 빠지기 쉽다는 것을 의미합니다."
+</p>
+<p>
+가장 적합한 또는 권장되는 방법으로 Go 언어로 웹 애플리케이션을 구조화하는 유일한 올바른 방법이 없다는 것을 미리 설명하는 것이 중요합니다. 이것은 코드를 어떻게 구성할지에 대한 자유와 유연성을 의미하지만, 동시에 어떤 구조가 최선인지 결정하려고 할 때 불확실성의 미로에 빠지기 쉽다는 것을 의미합니다.
 </p>
 
 <p>As you gain experience with Go, you&rsquo;ll get a feel for which patterns work well for you in different situations. But as a starting point, the best advice I can give you is <em>don&rsquo;t over-complicate things</em>. Try hard to add structure and complexity only when it&rsquo;s demonstrably needed.
-"Go 언어에 대한 경험이 쌓이면 각 상황에서 어떤 패턴이 잘 동작하는지에 대한 감각이 생길 것입니다. 하지만 시작할 때 가장 좋은 조언은 과도하게 복잡하게 만들지 말라는 것입니다. 구조와 복잡성을 추가할 때 실제로 필요한 경우에만 노력하십시오."
 </p>
+<p>Go 언어에 대한 경험이 쌓이면 각 상황에서 어떤 패턴이 잘 동작하는지에 대한 감각이 생길 것입니다. 하지만 시작할 때 가장 좋은 조언은 과도하게 복잡하게 만들지 말라는 것입니다. 구조와 복잡성을 추가할 때 실제로 필요한 경우에만 노력하십시오.</p>
 
 <p>For this project we&rsquo;ll implement an outline structure which follows a <a href="https://go.dev/doc/modules/layout#server-project">popular and tried-and-tested</a> approach. It&rsquo;s a solid starting point, and you should be able to reuse the general structure in a wide variety of projects.
-"이 프로젝트에서는 널리 사용되고 검증된 방식을 따르는 개요 구조를 구현할 것입니다. 이는 견고한 시작점이며, 이 일반적인 구조를 다양한 프로젝트에서 재사용할 수 있어야 합니다."</p>
+</p>
+<p>이 프로젝트에서는 널리 사용되고 검증된 방식을 따르는 개요 구조를 구현할 것입니다. 이는 견고한 시작점이며, 이 일반적인 구조를 다양한 프로젝트에서 재사용할 수 있어야 합니다.</p>
 
 <p>If you&rsquo;re following along, make sure that you&rsquo;re in the root of your project repository and run the following commands:
-
-"만약 따라오고 있다면, 프로젝트 저장소의 루트에 있는지 확인하고 다음 명령을 실행하십시오."</p>
+</p>
+<p>만약 따라오고 있다면, 프로젝트 저장소의 루트에 있는지 확인하고 다음 명령을 실행하십시오.</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -59,15 +61,15 @@ $ touch cmd/web/handlers.go</pre>
 </figure>
 
 <p>The structure of your project repository should now look like this:
-"이제 프로젝트 저장소의 구조는 다음과 같이 보여야 합니다:"
 </p>
+<p>이제 프로젝트 저장소의 구조는 다음과 같이 보여야 합니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.06-01.png" alt="02.06-01.png" />
 </figure>
 
-<p>Let&rsquo;s take a moment to discuss what each of these directories will be used for."이제 각 디렉토리가 어떤 용도로 사용될지에 대해 잠시 이야기해 보겠습니다."</p>
-
+<p>Let&rsquo;s take a moment to discuss what each of these directories will be used for.</p>
+<p>이제 각 디렉토리가 어떤 용도로 사용될지에 대해 잠시 이야기해 보겠습니다.</p>
 <ul>
 <li><p>The <code>cmd</code> directory will contain the <em>application-specific</em> code for the executable applications in the project. For now our project will have just one executable application &mdash; the web application &mdash; which will live under the <code>cmd/web</code> directory.
 "<code>cmd</code> 디렉토리에는 프로젝트의 실행 가능한 애플리케이션에 대한 애플리케이션 특정 코드가 포함됩니다. 현재 프로젝트에서는 <code>cmd/web</code> 디렉토리에 위치한 웹 애플리케이션만을 가지게 될 것입니다."</p></li>

@@ -30,16 +30,19 @@
 			<div class="chapter">Chapter 2.8.</div>
 			<h2 id="serving-static-files">Serving static files</h2>
 
-<p>Now let&rsquo;s improve the look and feel of the home page by adding some static CSS and image files to our project, along with a tiny bit of JavaScript to highlight the active navigation item.<br/>"이제 홈 페이지의 디자인을 개선하기 위해 프로젝트에 정적 CSS 및 이미지 파일을 추가하고, 활성 내비게이션 항목을 강조하기 위해 약간의 JavaScript를 추가해 보겠습니다."</p>
+<p>Now let&rsquo;s improve the look and feel of the home page by adding some static CSS and image files to our project, along with a tiny bit of JavaScript to highlight the active navigation item.</p>
+<p>이제 홈 페이지의 디자인을 개선하기 위해 프로젝트에 정적 CSS 및 이미지 파일을 추가하고, 활성 내비게이션 항목을 강조하기 위해 약간의 JavaScript를 추가해 보겠습니다.</p>
 
-<p>If you&rsquo;re following along, you can grab the necessary files and extract them into the <code>ui/static</code> folder that we made earlier with the following commands:<br/>"따라오고 있다면, 아래 명령을 사용하여 필요한 파일을 가져와 <code>ui/static</code> 폴더에 압축을 풀 수 있습니다."</p>
+<p>If you&rsquo;re following along, you can grab the necessary files and extract them into the <code>ui/static</code> folder that we made earlier with the following commands:</p>
+<p>따라오고 있다면, 아래 명령을 사용하여 필요한 파일을 가져와 <code>ui/static</code> 폴더에 압축을 풀 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
 $ curl https://www.alexedwards.net/static/sb-v2.tar.gz | tar -xvz -C ./ui/static/</pre>
 </figure>
 
-<p>The contents of your <code>ui/static</code> directory should now look like this:<br/>"이제 <code>ui/static</code> 디렉토리의 내용은 다음과 같아야 합니다:"</p>
+<p>The contents of your <code>ui/static</code> directory should now look like this:</p>
+<p>이제 <code>ui/static</code> 디렉토리의 내용은 다음과 같아야 합니다:</p>
 
 <figure class="img">
 <img src="assets/img/02.08-01.png" alt="02.08-01.png" />
@@ -47,8 +50,8 @@ $ curl https://www.alexedwards.net/static/sb-v2.tar.gz | tar -xvz -C ./ui/static
 
 <h3 id="the-http-fileserver-handler">The http.Fileserver handler</h3>
 
-<p>Go&rsquo;s <code>net/http</code> package ships with a built-in <a href="https://pkg.go.dev/net/http/#FileServer"><code>http.FileServer</code></a> handler which you can use to serve files over HTTP from a specific directory. Let’s add a new route to our application so that all requests which begin with <code>&quot;/static/&quot;</code> are handled using this, like so:<br/>"
-Go의 <code>net/http</code> 패키지에는 특정 디렉토리에서 HTTP를 통해 파일을 제공하는 데 사용할 수 있는 내장 <code>http.FileServer</code> 핸들러가 있습니다. 이를 사용하여 <code>&quot;/static/&quot;</code>로 시작하는 모든 요청을 다음과 같이 처리하는 새로운 경로를 추가해 보겠습니다."</p>
+<p>Go&rsquo;s <code>net/http</code> package ships with a built-in <a href="https://pkg.go.dev/net/http/#FileServer"><code>http.FileServer</code></a> handler which you can use to serve files over HTTP from a specific directory. Let’s add a new route to our application so that all requests which begin with <code>&quot;/static/&quot;</code> are handled using this, like so:</p>
+<p>Go의 <code>net/http</code> 패키지에는 특정 디렉토리에서 HTTP를 통해 파일을 제공하는 데 사용할 수 있는 내장 <code>http.FileServer</code> 핸들러가 있습니다. 이를 사용하여 <code>&quot;/static/&quot;</code>로 시작하는 모든 요청을 다음과 같이 처리하는 새로운 경로를 추가해 보겠습니다.</p>
 
 <table>
 <thead>
@@ -92,21 +95,25 @@ Go의 <code>net/http</code> 패키지에는 특정 디렉토리에서 HTTP를 �
 </table>
 <aside class="hint"><p>
  <strong>Remember:</strong> The pattern <code>&quot;/static/&quot;</code> is a subtree path pattern, so it acts a bit like there is a wildcard at the end.
-<br/>"<strong>기억하세요:</strong> 패턴 <code>&quot;/static/&quot;</code>은 서브트리 경로 패턴이므로 마치 끝에 와일드카드가 있는 것처럼 작동합니다."
-</p></aside>
+</p>
+<p><strong>기억하세요:</strong> 패턴 <code>&quot;/static/&quot;</code>은 서브트리 경로 패턴이므로 마치 끝에 와일드카드가 있는 것처럼 작동합니다.</p>
+</aside>
 
-<p>To create a new <code>http.FileServer</code> handler, we need to use the <a href="https://pkg.go.dev/net/http/#FileServer"><code>http.FileServer()</code></a> function like this:<br/>
-"새로운 <code>http.FileServer</code> 핸들러를 만들려면 다음과 같이 <code>http.FileServer()</code> 함수를 사용해야 합니다."</p>
+<p>To create a new <code>http.FileServer</code> handler, we need to use the <a href="https://pkg.go.dev/net/http/#FileServer"><code>http.FileServer()</code></a> function like this:</p>
+<p>새로운 <code>http.FileServer</code> 핸들러를 만들려면 다음과 같이 <code>http.FileServer()</code> 함수를 사용해야 합니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">fileServer</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">FileServer</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nf">Dir</span><span class="p">(</span><span class="s">&#34;./ui/static/&#34;</span><span class="p">)</span><span class="p">)</span></pre>
 </figure>
 
-<p>When this handler receives a request for a file, it will remove the leading slash from the request URL path and then search the <code>./ui/static</code> directory for the corresponding file to send to the user.<br/>"이 핸들러는 파일에 대한 요청을 받으면 요청 URL 경로에서 선행 슬래시를 제거한 다음, <code>./ui/static</code> 디렉토리에서 해당 파일을 찾아 사용자에게 보내게 됩니다."</p>
+<p>When this handler receives a request for a file, it will remove the leading slash from the request URL path and then search the <code>./ui/static</code> directory for the corresponding file to send to the user.</p>
+<p>이 핸들러는 파일에 대한 요청을 받으면 요청 URL 경로에서 선행 슬래시를 제거한 다음, <code>./ui/static</code> 디렉토리에서 해당 파일을 찾아 사용자에게 보내게 됩니다.</p>
 
-<p>So, for this to work correctly, we must strip the leading <code>&quot;/static&quot;</code> from the URL path <em>before</em> passing it to <code>http.FileServer</code>. Otherwise it will be looking for a file which doesn&rsquo;t exist and the user will receive a <code>404 page not found</code> response. Fortunately Go includes a <a href="https://pkg.go.dev/net/http/#StripPrefix"><code>http.StripPrefix()</code></a> helper specifically for this task.<br/>"따라서 이 작업이 올바르게 동작하려면 <code>http.FileServer</code>에 전달하기 전에 URL 경로에서 선행 <code>&quot;/static&quot;</code>을 제거해야 합니다. 그렇지 않으면 존재하지 않는 파일을 찾으려고 하고 사용자는 <code>404 page not found</code> 응답을 받게 됩니다. 다행히 Go에는 이 작업을 위한 <code>http.StripPrefix()</code> 도우미가 특별히 포함되어 있습니다."</p>
+<p>So, for this to work correctly, we must strip the leading <code>&quot;/static&quot;</code> from the URL path <em>before</em> passing it to <code>http.FileServer</code>. Otherwise it will be looking for a file which doesn&rsquo;t exist and the user will receive a <code>404 page not found</code> response. Fortunately Go includes a <a href="https://pkg.go.dev/net/http/#StripPrefix"><code>http.StripPrefix()</code></a> helper specifically for this task.</p>
+<p>따라서 이 작업이 올바르게 동작하려면 <code>http.FileServer</code>에 전달하기 전에 URL 경로에서 선행 <code>&quot;/static&quot;</code>을 제거해야 합니다. 그렇지 않으면 존재하지 않는 파일을 찾으려고 하고 사용자는 <code>404 page not found</code> 응답을 받게 됩니다. 다행히 Go에는 이 작업을 위한 <code>http.StripPrefix()</code> 도우미가 특별히 포함되어 있습니다.</p>
 
-<p>Open your <code>main.go</code> file and add the following code, so that the file ends up looking like this:<br/>"<code>main.go</code> 파일을 열고 다음 코드를 추가하여 파일이 다음과 같아지도록 하세요:"</p>
+<p>Open your <code>main.go</code> file and add the following code, so that the file ends up looking like this:</p>
+<p><code>main.go</code> 파일을 열고 다음 코드를 추가하여 파일이 다음과 같아지도록 하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -142,7 +149,8 @@ Go의 <code>net/http</code> 패키지에는 특정 디렉토리에서 HTTP를 �
 <span class="p">}</span></pre>
 </figure>
 
-<p>Once that&rsquo;s complete, restart the application and open <a href="http://localhost:4000/static/"><code>http://localhost:4000/static/</code></a> in your browser. You should see a navigable directory listing of the <code>ui/static</code> folder which looks like this:<br/>"작업이 완료되면 애플리케이션을 다시 시작하고 브라우저에서 <code>http://localhost:4000/static/</code>을 열어보세요. 다음과 같이 <code>ui/static</code> 폴더의 탐색 가능한 디렉토리 목록이 표시됩니다:"</p>
+<p>Once that&rsquo;s complete, restart the application and open <a href="http://localhost:4000/static/"><code>http://localhost:4000/static/</code></a> in your browser. You should see a navigable directory listing of the <code>ui/static</code> folder which looks like this:</p>
+<p>작업이 완료되면 애플리케이션을 다시 시작하고 브라우저에서 <code>http://localhost:4000/static/</code>을 열어보세요. 다음과 같이 <code>ui/static</code> 폴더의 탐색 가능한 디렉토리 목록이 표시됩니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.08-02.png" alt="02.08-02.png" />

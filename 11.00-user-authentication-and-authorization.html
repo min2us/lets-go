@@ -29,30 +29,51 @@
 		<main class="wrapper text">
 			<div class="chapter">Chapter 11.</div>
 			<h1 id="user-authentication">User authentication</h1>
-
+			<h3>사용자 인증</h3>	
 <p>In this section of the book we&rsquo;re going to add some user authentication functionality to our application, so that only registered, logged-in users can create new snippets. Non-logged-in users will still be able to view the snippets, and will also be able to sign up for an account.</p>
+<p>이 부분에서는 애플리케이션에 사용자 인증 기능을 추가하여 등록된 사용자만 새 Snippets을 만들 수 있도록 할 것입니다. 로그인하지 않은 사용자는 여전히 Snippets을 볼 수 있으며 계정을 만들 수도 있습니다.</p>
 
 <p>The workflow will look like this:</p>
+<p>작업 흐름은 다음과 같을 것입니다</p>
 
 <ol>
-<li><p>A user will register by visiting a form at <code>/user/signup</code> and entering their name, email address and password. We&rsquo;ll store this information in a new <code>users</code> database table (which we&rsquo;ll create in a moment).</p></li>
+<li><p>A user will register by visiting a form at <code>/user/signup</code> and entering their name, email address and password. We&rsquo;ll store this information in a new <code>users</code> database table (which we&rsquo;ll create in a moment).</p>
+<p>사용자는 <code>/user/signup</code> 경로의 양식을 방문하여 이름, 이메일 주소 및 비밀번호를 입력하여 등록할 것입니다. 이 정보는 새로운 <code>users</code> 데이터베이스 테이블에 저장할 것입니다(곧 만들 것입니다)</p>
+</li>
 
-<li><p>A user will log in by visiting a form at <code>/user/login</code> and entering their email address and password.</p></li>
+<li><p>A user will log in by visiting a form at <code>/user/login</code> and entering their email address and password.</p>
+<p>사용자는 <code>/user/login</code> 경로의 양식을 방문하여 이메일 주소와 비밀번호를 입력하여 로그인할 것입니다.</p>
+</li>
 
-<li><p>We will then check the database to see if the email and password they entered match one of the users in the <code>users</code> table. If there&rsquo;s a match, the user has <em>authenticated</em> successfully and we add the relevant <code>id</code> value for the user to their session data, using the key <code>&quot;authenticatedUserID&quot;</code>.</p></li>
+<li><p>We will then check the database to see if the email and password they entered match one of the users in the <code>users</code> table. If there&rsquo;s a match, the user has <em>authenticated</em> successfully and we add the relevant <code>id</code> value for the user to their session data, using the key <code>&quot;authenticatedUserID&quot;</code>.</p>
+<p>그런 다음 데이터베이스를 확인하여 입력한 이메일과 비밀번호가 <code>users</code> 테이블의 하나와 일치하는지 확인합니다. 일치하는 경우 사용자는 성공적으로 <em>인증(authenticated)</em>되었으며 해당 사용자의 <code>id</code> 값을 세션 데이터에 <code>&quot;authenticatedUserID&quot;</code> 키를 사용하여 추가합니다.</p>
 
-<li><p>When we receive any subsequent requests, we can check the user&rsquo;s session data for a <code>&quot;authenticatedUserID&quot;</code> value. If it exists, we know that the user has already successfully logged in. We can keep checking this until the session expires, when the user will need to log in again. If there&rsquo;s no <code>&quot;authenticatedUserID&quot;</code> in the session, we know that the user is not logged in.</p></li>
+</li>
+
+<li><p>When we receive any subsequent requests, we can check the user&rsquo;s session data for a <code>&quot;authenticatedUserID&quot;</code> value. If it exists, we know that the user has already successfully logged in. We can keep checking this until the session expires, when the user will need to log in again. If there&rsquo;s no <code>&quot;authenticatedUserID&quot;</code> in the session, we know that the user is not logged in.</p>
+<p>이후에 수신하는 모든 요청에서는 사용자의 세션 데이터를 <code>&quot;authenticatedUserID&quot;</code> 값으로 확인할 수 있습니다. 이 값이 존재하면 사용자가 이미 성공적으로 로그인한 것을 알 수 있습니다. 세션이 만료될 때까지 계속 이를 확인하여 사용자는 다시 로그인해야 합니다. 세션에 <code>&quot;authenticatedUserID&quot;</code>가 없으면 사용자가 로그인하지 않았음을 알 수 있습니다.</p>
+
+</li>
 </ol>
 
 <p>In many ways, a lot of the content in this section is just putting together the things that we&rsquo;ve already learned in a different way. So it&rsquo;s a good litmus test of your understanding and a reminder of some key concepts.</p>
+<p>이 섹션의 내용은 많은 면에서 이미 배운 내용을 다르게 조합하는 것에 불과합니다. 따라서 이것은 여러분의 이해를 테스트하고 몇 가지 핵심 개념을 상기시키는 좋은 지표입니다.</p>
 
 <p>You&rsquo;ll learn:</p>
 
 <ul>
-<li>How to implement basic <a href="11.03-user-signup-and-password-encryption.html">signup</a>, <a href="11.04-user-login.html">login</a> and <a href="11.05-user-logout.html">logout</a> functionality for users.</li>
-<li>A secure approach to encrypting and <a href="11.03-user-signup-and-password-encryption.html">storing user passwords</a> in your database.</li>
-<li>A solid and straightforward approach to <a href="11.06-user-authorization.html">verifying that a user is logged in</a> using middleware and sessions.</li>
-<li>How to <a href="11.07-csrf-protection.html">prevent cross-site request forgery</a> (CSRF) attacks.</li>
+<li>How to implement basic <a href="11.03-user-signup-and-password-encryption.html">signup</a>, <a href="11.04-user-login.html">login</a> and <a href="11.05-user-logout.html">logout</a> functionality for users.
+<p>사용자를 위한 기본적인 회원가입, 로그인 및 로그아웃 기능을 구현하는 방법입니다.</p>
+</li>
+<li>A secure approach to encrypting and <a href="11.03-user-signup-and-password-encryption.html">storing user passwords</a> in your database.
+<p>데이터베이스에 사용자 비밀번호를 안전하게 암호화하고 저장하는 방법입니다.</p>
+</li>
+<li>A solid and straightforward approach to <a href="11.06-user-authorization.html">verifying that a user is logged in</a> using middleware and sessions.
+<p>미들웨어와 세션을 사용하여 사용자가 로그인되어 있는지 확인하는 견고하고 간단한 방법입니다.</p>
+</li>
+<li>How to <a href="11.07-csrf-protection.html">prevent cross-site request forgery</a> (CSRF) attacks.
+<p>크로스사이트 요청 위조 (CSRF) 공격을 방지하는 방법입니다.</p>
+</li>
 </ul>
 
 		</main>

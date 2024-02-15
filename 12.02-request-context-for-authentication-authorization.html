@@ -29,10 +29,13 @@
 		<main class="wrapper text">
 			<div class="chapter">Chapter 12.2.</div>
 			<h2 id="request-context-for-authentication-authorization">Request context for authentication/authorization</h2>
+			<h3>인증/인가 요청 컨텍스트</h3>
 
 <p>So, with those explanations out of the way, let&rsquo;s start to use the request context functionality in our application.</p>
+<p>그럼 이러한 설명들을 마치고 응용 프로그램에서 요청 컨텍스트 기능을 사용해 보겠습니다.</p>
 
 <p>We&rsquo;ll begin by heading back to our <code>internal/models/users.go</code> file and fleshing out the <code>UserModel.Exists()</code> method, so that it returns <code>true</code> if a user with a specific ID exists in our <code>users</code> table, and <code>false</code> otherwise. Like so:</p>
+<p>먼저 <code>internal/models/users.go</code> 파일로 돌아가서 <code>UserModel.Exists()</code> 메서드를 보완하여 특정 ID를 가진 사용자가 <code>users</code> 테이블에 존재하면 <code>true</code> 를 반환하고, 그렇지 않으면 <code>false</code> 를 반환하도록 만들어보겠습니다. 다음과 같이요.</p>
 
 <figure class="code go">
 <figcaption>File: internal/models/users.go</figcaption>
@@ -51,6 +54,7 @@
 </figure>
 
 <p>Then let&rsquo;s create a new <code>cmd/web/context.go</code> file. In this file we&rsquo;ll define a custom <code>contextKey</code> type and an <code>isAuthenticatedContextKey</code> variable, so that we have a unique key we can use to store and retrieve the authentication status from a request context (without the risk of naming collisions).</p>
+<p>그런 다음 새로운 <code>cmd/web/context.go</code> 파일을 만들어봅시다. 이 파일에서는 custom <code>contextKey</code> 타입과 <code>isAuthenticatedContextKey</code> 변수를 정의할 것입니다. 이를 통해 요청 컨텍스트에서 인증 상태를 저장하고 검색하는 데 사용할 수 있는 고유한 키를 갖게 됩니다(네이밍 충돌의 위험이 없음).</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/context.go</pre>
@@ -66,11 +70,18 @@
 </figure>
 
 <p>And now for the exciting part. Let&rsquo;s create a new <code>authenticate()</code> middleware method which:</p>
+<p>그리고 이제 흥미로운 부분으로 넘어가보겠습니다. 새로운 <code>authenticate()</code> 미들웨어 메서드를 생성해봅시다. 이 메서드는</p>
 
 <ol>
-<li>Retrieves the user&rsquo;s ID from their session data.</li>
-<li>Checks the database to see if the ID corresponds to a valid user using the <code>UserModel.Exists()</code> method.</li>
-<li>Updates the request context to include an <code>isAuthenticatedContextKey</code> key with the value <code>true</code>.</li>
+<li>Retrieves the user&rsquo;s ID from their session data.
+<p>사용자의 세션 데이터에서 사용자의 ID를 검색합니다.</p>
+</li>
+<li>Checks the database to see if the ID corresponds to a valid user using the <code>UserModel.Exists()</code> method.
+<p><code>UserModel.Exists()</code> 메서드를 사용하여 ID가 유효한 사용자에 해당하는지 데이터베이스를 확인합니다.</p>
+</li>
+<li>Updates the request context to include an <code>isAuthenticatedContextKey</code> key with the value <code>true</code>.
+<p>요청 컨텍스트를 업데이트하여 <code>isAuthenticatedContextKey</code> 키와 값이 <code>true</code>인 항목을 포함시킵니다.</p>
+</li>
 </ol>
 
 <p>Here&rsquo;s the code:</p>
@@ -125,13 +136,20 @@
 </figure>
 
 <p>The important thing to emphasize here is the following difference:</p>
+<p>여기서 강조해야 할 중요한 차이점은 다음과 같습니다.</p>
 
 <ul>
-<li>When we <em>don&rsquo;t</em> have a valid authenticated user, we pass the original and unchanged <code>*http.Request</code> to the next handler in the chain.</li>
-<li>When we <em>do</em> have a valid authenticated user, we create a copy of the request with a <code>isAuthenticatedContextKey</code> key and <code>true</code> value stored in the request context. We then pass this copy of <code>*http.Request</code> to the next handler in the chain.</li>
+<li>When we <em>don&rsquo;t</em> have a valid authenticated user, we pass the original and unchanged <code>*http.Request</code> to the next handler in the chain.
+<p>유효한 인증된 사용자가 없을 때, 우리는 변경되지 않은 원래 <code>*http.Request</code>를 체인의 다음 핸들러에 전달합니다.</p>
+</li>
+<li>When we <em>do</em> have a valid authenticated user, we create a copy of the request with a <code>isAuthenticatedContextKey</code> key and <code>true</code> value stored in the request context. We then pass this copy of <code>*http.Request</code> to the next handler in the chain.
+
+<p>유효한 인증된 사용자가 있을 때, 우리는 <code>isAuthenticatedContextKey</code> 키와 <code>true</code> 값이 요청 컨텍스트에 저장된 요청의 복사본을 생성합니다. 그런 다음 이 <code>*http.Request</code> 의 복사본을 체인의 다음 핸들러에 전달합니다.</p>
+</li>
 </ul>
 
 <p>Alright, let&rsquo;s update the <code>cmd/web/routes.go</code> file to include the <code>authenticate()</code> middleware in our <code>dynamic</code> middleware chain:</p>
+<p>좋아요, <code>cmd/web/routes.go</code> 파일을 업데이트하여 <code>dynamic</code> 미들웨어 체인에 <code>authenticate()</code> 미들웨어를 포함시켜봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -171,8 +189,9 @@
 </figure>
 
 <p>The last thing that we need to do is update our <code>isAuthenticated()</code> helper, so that instead of checking the session data it now checks the request context to determine if a user is authenticated or not.</p>
+<p>마지막으로 수행해야 할 작업은 <code>isAuthenticated()</code> 헬퍼를 업데이트하여 세션 데이터를 확인하는 대신 이제 사용자가 인증되었는지 여부를 결정하기 위해 요청 컨텍스트를 확인하도록 하는 것입니다.</p>
 
-<p>We can do this like so:</p>
+<p>We can do this like so: 이를 다음과 같이 수행할 수 있습니다</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -191,10 +210,13 @@
 </figure>
 
 <p>It&rsquo;s important to point out here that if there isn&rsquo;t a value in the request context with the <code>isAuthenticatedContextKey</code> key, or the underlying value isn&rsquo;t a <code>bool</code>, then this type assertion will fail. In that case we take a &lsquo;safe&rsquo; fall back and return false (i.e we assume that the user isn&rsquo;t authenticated).</p>
+<p>여기서 중요한 점은 요청 컨텍스트에 <code>isAuthenticatedContextKey</code> 키로 된 값이 없거나 해당 값이 <code>bool</code>이 아니라면 이 타입 단언이 실패할 것이라는 것입니다. 이 경우 '안전한' 대안으로 false를 반환합니다(즉, 사용자가 인증되지 않은 것으로 가정합니다).</p>
 
 <p>If you like, try running the application again. It should compile correctly and if you log in as a certain user and browse around the application should work exactly as before.</p>
+<p>원하시면 애플리케이션을 다시 실행해보세요. 올바르게 컴파일되어야 하며 특정 사용자로 로그인하고 애플리케이션을 둘러보면 이전과 정확히 동일하게 작동해야 합니다.</p>
 
 <p>Then, if you want, open MySQL and delete the record for the user that you&rsquo;re logged in as from the database. For example:</p>
+<p>그런 다음 필요하다면 MySQL을 열고 데이터베이스에서 현재 로그인된 사용자의 레코드를 삭제해보세요. 예를 들어</p>
 
 <figure class="code bash">
 <pre>mysql&gt; USE snippetbox;
@@ -202,22 +224,28 @@ mysql&gt; DELETE FROM users WHERE email = &#39;bob@example.com&#39;;</pre>
 </figure>
 
 <p>And when you go back to your browser and refresh the page, the application is now smart enough to recognize that the user has been deleted, and you&rsquo;ll find yourself treated as an unauthenticated (logged-out) user.</p>
+<p>그리고 브라우저로 돌아가 페이지를 새로 고치면, 애플리케이션은 이제 사용자가 삭제되었다는 것을 인식하여 로그아웃된 사용자로 취급합니다.</p>
 
 <hr />
 
 <h3 id="additional-information">Additional information</h3>
 
 <h4 id="misusing-request-context">Misusing request context</h4>
+<h5>요청 컨텍스트 오용</h5>
 
 <p>It&rsquo;s important to emphasize that request context should only be used to store information relevant to the lifetime of a specific request. The Go documentation for <code>context.Context</code> warns:</p>
+<p>요청 컨텍스트는 특정 요청의 수명과 관련된 정보를 저장하는 데만 사용해야 한다는 점을 강조하는 것이 중요합니다. <code>context.Context</code>에 대한 Go 문서는 다음과 같이 경고합니다.</p>
 
 <blockquote>
 <p>Use context Values only for request-scoped data that transits processes and APIs.</p>
+<p>컨텍스트 값은 프로세스와 API를 통과하는 요청 범위의 데이터에만 사용하세요.</p>
 </blockquote>
 
 <p>That means you should not use it to pass dependencies that exist <em>outside of the lifetime of a request</em> &mdash;  like loggers, template caches and your database connection pool &mdash; to your middleware and handlers.</p>
+<p>즉, 로거, 템플릿 캐시, 데이터베이스 연결 풀과 같이 요청 수명 외부에 존재하는 의존성을 미들웨어 및 핸들러에 전달하는 데 사용해서는 안 됩니다.</p>
 
 <p>For reasons of type-safety and clarity of code, it&rsquo;s almost always better to make these dependencies available to your handlers explicitly, by either making your handlers methods against an <code>application</code> struct (like we have in this book) or passing them in a closure (like in <a href="https://gist.github.com/alexedwards/5cd712192b4831058b21">this Gist</a>).</p>
+<p>타입 안전성과 코드 가독성을 위해, 이러한 종속성을 명시적으로 핸들러에 제공하는 것이 거의 항상 더 좋습니다. 이를 위해 핸들러를 <code>application</code> 구조체의 메서드로 만들거나 (이 책에서처럼) 클로저에 전달하는 것이 좋습니다.</p>
 
 		</main>
 		<footer>

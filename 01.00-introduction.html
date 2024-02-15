@@ -31,18 +31,21 @@
 			<h1 id="introduction">Introduction</h1>
 
 <p>In this book we&rsquo;ll be building a web application called Snippetbox, which lets people paste and share snippets of text &mdash; a bit like <a href="https://pastebin.com/">Pastebin</a> or GitHub&rsquo;s <a href="https://gist.github.com/">Gists</a>. Towards the end of the build it will look a bit like this:</p>
+<p>이 책에서는 Snippetbox라는 웹 애플리케이션을 구축할 것입니다. 이 애플리케이션은 사용자가 텍스트 스니펫을 붙여넣고 공유할 수 있도록 하는데, Pastebin이나 GitHub의 Gists와 비슷한 기능을 제공합니다. 구축의 끝에는 다음과 같이 보일 것입니다.</p>
 
 <figure class="img">
 <img src="assets/img/01.00-01.png" alt="01.00-01.png" />
 </figure>
 
 <p>Our application will start off super simple, with just one web page. Then with each chapter we&rsquo;ll build it up step-by-step until a user can save and view snippets via the app. This will take us through topics like how to structure a project, routing requests, working with a database, processing forms and displaying dynamic data safely.</p>
+<p>우리의 애플리케이션은 아주 간단하게 시작되어 하나의 웹 페이지만을 가지고 시작합니다. 그 후 각 장에서는 단계적으로 빌드하여 사용자가 앱을 통해 스니펫을 저장하고 볼 수 있는 기능을 만들어 갑니다. 이를 통해 프로젝트 구조화, 요청 라우팅, 데이터베이스 작업, 폼 처리 및 안전한 동적 데이터 표시와 같은 주제를 다룰 것입니다.</p>
 
 <p>Then later in the book we&rsquo;ll add user accounts, and restrict the application so that only registered users can create snippets. This will take us through more advanced topics like configuring a HTTPS server, session management, user authentication and middleware.</p>
-
+<p>책의 뒷부분에서는 사용자 계정을 추가하고, 애플리케이션에 등록된 사용자만이 스니펫을 생성할 수 있도록 제한할 것입니다. 이로 인해 HTTPS 서버 구성, 세션 관리, 사용자 인증 및 미들웨어와 같은 고급 주제를 다룰 예정입니다.</p>
 <h3 id="conventions">Conventions</h3>
 
 <p>Code blocks in this book are shown with a silver background, like the example below. If a code block is particularly long, any parts that aren&rsquo;t relevant may be replaced with an ellipsis. To make it easy to follow along, most code blocks also have a title bar at the top indicating the name of the file that the code is in. Like this:</p>
+<p>이 책의 코드 블록은 아래 예시처럼 은색 배경으로 표시됩니다. 코드 블록이 특히 길 경우 관련 없는 부분은 생략 부호로 대체될 수 있습니다. 코드를 쉽게 따라가기 위해 대부분의 코드 블록에는 코드가 포함된 파일의 이름을 나타내는 상단 타이틀 바도 있습니다.</p>
 
 <figure class="code go">
 <figcaption>File: hello.go</figcaption>
@@ -56,6 +59,7 @@
 </figure>
 
 <p>Terminal (command line) instructions are shown with a black background and start with a dollar symbol. These commands should work on any Unix-based operating system, including Mac OSX and Linux. Sample output is shown in silver beneath the command, like so:</p>
+<p>터미널(명령 줄) 명령은 검은 배경으로 표시되며 달러($) 기호로 시작합니다. 이러한 명령은 Mac OSX 및 Linux를 포함한 모든 Unix 기반 운영 체제에서 작동해야 합니다. 명령어 아래에는 이와 같이 은색으로 샘플 출력이 표시됩니다.</p>
 
 <figure class="code bash">
 <pre>$ echo &#34;Hello world!&#34;
@@ -63,34 +67,47 @@
 </figure>
 
 <p>If you&rsquo;re using Windows, you should replace the command with the DOS equivalent or carry out the action via the normal Windows GUI.</p>
+<p>Windows를 사용하는 경우 해당 명령을 DOS 동등 명령으로 바꾸거나 일반적인 Windows GUI를 통해 작업을 수행해야 합니다.</p>
 
 <p>Please note that the dates and timestamps shown in screenshots and the example output from commands are illustrative only. They do not necessarily align with each other, or progress chronologically throughout the book.</p>
+<p>스크린샷 및 명령의 예제 출력에서 표시된 날짜와 타임스탬프는 설명을 위한 것일 뿐이며, 반드시 서로 일치하거나 책 전체적으로 시간에 따라 진행되는 것은 아닐 수 있습니다.</p>
 
 <p>Some chapters in this book end with an <em>additional information</em> section. These sections contain information that isn&rsquo;t relevant to our application build, but is still important (or sometimes, just interesting) to know about. If you&rsquo;re very new to Go, you might want to skip these parts and circle back to them later.</p>
+<p>이 책의 몇몇 장은 추가 정보 섹션으로 끝납니다. 이러한 섹션에는 우리 애플리케이션 빌드와 직접적으로 관련은 없지만 여전히 알아두면 유용하거나 때로는 흥미로운 정보가 포함되어 있습니다. Go 언어에 대해 처음 접하는 경우 이러한 부분을 건너뛰고 나중에 다시 참고하는 것이 좋습니다.</p>
 
 <aside class="hint"><p>
 <strong>Hint:</strong> If you&rsquo;re following along with the application build I recommend using the HTML version of this book instead of the PDF or EPUB. The HTML version works in all browsers, and the proper formatting of code blocks is retained if you want to copy-and-paste code directly from the book.</p>
+<p><strong>힌트:</strong> 만약 애플리케이션 빌드에 따라 진행하고 있다면, PDF나 EPUB 대신 이 책의 HTML 버전을 사용하는 것을 추천합니다. HTML 버전은 모든 브라우저에서 작동하며, 코드 블록의 적절한 형식이 유지되어 코드를 책에서 직접 복사하여 붙여넣고 사용할 수 있습니다.</p>
 
 <p>When using the HTML version, you can also use the left and right arrow keys on your keyboard to navigate between chapters.
-</p></aside>
+</p>
+<p>HTML 버전을 사용할 때 키보드의 왼쪽 및 오른쪽 화살표 키를 사용하여 장(chapter) 간을 이동할 수도 있습니다.</p>
+</aside>
 
 <h3 id="about-the-author">About the author</h3>
 
 <p>Hey, I’m Alex Edwards, a full-stack web developer and author. I live near Innsbruck, Austria.</p>
+<p>안녕하세요, 저는 알렉스 에드워즈(Alex Edwards)라고 합니다. 풀스택 웹 개발자이자 저자입니다. 오스트리아, 인스브루크 근처에서 살고 있습니다.</p>
 
 <p>I’ve been working with Go for over 10 years, building production applications for myself and commercial clients, and helping people all around the world improve their Go skills.</p>
+<p>10년 이상의 시간 동안 Go 언어를 사용하여 자체 제작 및 상업 고객을 위한 프로덕션 애플리케이션을 개발하고 전 세계의 사람들이 Go 스킬을 향상시킬 수 있도록 도움을 주고 있습니다.</p>
 
 <p>You can see more of my writing on <a href="https://www.alexedwards.net/blog/">my blog</a> (where I publish detailed tutorials), some of my open-source work on <a href="https://github.com/alexedwards/">GitHub</a>, and you can also follow me on <a href="https://www.instagram.com/ajmedwards/">Instagram</a> and <a href="https://twitter.com/ajmedwards">Twitter</a>.</p>
+<p>제 블로그에서는 자세한 튜토리얼을 게시하고 있습니다. 또한 GitHub에서 제 오픈소스 작업을 확인할 수 있으며, 인스타그램(Instagram)과 트위터(Twitter)에서도 팔로우할 수 있습니다.</p>
 
 <h3 id="copyright-and-disclaimer">Copyright and disclaimer</h3>
 
 <p><em>Let&rsquo;s Go: Learn to build professional web applications with Go</em>. Copyright © 2023 Alex Edwards.</p>
+<p>Let’s Go: Go를 사용하여 프로페셔널한 웹 애플리케이션을 만드는 방법. Copyright © 2023 Alex Edwards.</p>
 
 <p>Last updated 2023-11-23 17:05:04 UTC. Version 2.21.3.</p>
+<p>마지막 업데이트 날짜 2023년 11월 23일 17시 05분 04초 UTC. Version 2.21.3.</p>
 
 <p>The Go gopher was designed by <a href="http://reneefrench.blogspot.com/">Renee French</a> and is used under the Creative Commons 3.0 Attributions license. Cover gopher adapted from vectors by <a href="https://github.com/egonelbre/gophers">Egon Elbre</a>.</p>
+<p>Go 언어 고퍼(Gopher)는 Renee French가 디자인하였으며 Creative Commons 3.0 Attribution 라이선스에 따라 사용되고 있습니다. 표지의 고퍼는 Egon Elbre의 벡터를 기반으로 적용되었습니다.</p>
 
 <p><em>The information provided within this book is for general informational purposes only. While the author and publisher have made every effort to ensure the accuracy of the information within this book was correct at time of publication there are no representations or warranties, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the information, products, services, or related graphics contained in this book for any purpose. Any use of this information is at your own risk.</em></p>
+<p>본 책에서 제공된 정보는 일반 정보 목적으로만 제공되었습니다. 저자와 출판사는 본 책 내 정보의 정확성을 보장하기 위해 모든 노력을 기울였으나, 발행 시점에서의 정확성을 보장하는 것은 아니며 어떠한 명시적 또는 묵시적인 표현이나 보증도 없습니다. 이 책에 포함된 정보, 제품, 서비스 또는 관련 그래픽의 완전성, 정확성, 신뢰성, 적절성 또는 가용성과 관련하여 어떠한 목적으로도 어떠한 표현이나 보증이 없습니다. 이 정보의 사용은 자신의 책임하에 이루어져야 합니다.</p>
 
 		</main>
 		<footer>

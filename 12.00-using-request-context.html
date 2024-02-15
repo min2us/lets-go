@@ -31,6 +31,7 @@
 			<h1 id="using-request-context">Using request context</h1>
 
 <p>At the moment our logic for authenticating a user consists of simply checking whether a <code>&quot;authenticatedUserID&quot;</code> value exists in their session data, like so:</p>
+<p>현재 사용자를 인증하는 우리의 논리는 단순히 세션 데이터에서 <code>&quot;authenticatedUserID&quot;</code> 값이 존재하는지 확인하는 것으로 이루어져 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="p">(</span><span class="nx">app</span> <span class="o">*</span><span class="nx">application</span><span class="p">)</span> <span class="nf">isAuthenticated</span><span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
@@ -39,20 +40,29 @@
 </figure>
 
 <p>We could make this check more robust by querying our <code>users</code> database table to make sure that the <code>&quot;authenticatedUserID&quot;</code> value is a real, valid, value (i.e we haven&rsquo;t deleted the user&rsquo;s account since they last logged in).</p>
+<p>우리는 <code>users</code> 데이터베이스 테이블을 쿼리하여 <code>&quot;authenticatedUserID&quot;</code> 값이 실제로 유효한 값인지 확인하여 이 검사를 더 견고하게 만들 수 있습니다. 즉, 사용자가 마지막으로 로그인한 이후에 사용자 계정을 삭제하지 않았는지 확인할 수 있습니다.</p>
 
 <p>But there is a slight problem with doing this additional database check.</p>
+<p>그러나 이 추가적인 데이터베이스 확인을 수행하는 데 약간의 문제가 있습니다.</p>
 
 <p>Our <code>isAuthenticated()</code> helper can potentially be called multiple times in each request cycle. Currently we use it twice &mdash; once in the <code>requireAuthentication()</code> middleware and again in the <code>newTemplateData()</code> helper. So, if we query the database from the <code>isAuthenticated()</code> helper directly, we would end up making duplicated round-trips to the database during every request. And that&rsquo;s not very efficient.</p>
+<p>우리의 <code>isAuthenticated()</code> 헬퍼는 각 요청 주기에서 여러 번 호출될 수 있습니다. 현재 우리는 그것을 두 번 사용합니다. 먼저 <code>requireAuthentication()</code> 미들웨어에서 한 번, 그리고 나중에 <code>newTemplateData()</code> 헬퍼에서 다시 호출됩니다. 그래서 <code>isAuthenticated()</code> 헬퍼에서 직접 데이터베이스를 쿼리하면 매 요청마다 중복된 데이터베이스 라운드트립을 수행하게 되어 효율적이지 않을 것입니다.</p>
 
 <p>A better approach would be to carry out this check in some middleware to determine whether the current request is from an authenticated user or not, and then pass that information down to all subsequent handlers in the chain.</p>
+<p>더 나은 접근 방식은 현재 요청이 인증된 사용자의 것인지 여부를 결정하기 위해 미들웨어에서 이 확인을 수행하고, 그 정보를 모든 이후 핸들러에게 전달하는 것입니다.</p>
 
 <p>So how do we do this? Enter <dfn>request context</dfn>.</p>
+<p>그렇다면 어떻게 이를 수행할까요? 여기에 <dfn>요청 컨텍스트(request context)</dfn>가 등장합니다.</p>
 
 <p>In this section you&rsquo;ll learn:</p>
 
 <ul>
-<li><a href="12.01-how-request-context-works.html">What request context is</a>, how to use it, and when it is appropriate to use it.</li>
-<li>How to <a href="12.02-request-context-for-authentication-authorization.html">use request context in practice</a> to pass information about the current user between your handlers.</li>
+<li><a href="12.01-how-request-context-works.html">What request context is</a>, how to use it, and when it is appropriate to use it.
+<p>요청 컨텍스트(request context)는 무엇이며, 어떻게 사용되며, 언제 사용하는 것이 적절한지에 대해 설명합니다.</p>
+</li>
+<li>How to <a href="12.02-request-context-for-authentication-authorization.html">use request context in practice</a> to pass information about the current user between your handlers.
+<p>현업에서 요청 컨텍스트를 사용하여 핸들러 간에 현재 사용자에 관한 정보를 전달하는 방법에 대해 설명합니다.</p>
+</li>
 </ul>
 
 		</main>

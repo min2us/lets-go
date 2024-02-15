@@ -29,10 +29,13 @@
 		<main class="wrapper text">
 			<div class="chapter">Chapter 11.2.</div>
 			<h2 id="creating-a-users-model">Creating a users model</h2>
+            <h3>사용자 모델 생성</h3>
 
 <p>Now that the routes are set up, we need to create a new <code>users</code> database table and a database model to access it.</p>
+<p>이제 경로를 설정되었으므로 새로운 <code>users</code> 데이터베이스 테이블과 그에 접근하기 위한 데이터베이스 모델을 만들어야 합니다.</p>
 
 <p>Start by connecting to MySQL from your terminal window as the <code>root</code> user and execute the following SQL statement to setup the <code>users</code> table:</p>
+<p><code>root</code> 사용자로 터미널 창에서 MySQL에 연결하고 다음 SQL 문을 실행하여 <code>users</code> 테이블을 설정하세요.</p>
 
 <figure class="code sql">
 <pre><span class="n">USE</span> <span class="n">snippetbox</span><span class="p">;</span>
@@ -49,20 +52,30 @@
 </figure>
 
 <p>There&rsquo;s a couple of things worth pointing out about this table:</p>
+<p>이 테이블에 대해 몇 가지 주목할 만한 사항이 있습니다.</p>
 
 <ul>
-<li><p>The <code>id</code> field is an autoincrementing integer field and the primary key for the table. This means that the user ID values are guaranteed to be unique positive integers (1, 2, 3&hellip; etc).</p></li>
+<li><p>The <code>id</code> field is an autoincrementing integer field and the primary key for the table. This means that the user ID values are guaranteed to be unique positive integers (1, 2, 3&hellip; etc).</p>
+<p><code>id</code> 필드는 자동으로 증가하는 정수 필드이며 테이블의 기본 키입니다. 이는 사용자 ID 값이 고유한 양의 정수 (1, 2, 3 등)임을 보장합니다.</p>
+</li>
 
-<li><p>The type of the <code>hashed_password</code> field is <code>CHAR(60)</code>. This is because we&rsquo;ll be storing bcrypt hashes of the user passwords in the database &mdash; not the passwords themselves &mdash; and the hashes are always exactly 60 characters long.</p></li>
+<li><p>The type of the <code>hashed_password</code> field is <code>CHAR(60)</code>. This is because we&rsquo;ll be storing bcrypt hashes of the user passwords in the database &mdash; not the passwords themselves &mdash; and the hashes are always exactly 60 characters long.</p>
+<p><code>hashed_password</code> 필드의 타입은 <code>CHAR(60)</code>입니다. 이는 데이터베이스에 사용자 비밀번호의 bcrypt 해시를 저장할 것이기 때문에 &mdash; 비밀번호 자체가 아니라 &mdash; 해시가 항상 정확히 60자인 것입니다.</p>
+</li>
 
-<li><p>We&rsquo;ve also added a <code>UNIQUE</code> constraint on the <code>email</code> column and named it <code>users_uc_email</code>. This constraint ensures that we won&rsquo;t end up with two users who have the same email address. If we try to insert a record in this table with a duplicate email, MySQL will throw an <a href="https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html#error_er_dup_entry"><code>ERROR 1062: ER_DUP_ENTRY</code></a> error.</p></li>
+<li><p>We&rsquo;ve also added a <code>UNIQUE</code> constraint on the <code>email</code> column and named it <code>users_uc_email</code>. This constraint ensures that we won&rsquo;t end up with two users who have the same email address. If we try to insert a record in this table with a duplicate email, MySQL will throw an <a href="https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html#error_er_dup_entry"><code>ERROR 1062: ER_DUP_ENTRY</code></a> error.</p>
+<p>우리는 또한 <code>email</code> 열에 대한 <code>UNIQUE</code> 제약 조건을 추가하고 <code>users_uc_email</code>로 명명했습니다. 이 제약 조건은 동일한 이메일 주소를 가진 두 사용자가 생기지 않도록 보장합니다. 중복된 이메일을 가진 레코드를 이 테이블에 삽입하려고 하면 MySQL이 <code>ERROR 1062: ER_DUP_ENTRY</code> 오류를 발생시킵니다.</p>
+
+</li>
 </ul>
 
 <h3 id="building-the-model-in-go">Building the model in Go</h3>
 
 <p>Next let&rsquo;s setup a model so that we can easily work with the new <code>users</code> table. We&rsquo;ll follow the same pattern that we used earlier in the book for modeling access to the <code>snippets</code> table, so hopefully this should feel familiar and straightforward.</p>
+<p>다음으로 새로운 <code>users</code> 테이블과 쉽게 작업할 수 있는 모델을 설정해 보겠습니다. 우리는 이전에 <code>snippets</code> 테이블에 대한 액세스를 모델링할 때 사용한 동일한 패턴을 따를 것이므로 익숙하고 간단한 느낌이 있을 것입니다.</p>
 
 <p>First, open up the <code>internal/models/errors.go</code> file that you created earlier and define a couple of new error types:</p>
+<p>먼저, 이전에 생성한 <code>internal/models/errors.go</code> 파일을 열고 몇 가지 새로운 오류 유형을 정의하세요.</p>
 
 <figure class="code go">
 <figcaption>File: internal/models/errors.go</figcaption>
@@ -86,12 +99,14 @@
 </figure>
 
 <p>Then create a new file at <code>internal/models/users.go</code>:</p>
+<p>그런 다음 <code>internal/models/users.go</code> 라는 새 파일을 만드세요.</p>
 
 <figure class="code bash">
 <pre>$ touch internal/models/users.go</pre>
 </figure>
 
 <p>&hellip;and define a new <code>User</code> struct (to hold the data for a specific user) and a <code>UserModel</code> struct (with some placeholder methods for interacting with our database). Like so:</p>
+<p>그리고 새로운 <code>User</code>  구조체(특정 사용자에 대한 데이터를 보관하기 위해서)와 <code>UserModel</code> 구조체(데이터베이스와 상호 작용하기 위한 일부 자리 표시자 메서드 포함)를 정의합니다.
 
 <figure class="code go">
 <figcaption>File: internal/models/users.go</figcaption>
@@ -136,6 +151,7 @@
 </figure>
 
 <p>The final stage is to add a new field to our <code>application</code> struct so that we can make this model available to our handlers. Update the <code>main.go</code> file as follows:</p>
+<p>마지막 단계는 <code>application</code> 구조체에 새로운 필드를 추가하여 이 모델을 핸들러에 사용할 수 있게 만드는 것입니다. <code>main.go</code> 파일을 다음과 같이 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -193,6 +209,7 @@
 </figure>
 
 <p>Make sure that all the files are all saved, then go ahead and try to run the application. At this stage you should find that it compiles correctly without any problems.</p>
+<p>모든 파일이 저장되었는지 확인한 다음, 애플리케이션을 실행해 보세요. 이 단계에서는 문제없이 올바르게 컴파일되어야 합니다.</p>
 
 		</main>
 		<footer>
