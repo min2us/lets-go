@@ -156,8 +156,8 @@ $ curl https://www.alexedwards.net/static/sb-v2.tar.gz | tar -xvz -C ./ui/static
 <img src="assets/img/02.08-02.png" alt="02.08-02.png" />
 </figure>
 
-<p>Feel free to have a play around and browse through the directory listing to view individual files. For example, if you navigate to <a href="http://localhost:4000/static/css/main.css"><code>http://localhost:4000/static/css/main.css</code></a> you should see the CSS file appear in your browser like so:
-<br/>"자유롭게 탐색하고 디렉토리 목록을 통해 개별 파일을 확인해 보세요. 예를 들어 <code>http://localhost:4000/static/css/main.css</code>로 이동하면 브라우저에 CSS 파일이 표시될 것입니다."</p>
+<p>Feel free to have a play around and browse through the directory listing to view individual files. For example, if you navigate to <a href="http://localhost:4000/static/css/main.css"><code>http://localhost:4000/static/css/main.css</code></a> you should see the CSS file appear in your browser like so:</p>
+<p>자유롭게 탐색하고 디렉토리 목록을 통해 개별 파일을 확인해 보세요. 예를 들어 <code>http://localhost:4000/static/css/main.css</code>로 이동하면 브라우저에 CSS 파일이 표시될 것입니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.08-03.png" alt="02.08-03.png" />
@@ -166,7 +166,8 @@ $ curl https://www.alexedwards.net/static/sb-v2.tar.gz | tar -xvz -C ./ui/static
 <h3 id="using-the-static-files">Using the static files</h3>
 
 <p>With the file server working properly, we can now update the <code>ui/html/base.tmpl</code> file to make use of the static files:
-<br/>"파일 서버가 제대로 작동하므로 이제 <code>ui/html/base.tmpl</code> 파일을 업데이트하여 정적 파일을 사용할 수 있게 만들 수 있습니다."</p>
+</p>
+<p>파일 서버가 제대로 작동하므로 이제 <code>ui/html/base.tmpl</code> 파일을 업데이트하여 정적 파일을 사용할 수 있게 만들 수 있습니다.</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/base.tmpl</figcaption>
@@ -198,7 +199,8 @@ $ curl https://www.alexedwards.net/static/sb-v2.tar.gz | tar -xvz -C ./ui/static
 {{end}}</pre>
 </figure>
 
-<p>Make sure you save the changes, then restart the server and visit <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>. Your home page should now look like this:<br/>"변경 사항을 저장한 후 서버를 다시 시작하고 <code>http://localhost:4000</code>을 방문하세요. 이제 홈 페이지는 다음과 같아야 합니다:"</p>
+<p>Make sure you save the changes, then restart the server and visit <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>. Your home page should now look like this:</p>
+<p>변경 사항을 저장한 후 서버를 다시 시작하고 <code>http://localhost:4000</code>을 방문하세요. 이제 홈 페이지는 다음과 같아야 합니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.08-04.png" alt="02.08-04.png" />
@@ -210,15 +212,17 @@ $ curl https://www.alexedwards.net/static/sb-v2.tar.gz | tar -xvz -C ./ui/static
 
 <h4 id="file-server-features-and-functions">File server features and functions</h4>
 
-<p>Go&rsquo;s <code>http.FileServer</code> handler has a few really nice features that are worth mentioning:<br/>"Go의 <code>http.FileServer</code> 핸들러에는 언급할만한 몇 가지 좋은 기능이 있습니다:"</p>
+<p>Go&rsquo;s <code>http.FileServer</code> handler has a few really nice features that are worth mentioning:</p>
+<p>Go의 <code>http.FileServer</code> 핸들러에는 언급할만한 몇 가지 좋은 기능이 있습니다.</p>
 
 <ul>
 <li><p>It sanitizes all request paths by running them through the <a href="https://pkg.go.dev/path/#Clean"><code>path.Clean()</code></a> function before searching for a file. This removes any <code>.</code> and <code>..</code> elements from the URL path, which helps to stop directory traversal attacks. This feature is particularly useful if you&rsquo;re using the fileserver in conjunction with a router that doesn&rsquo;t automatically sanitize URL paths.
-<br/>"파일을 검색하기 전에 모든 요청 경로를 <code>path.Clean()</code> 함수를 사용하여 정리하여 샌디타이징합니다. 이렇게 하면 URL 경로에서 <code>.</code> 및 <code>..</code> 요소가 제거되어 디렉터리 이탈 공격을 방지하는 데 도움이 됩니다. 이 기능은 URL 경로를 자동으로 샌디타이징하지 않는 라우터와 함께 파일 서버를 사용하는 경우에 특히 유용합니다."
-</p></li>
+</p>
+<p>파일을 검색하기 전에 모든 요청 경로를 <code>path.Clean()</code> 함수를 사용하여 정리하여 샌디타이징합니다. 이렇게 하면 URL 경로에서 <code>.</code> 및 <code>..</code> 요소가 제거되어 디렉터리 이탈 공격을 방지하는 데 도움이 됩니다. 이 기능은 URL 경로를 자동으로 샌디타이징하지 않는 라우터와 함께 파일 서버를 사용하는 경우에 특히 유용합니다.</p>
+</li>
 
-<li><p><a href="https://benramsey.com/blog/2008/05/206-partial-content-and-range-requests">Range requests</a> are fully supported. This is great if your application is serving large files and you want to support resumable downloads. You can see this functionality in action if you use curl to request bytes 100-199 of the <code>logo.png</code> file, like so:<br/>
-"<code>Range requests</code>가 완벽하게 지원됩니다. 애플리케이션이 큰 파일을 제공하고 이어받기 다운로드를 지원하려는 경우에 훌륭합니다. curl을 사용하여 <code>logo.png</code> 파일의 100-199 바이트를 요청하면 이 기능이 동작하는 것을 확인할 수 있습니다.""</p>
+<li><p><a href="https://benramsey.com/blog/2008/05/206-partial-content-and-range-requests">Range requests</a> are fully supported. This is great if your application is serving large files and you want to support resumable downloads. You can see this functionality in action if you use curl to request bytes 100-199 of the <code>logo.png</code> file, like so:</p>
+<p><code>Range requests</code>가 완벽하게 지원됩니다. 애플리케이션이 큰 파일을 제공하고 이어받기 다운로드를 지원하려는 경우에 훌륭합니다. curl을 사용하여 <code>logo.png</code> 파일의 100-199 바이트를 요청하면 이 기능이 동작하는 것을 확인할 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ curl -i -H &#34;Range: bytes=100-199&#34; --output - http://localhost:4000/static/img/logo.png
@@ -233,27 +237,31 @@ Date: Tue, 05 Sep 2023 08:13:16 GMT
 </figure>
 </li>
 
-<li><p>The <code>Last-Modified</code> and <code>If-Modified-Since</code> headers are transparently supported. If a file hasn’t changed since the user last requested it, then <code>http.FileServer</code> will send a <code>304 Not Modified</code> status code instead of the file itself. This helps reduce latency and processing overhead for both the client and server.<br/>
-"<code>Last-Modified</code> 및 <code>If-Modified-Since</code> 헤더가 투명하게 지원됩니다. 사용자가 마지막으로 요청한 이후 파일이 변경되지 않았다면 <code>http.FileServer</code>는 파일 자체가 아니라 <code>304 Not Modified</code> 상태 코드를 전송합니다. 이는 클라이언트와 서버 모두의 대기 시간과 처리 오버헤드를 줄이는 데 도움이 됩니다."
-</p></li>
+<li><p>The <code>Last-Modified</code> and <code>If-Modified-Since</code> headers are transparently supported. If a file hasn’t changed since the user last requested it, then <code>http.FileServer</code> will send a <code>304 Not Modified</code> status code instead of the file itself. This helps reduce latency and processing overhead for both the client and server.
+</p>
+<p><code>Last-Modified</code> 및 <code>If-Modified-Since</code> 헤더가 투명하게 지원됩니다. 사용자가 마지막으로 요청한 이후 파일이 변경되지 않았다면 <code>http.FileServer</code>는 파일 자체가 아니라 <code>304 Not Modified</code> 상태 코드를 전송합니다. 이는 클라이언트와 서버 모두의 대기 시간과 처리 오버헤드를 줄이는 데 도움이 됩니다.</p>
+</li>
 
-<li><p>The <code>Content-Type</code> is automatically set from the file extension using the <a href="https://pkg.go.dev/mime/#TypeByExtension"><code>mime.TypeByExtension()</code></a> function. You can add your own custom extensions and content types using the <a href="https://pkg.go.dev/mime/#AddExtensionType"><code>mime.AddExtensionType()</code></a> function if necessary.<br/>
-"<code>Content-Type</code>은 <code>mime.TypeByExtension()</code> 함수를 사용하여 파일 확장자에서 자동으로 설정됩니다. 필요한 경우 <code>mime.AddExtensionType()</code> 함수를 사용하여 사용자 정의 확장자 및 콘텐츠 유형을 추가할 수 있습니다."
-</p></li>
+<li><p>The <code>Content-Type</code> is automatically set from the file extension using the <a href="https://pkg.go.dev/mime/#TypeByExtension"><code>mime.TypeByExtension()</code></a> function. You can add your own custom extensions and content types using the <a href="https://pkg.go.dev/mime/#AddExtensionType"><code>mime.AddExtensionType()</code></a> function if necessary.
+</p>
+<p><code>Content-Type</code>은 <code>mime.TypeByExtension()</code> 함수를 사용하여 파일 확장자에서 자동으로 설정됩니다. 필요한 경우 <code>mime.AddExtensionType()</code> 함수를 사용하여 사용자 정의 확장자 및 콘텐츠 유형을 추가할 수 있습니다.</p>
+</li>
 </ul>
 
 <h4 id="performance">Performance</h4>
 
-<p>In this chapter we set up the file server so that it serves files out of the <code>./ui/static</code> directory on your hard disk.<br/>"이 장에서는 파일 서버를 설정하여 <code>./ui/static</code> 디렉토리에서 파일을 제공합니다."</p>
+<p>In this chapter we set up the file server so that it serves files out of the <code>./ui/static</code> directory on your hard disk.</p>
+<p>이 장에서는 파일 서버를 설정하여 <code>./ui/static</code> 디렉토리에서 파일을 제공합니다.</p>
 
 <p>But it&rsquo;s important to note that <code>http.FileServer</code> probably won&rsquo;t be reading these files from disk once the application is up-and-running. Both <a href="https://docs.microsoft.com/en-us/windows/desktop/fileio/file-caching">Windows</a> and <a href="https://www.tldp.org/LDP/sag/html/buffer-cache.html">Unix-based</a> operating systems cache recently-used files in RAM, so (for frequently-served files at least) it&rsquo;s likely that <code>http.FileServer</code> will be serving them from RAM rather than making the <a href="https://gist.github.com/jboner/2841832">relatively slow</a> round-trip to your hard disk.
-<br/>"그러나 중요한 점은 애플리케이션이 가동 중일 때 <code>http.FileServer</code>가 이 파일들을 디스크에서 읽지 않을 것입니다. Windows 및 Unix 기반 운영 체제는 최근 사용한 파일을 RAM에 캐시하므로 (적어도 자주 제공되는 파일의 경우) <code>http.FileServer</code>가 상대적으로 느린 디스크로의 왕복 여행 대신 RAM에서 파일을 제공할 가능성이 높습니다."
 </p>
+<p>그러나 중요한 점은 애플리케이션이 가동 중일 때 <code>http.FileServer</code>가 이 파일들을 디스크에서 읽지 않을 것입니다. Windows 및 Unix 기반 운영 체제는 최근 사용한 파일을 RAM에 캐시하므로 (적어도 자주 제공되는 파일의 경우) <code>http.FileServer</code>가 상대적으로 느린 디스크로의 왕복 여행 대신 RAM에서 파일을 제공할 가능성이 높습니다.</p>
 
 <h4 id="serving-single-files">Serving single files</h4>
 
-<p>Sometimes you might want to serve a single file from within a handler. For this there&rsquo;s the <a href="https://pkg.go.dev/net/http/#ServeFile"><code>http.ServeFile()</code></a> function, which you can use like so:<br/>
-"가끔은 핸들러 내에서 단일 파일을 제공하고 싶을 수 있습니다. 이 경우 <code>http.ServeFile()</code> 함수를 사용할 수 있습니다. 다음과 같이 사용할 수 있습니다:"</p>
+<p>Sometimes you might want to serve a single file from within a handler. For this there&rsquo;s the <a href="https://pkg.go.dev/net/http/#ServeFile"><code>http.ServeFile()</code></a> function, which you can use like so:
+</p>
+<p>가끔은 핸들러 내에서 단일 파일을 제공하고 싶을 수 있습니다. 이 경우 <code>http.ServeFile()</code> 함수를 사용할 수 있습니다. 다음과 같이 사용할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="nf">downloadHandler</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
@@ -263,25 +271,26 @@ Date: Tue, 05 Sep 2023 08:13:16 GMT
 
 <aside class="important"><p>
 <strong>Warning:</strong> <code>http.ServeFile()</code> does not automatically sanitize the file path. If you&rsquo;re constructing a file path from untrusted user input, to avoid directory traversal attacks you <em>must</em> sanitize the input with <a href="https://pkg.go.dev/path/filepath/#Clean"><code>filepath.Clean()</code></a> before using it.
-<br/>
-"<strong>경고:</strong> <code>http.ServeFile()</code>은 파일 경로를 자동으로 샌디타이징하지 않습니다. 신뢰할 수 없는 사용자 입력에서 파일 경로를 구성하는 경우 사용하기 전에 input을 <code>filepath.Clean()</code>로 샌디타이징해야 디렉터리 이탈 공격을 피할 수 있습니다."
-</p></aside>
+</p>
+<p><strong>경고:</strong> <code>http.ServeFile()</code>은 파일 경로를 자동으로 샌디타이징하지 않습니다. 신뢰할 수 없는 사용자 입력에서 파일 경로를 구성하는 경우 사용하기 전에 input을 <code>filepath.Clean()</code>로 샌디타이징해야 디렉터리 이탈 공격을 피할 수 있습니다.</p>
+</aside>
 
 <h4 id="disabling-directory-listings">Disabling directory listings</h4>
 
-<p>If you want to disable directory listings there are a few different approaches you can take.<br/>"디렉터리 목록을 비활성화하려면 몇 가지 다른 접근 방법을 취할 수 있습니다."</p>
+<p>If you want to disable directory listings there are a few different approaches you can take.</p>
+<p>디렉터리 목록을 비활성화하려면 몇 가지 다른 접근 방법을 취할 수 있습니다.</p>
 
 <p>The simplest way? Add a blank <code>index.html</code> file to the specific directory that you want to disable listings for. This will then be served instead of the directory listing, and the user will get a <code>200 OK</code> response with no body. If you want to do this for all directories under <code>./ui/static</code> you can use the command:
-<br/>"가장 간단한 방법은 불러오기를 비활성화하려는 특정 디렉토리에 빈 <code>index.html</code> 파일을 추가하는 것입니다. 그러면 디렉터리 목록 대신에 이 파일이 제공되며 사용자는 본문이 없는 <code>200 OK</code> 응답을 받게 됩니다. 이를 <code>./ui/static</code> 아래의 모든 디렉토리에 대해 수행하려면 다음 명령을 사용할 수 있습니다:"
 </p>
+<p>가장 간단한 방법은 불러오기를 비활성화하려는 특정 디렉토리에 빈 <code>index.html</code> 파일을 추가하는 것입니다. 그러면 디렉터리 목록 대신에 이 파일이 제공되며 사용자는 본문이 없는 <code>200 OK</code> 응답을 받게 됩니다. 이를 <code>./ui/static</code> 아래의 모든 디렉토리에 대해 수행하려면 다음 명령을 사용할 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ find ./ui/static -type d -exec touch {}/index.html \;</pre>
 </figure>
 
 <p>A more complicated (but arguably better) solution is to create a custom implementation of <a href="https://pkg.go.dev/net/http/#FileSystem"><code>http.FileSystem</code></a>, and have it return an <code>os.ErrNotExist</code> error for any directories. A full explanation and sample code can be found in <a href="https://www.alexedwards.net/blog/disable-http-fileserver-directory-listings">this blog post</a>.
-<br/>"좀 더 복잡하지만 (아마도 더 나은) 해결책은 <code>http.FileSystem</code>의 사용자 정의 구현을 만들고 모든 디렉토리에 대해 <code>os.ErrNotExist</code> 오류를 반환하도록 하는 것입니다. 자세한 설명과 샘플 코드는 이 <a href="https://www.alexedwards.net/blog/disable-http-fileserver-directory-listings">블로그</a> 글에서 확인할 수 있습니다."
 </p>
+<p>좀 더 복잡하지만 (아마도 더 나은) 해결책은 <code>http.FileSystem</code>의 사용자 정의 구현을 만들고 모든 디렉토리에 대해 <code>os.ErrNotExist</code> 오류를 반환하도록 하는 것입니다. 자세한 설명과 샘플 코드는 이 <a href="https://www.alexedwards.net/blog/disable-http-fileserver-directory-listings">블로그</a> 글에서 확인할 수 있습니다.</p>
 
 		</main>
 		<footer>

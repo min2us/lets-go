@@ -31,8 +31,7 @@
 			<h2 id="routing-requests">Routing requests</h2>
 
 <p>Having a web application with just one route isn&rsquo;t very exciting&hellip; or useful! Let&rsquo;s add a couple more routes so that the application starts to shape up like this:</p>
-
-<p>경로를 몇 개 더 추가해 보겠습니다.</p>
+<p>하나의 라우트만 있는 웹 애플리케이션은 그다지 흥미롭지 않거나 유용하지 않습니다! 몇 가지 추가 라우트를 추가하여 애플리케이션이 다음과 같이 형성되도록 해봅시다.</p>
 <table>
 <thead>
 <tr>
@@ -63,6 +62,7 @@
 </tbody>
 </table>
 <p>Reopen the <code>main.go</code> file and update it as follows:</p>
+<p><code>main.go</code> 파일을 다시 열고 다음과 같이 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: main.go</figcaption>
@@ -103,6 +103,7 @@
 </figure>
 
 <p>Make sure these changes are saved and then restart the web application:</p>
+<p>이 변경 사항이 저장되었는지 확인하고 웹 애플리케이션을 다시 시작하세요.</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -111,6 +112,7 @@ $ go run .
 </figure>
 
 <p>If you visit the following links in your web browser you should now get the appropriate response for each route:</p>
+<p>웹 브라우저에서 다음 링크를 방문하면 각 라우트에 대한 적절한 응답을 받을 수 있습니다.</p>
 
 <ul>
 <li><a href="http://localhost:4000/snippet/view"><code>http://localhost:4000/snippet/view</code></a></li>
@@ -131,11 +133,12 @@ $ go run .
 <h3 id="fixed-path-and-subtree-patterns">Fixed path and subtree patterns</h3>
 
 <p>Now that the two new routes are up and running, let&rsquo;s talk a bit of theory.</p>
+<p>이제 두 개의 새로운 라우트가 작동 중이니 이론적인 부분을 조금 이야기해 봅시다.</p>
 
 <p>Go&rsquo;s servemux supports two different types of URL patterns: <em>fixed paths</em> and <em>subtree paths</em>. Fixed paths <em>don&
 rsquo;t</em> end with a trailing slash, whereas subtree paths <em>do</em> end with a trailing slash.</p>
 
-<p>Go의 ServeMux는 두 가지 다른 유형의 URL 패턴을 지원합니다. 고정된 경로와 서브트리 경로입니다. 고정된 경로는 슬래시로 끝나지 않지만, 서브트리 경로는 슬래시로 끝납니다.</p>
+<p>Go의 servemux는 두 가지 다른 유형의 URL 패턴을 지원합니다. <em>고정된 경로(fixed paths)</em>와 <em>서브트리 경로(subtree paths)</em>입니다. 고정된 경로는 슬래시로 끝나지 않지만, 서브트리 경로는 슬래시로 끝납니다.</p>
 
 <p>Our two new patterns &mdash; <code>&quot;/snippet/view&quot;</code> and <code>&quot;/snippet/create&quot;</code> &mdash; are both examples of fixed paths. In Go&rsquo;s servemux, fixed path patterns like these are only matched (and the corresponding handler called) when the request URL path <em>exactly</em> matches the fixed path.</p>
 
@@ -150,11 +153,11 @@ rsquo;t</em> end with a trailing slash, whereas subtree paths <em>do</em> end wi
 
 <p>This helps explain why the <code>&quot;/&quot;</code> pattern is acting like a catch-all. The pattern essentially means <em>match a single slash, followed by anything (or nothing at all)</em>.</p>
 
-<p>이것은 왜 <code>&quot;/&quot;</code> 패턴이 일종의 Catch-all로 동작하는지를 설명하는 데 도움이 됩니다.</p>
+<p>이것은 왜 <code>&quot;/&quot;</code> 패턴이 일종의 catch-all로 동작하는지를 설명하는 데 도움이 됩니다.</p>
 <h3 id="restricting-the-root-url-pattern">Restricting the root url pattern</h3>
 
 <p>So what if you don&rsquo;t want the <code>&quot;/&quot;</code> pattern to act like a catch-all?</p>
-<p>만약 <code>&quot;/&quot;</code> 패턴이 Catch-all 처럼 동작하지 않도록 원한다면 어떻게 해야할까요?</p>
+<p>만약 <code>&quot;/&quot;</code> 패턴이 catch-all 처럼 동작하지 않도록 원한다면 어떻게 해야할까요?</p>
 
 <p>For instance, in the application we&rsquo;re building we want the home page to be displayed if &mdash; and only if &mdash; the request URL path exactly matches <code>&quot;/&quot;</code>.  Otherwise, we want the user to receive a <code>404 page not found</code> response.</p>
 
@@ -163,7 +166,7 @@ rsquo;t</em> end with a trailing slash, whereas subtree paths <em>do</em> end wi
 
 <p>It&rsquo;s not possible to change the behavior of Go&rsquo;s servemux to do this, but you <em>can</em> include a simple check in the <code>home</code> hander which ultimately has the same effect:</p>
 
-<p>Go의 ServeMux의 동작을 이렇게 변경하는 것은 불가능하지만, <code>home</code> 핸들러에 간단한 체크를 포함하여 동일한 효과를 얻을 수 있습니다.</p>
+<p>Go의 servemux 의 동작을 이렇게 변경하는 것은 불가능하지만, <code>home</code> 핸들러에 간단한 체크를 포함하여 동일한 효과를 얻을 수 있습니다.</p>
 <figure class="code go">
 <figcaption>File: main.go</figcaption>
 <pre><span class="kn">package</span> <span class="nx">main</span>
@@ -187,6 +190,7 @@ rsquo;t</em> end with a trailing slash, whereas subtree paths <em>do</em> end wi
 </figure>
 
 <p>Go ahead and make that change, then restart the server and make a request for an unregistered URL path like <a href="http://localhost:4000/missing"><code>http://localhost:4000/missing</code></a>. You should get a <code>404</code> response which looks a bit like this:</p>
+<p>계속 진행하여 해당 변경을 수행한 다음 서버를 다시 시작하고 <code>http://localhost:4000/missing</code> 과 같은 등록되지 않은 URL 경로에 대한 요청을 만들어 보세요. <code>404</code> 응답을 받아야 하는데, 다음과 같이 보일 것입니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.03-03.png" alt="02.03-03.png" />
@@ -199,18 +203,17 @@ rsquo;t</em> end with a trailing slash, whereas subtree paths <em>do</em> end wi
 <h4 id="servemux-features-and-quirks">Servemux features and quirks (Servemux 기능과 단점)</h4>
 
 <ul>
-<li><p>In Go&rsquo;s servemux, longer URL patterns always take precedence over shorter ones. So, if a servemux contains multiple patterns which match a request, it will always dispatch the request to the handler corresponding to the longest pattern. This has the nice side-effect that you can register patterns in any order <em>and it won&rsquo;t change how the servemux behaves</em>.</p></li>
+<li><p>In Go&rsquo;s servemux, longer URL patterns always take precedence over shorter ones. So, if a servemux contains multiple patterns which match a request, it will always dispatch the request to the handler corresponding to the longest pattern. This has the nice side-effect that you can register patterns in any order <em>and it won&rsquo;t change how the servemux behaves</em>.</p>
+<p>Go의 servemux에서는 더 긴 URL 패턴이 항상 더 짧은 패턴보다 우선합니다. 따라서 servemux에 요청과 일치하는 여러 패턴이 포함되어 있다면 항상 가장 긴 패턴에 해당하는 핸들러로 요청이 전달됩니다. 이렇게 하면 패턴을 어떤 순서로든 등록할 수 있고 servemux의 동작이 변경되지 않습니다.</p>
+</li>
 
-<p>Go의 Servemux 에서는 긴 URL패턴이 항상 짧은 패턴보다 우선합니다. 따라서 Servemux 에 요청과 일치하는 여러 패턴이 포함되어 있으면 항상 가장 긴 패턴에 해당하는 핸들러로 요청을 전달합니다.
-이것은 어떤 순서로 패턴을 등록하든 Servemux 의 작동방식을 변경하지 않는다는 좋은 부작용이 있습니다.</p>
+<li><p>Request URL paths are automatically sanitized. If the request path contains any <code>.</code> or <code>..</code> elements or repeated slashes, the user will automatically be redirected to an equivalent clean URL. For example, if a user makes a request to <code>/foo/bar/..//baz</code> they will automatically be sent a <code>301 Permanent Redirect</code> to <code>/foo/baz</code> instead.</p>
+<p>요청 URL 경로는 자동으로 정제됩니다. 요청 경로에 <code>.</code> 이나 <code>..</code> 요소 또는 반복된 슬래시가 포함되어 있으면 사용자는 자동으로 해당하는 정리된 URL로 리디렉션됩니다. 예를 들어 사용자가 <code>/foo/bar/..//baz</code> 에 대한 요청을 하면 자동으로 <code>301 Permanent Redirect</code>으로 <code>/foo/baz</code> 로 전송됩니다.</p>
+</li>
 
-<li><p>Request URL paths are automatically sanitized. If the request path contains any <code>.</code> or <code>..</code> elements or repeated slashes, the user will automatically be redirected to an equivalent clean URL. For example, if a user makes a request to <code>/foo/bar/..//baz</code> they will automatically be sent a <code>301 Permanent Redirect</code> to <code>/foo/baz</code> instead.</p></li>
-
-<p>요청 URL 경로는 자동으로 정제됩니다. 요청 경로에 <code>.</code>이나 <code>..</code> 요소 또는 반복된 슬래시가 포함되어 있으면 사용자는 자동으로 해당하는 깨끗한 URL로 리디렉션됩니다.</p>
-
-<li><p>If a subtree path has been registered and a request is received for that subtree path <em>without</em> a trailing slash, then the user will automatically be sent a <code>301 Permanent Redirect</code> to the subtree path with the slash added. For example, if you have registered the subtree path <code>/foo/</code>, then any request to <code>/foo</code> will be redirected to <code>/foo/</code>.</p></li>
-
-<p>만약 서브트리 경로가 등록되어 있고, 해당 서브트리 경로에 대한 요청이 슬래시 없이 도착한다면, 사용자는 자동으로 슬래시가 추가된 서브트리 경로로 <code>301 Permanent Redirect</code> 하게 됩니다.<p>
+<li><p>If a subtree path has been registered and a request is received for that subtree path <em>without</em> a trailing slash, then the user will automatically be sent a <code>301 Permanent Redirect</code> to the subtree path with the slash added. For example, if you have registered the subtree path <code>/foo/</code>, then any request to <code>/foo</code> will be redirected to <code>/foo/</code>.</p>
+<p>만약 서브트리 경로가 등록되어 있고 해당 서브트리 경로에 대한 요청이 슬래시 없이 수신되면 사용자는 자동으로 해당 슬래시가 추가된 서브트리 경로로 <code>301 Permanent Redirect</code>를 받게 됩니다. 예를 들어 <code>/foo/</code> 서브트리 경로가 등록되어 있다면 <code>/foo</code> 로의 모든 요청은 <code>/foo/</code>로 리디렉션됩니다.</p>
+</li>
 
 </ul>
 
@@ -268,17 +271,21 @@ rsquo;t</em> end with a trailing slash, whereas subtree paths <em>do</em> end wi
 <p>이 접근 방식은 코드를 약간 더 간결하게 만들 수 있지만, 두 가지 이유로 추천하지 않습니다.</p>
 
 <ul>
-<li><p>It&rsquo;s less explicit and feels more &lsquo;magic&rsquo; than declaring and using your own locally-scoped servemux.</p></li>
-
+<li><p>It&rsquo;s less explicit and feels more &lsquo;magic&rsquo; than declaring and using your own locally-scoped servemux.</p>
 <p><code>http.DefaultServeMux</code>를 사용하는 것은 명시적이지 않고, 자체적으로 스코프가 지정된 servemux를 선언하고 사용하는 것보다 더 '마법(magic)'적으로 느껴집니다.</p>
+</li>
 
 <li><p>Because <code>http.DefaultServeMux</code> is a global variable in the standard library, it means <em>any</em> Go code in your project can access it and potentially register a route. If you have a large project codebase (especially one that is being worked on by many people), that can make it harder to ensure all route declarations for your application are easily discoverable in one central place.</p>
 
 <p><code>http.DefaultServeMux</code>는 표준 라이브러리의 전역 변수이기 때문에 프로젝트의 모든 Go 코드가 이에 접근할 수 있고 잠재적으로 라우트를 등록할 수 있습니다. 특히 여러 사람이 작업하는 대규모 프로젝트 코드베이스의 경우, 이는 애플리케이션의 모든 라우트 선언이 한 곳에서 쉽게 찾아볼 수 있는 방법을 보장하기 어렵게 만들 수 있습니다.</p>
+</li>
 
-<p>It also means that any <em>third-party packages that your application imports</em> can register routes with <code>http.DefaultServeMux</code> too. If one of those third-party packages is compromised, they could potentially use <code>http.DefaultServeMux</code> to expose a malicious handler to the web. It&rsquo;s simple to avoid this risk by just not using <code>http.DefaultServeMux</code>.</p></li>
-
+<li>
+<p>It also means that any <em>third-party packages that your application imports</em> can register routes with <code>http.DefaultServeMux</code> too. If one of those third-party packages is compromised, they could potentially use <code>http.DefaultServeMux</code> to expose a malicious handler to the web. It&rsquo;s simple to avoid this risk by just not using <code>http.DefaultServeMux</code>.</p>
 <p>이는 당신의 애플리케이션이 가져오는 어떤 서드파티 패키지들도 <code>http.DefaultServeMux</code>를 사용하여 라우트를 등록할 수 있다는 것을 의미합니다. 만약 그 서드파티 패키지 중 하나가 침해를 당한다면, 그들은 잠재적으로 <code>http.DefaultServeMux</code>를 사용하여 악의적인 핸들러를 웹에 노출시킬 수 있습니다. 이러한 리스크를 피하는 것은 <code>http.DefaultServeMux</code>를 사용하지 않는 것만으로도 간단히 가능합니다.</p>
+</li>
+
+
 </ul>
 
 <p>So, for the sake of clarity, maintainability and security, it&rsquo;s generally a good idea to avoid <code>http.DefaultServeMux</code> and the corresponding helper functions. Use your own locally-scoped servemux instead, like we have been doing in this project so far.</p>

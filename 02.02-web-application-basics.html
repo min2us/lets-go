@@ -31,18 +31,20 @@
 			<h2 id="web-application-basics">Web application basics</h2>
 
 <p>Now that everything is set up correctly, let&rsquo;s make the first iteration of our web application. We&rsquo;ll begin with the three absolute essentials:</p>
+<p>이제 모든 것이 올바르게 설정되었으니 웹 애플리케이션의 첫 번째 반복을 만들어봅시다. 세 가지 절대적으로 필요한 부분부터 시작하겠습니다.</p>
 
 <ul>
-<li><p>The first thing we need is <mark>a <dfn>handler</dfn></mark>. If you&rsquo;ve previously built web applications using a MVC pattern, you can think of handlers as being a bit like controllers. They&rsquo;re responsible for executing your application logic and for writing HTTP response headers and bodies.</p></li>
+<li><p>The first thing we need is <mark>a <dfn>handler</dfn></mark>. If you&rsquo;ve previously built web applications using a MVC pattern, you can think of handlers as being a bit like controllers. They&rsquo;re responsible for executing your application logic and for writing HTTP response headers and bodies.</p>
+<p>우리가 필요한 첫 번째는 <dfn>핸들러(handler)</dfn>입니다. 이전에 MVC 패턴을 사용하여 웹 애플리케이션을 개발한 적이 있다면 핸들러를 컨트롤러와 비슷한 역할로 생각할 수 있습니다. 핸들러는 애플리케이션 로직을 실행하고 HTTP 응답 헤더 및 본문을 작성하는 역할을 맡고 있습니다.</p>
+</li>
 
-<p>핸들러는 애플리케이션 로직을 실행하고 HTTP 응답 헤더와 본문을 작성하는 책임이 있습니다.</p>
+<li><p>The second component is <mark>a router</mark> (or <dfn>servemux</dfn> in Go terminology). This stores a mapping between the URL patterns for your application and the corresponding handlers. <u>Usually you have one servemux for your application containing all your routes.</u></p>
+<p>두 번째 구성 요소는 라우터(또는 Go 용어로 <dfn>servemux</dfn>)입니다. 이는 애플리케이션의 URL 패턴과 해당 핸들러 간의 매핑을 저장합니다. 일반적으로 애플리케이션에는 모든 라우트를 포함하는 하나의 <dfn>servemux</dfn> 가 있습니다.</p>
+</li>
 
-<li><p>The second component is <mark>a router</mark> (or <dfn>servemux</dfn> in Go terminology). This stores a mapping between the URL patterns for your application and the corresponding handlers. <u>Usually you have one servemux for your application containing all your routes.</u></p></li>
-<p>라우터는 애플리케이션의 URL 패턴과 해당 핸들러 간의 매핑을 저장합니다.</p>
-
-<li><p>The last thing we need is <mark>a <dfn>web server</dfn></mark>. One of the great things about Go is that you can establish a web server and listen for incoming requests <em>as part of your application itself</em>. <u>You don&rsquo;t need an external third-party server like Nginx, Apache or Caddy.</u></p></li>
-
-<p>애플리케이션 자체의 일부로 웹 서버를 구축하고 들어오는 요청을 수신합니다.</p>
+<li><p>The last thing we need is <mark>a <dfn>web server</dfn></mark>. One of the great things about Go is that you can establish a web server and listen for incoming requests <em>as part of your application itself</em>. <u>You don&rsquo;t need an external third-party server like Nginx, Apache or Caddy.</u></p>
+<p>마지막으로 필요한 것은 <dfn>웹 서버(web server)</dfn>입니다. Go의 훌륭한 점 중 하나는 <em>애플리케이션 자체의 일부로</em> 웹 서버를 설정하고 들어오는 요청을 수신할 수 있다는 것입니다. Nginx, Apache 또는 Caddy와 같은 외부 써드파티 서버가 필요하지 않습니다.</p>
+</li>
 
 </ul>
 
@@ -88,12 +90,17 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> The <code>home</code> handler function is just a regular Go function with two parameters. The <code>http.ResponseWriter</code> parameter provides <u>methods for assembling a HTTP response and sending it to the user</u>, and the <code>*http.Request</code> parameter is <u>a pointer to a struct which holds information about the current request</u> (like the HTTP method and the URL being requested). We&rsquo;ll talk more about these parameters and demonstrate how to use them as we progress through the book.
-</p></aside>
+</p>
+<p><strong>노트:</strong> <code>home</code> 핸들러 함수는 두 개의 매개변수를 가진 일반적인 Go 함수입니다. <code>http.ResponseWriter</code> 매개변수는 HTTP 응답을 조립하고 사용자에게 보내기 위한 메서드를 제공하며, <code>*http.Request</code> 매개변수는 현재 요청에 관한 정보를 담고 있는 구조체에 대한 포인터입니다(예: HTTP 메서드 및 요청 중인 URL과 같은 정보). 이러한 매개변수에 대해 더 자세히 알아보고 책이 진행됨에 따라 어떻게 사용하는지를 보여줄 것입니다.</p>
+
+</aside>
 
 <p>When you run this code, it will start a web server listening on port 4000 of your local machine. Each time the server receives a new HTTP request it will pass the request on to the servemux and &mdash; in turn &mdash; the servemux will check the URL path and dispatch the request to the matching handler.</p>
-<p>서버가 HTTP 요청을 받을 때마다 ServeMux 로 전달하고, ServeMux 는 URL 경로를 확인한 후 해당하는 핸들러로 요청을 보냅니다.</p>
+<p>
+이 코드를 실행하면 로컬 머신의 4000번 포트에서 수신 대기 중인 웹 서버가 시작됩니다. 서버가 새 HTTP 요청을 받을 때마다 요청은 servemux로 전달되고, servemux는 URL 경로를 확인하고 해당 핸들러로 요청을 전달합니다.</p>
 
 <p>Let&rsquo;s give this a whirl. Save your <code>main.go</code> file and then try running it from your terminal using the <code>go run</code> command.</p>
+<p>이걸 한 번 시도해 봅시다. <code>main.go</code> 파일을 저장한 후 터미널에서 <code>go run</code> 명령을 사용하여 실행해 보세요.</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -102,6 +109,7 @@ $ go run .
 </figure>
 
 <p>While the server is running, open a web browser and try visiting <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>. If everything has gone to plan you should see a page which looks a bit like this:</p>
+<p>서버가 실행 중일 때 웹 브라우저를 열고 <code>http://localhost:4000</code> 을 방문해 보세요. 모든 것이 계획대로 진행되었다면 다음과 같이 보이는 페이지가 표시됩니다.</p>
 
 <figure class="img">
 <img src="assets/img/02.02-01.png" alt="02.02-01.png" />
@@ -110,10 +118,11 @@ $ go run .
 <aside class="important"><p>
 <strong>Important:</strong> Before we continue, I should explain that Go&rsquo;s servemux treats the URL pattern <code>&quot;/&quot;</code> like a catch-all. So at the moment <em>all</em> HTTP requests to our server will be handled by the <code>home</code> function, regardless of their URL path. For instance, <u>you can visit a different URL path like <a href="http://localhost:4000/foo"><code>http://localhost:4000/foo</code></a> and you’ll receive exactly the same response.</u>
 </p>
-<p>Go의 ServeMux 는 URL 패턴 <code>&quot;/&quot;</code>을 Catch-all 로 취급한다는 것을 설명해야 할 것 같습니다. 현재 모든 서버의 HTTP 요청은 URL 경로와 관계없이 <code>home</code> 함수에서 처리됩니다.</p>
+<p><strong>중요:</strong> 계속 진행하기 전에 Go의 servemux 는 URL 패턴 <code>&quot;/&quot;</code>을 catch-all 로 취급한다는 것을 설명해야 할 것 같습니다. 현재 모든 서버의 HTTP 요청은 URL 경로와 관계없이 <code>home</code> 함수에서 처리됩니다.예를 들어 <code>http://localhost:4000/foo</code> 와 같은 다른 URL 경로를 방문해도 정확히 동일한 응답을 받게 됩니다.</p>
 </aside>
 
 <p>If you head back to your terminal window, you can stop the server by pressing <code>Ctrl+C</code> on your keyboard.</p>
+<p>터미널 창으로 돌아가면 키보드에서 <code>Ctrl+C</code> 를 눌러 서버를 중지할 수 있습니다.</p>
 
 <hr />
 
@@ -123,10 +132,11 @@ $ go run .
 
 <p>The TCP network address that you pass to <code>http.ListenAndServe()</code> should be in the format <code>&quot;host:port&quot;</code>. If you omit the host (like we did with <code>&quot;:4000&quot;</code>) then the server will listen on all your computer&rsquo;s available network interfaces. Generally, you only need to specify a host in the address if your computer has multiple network interfaces and you want to listen on just one of them.</p>
 
-<p><code>http.ListenAndServe()</code>에 전달하는 TCP 네트워크 주소는 <code>"host:port"</code> 형식이어야 합니다. 
-만약 host를 생략하고 (예: <code>":4000"</code>과 같이) 포트만 지정하면, 서버는 컴퓨터의 모든 사용 가능한 네트워크 인터페이스를 수신합니다.</p>
+<p>
+<code>http.ListenAndServe()</code> 에 전달하는 TCP 네트워크 주소는 <code>&quot;host:port&quot;</code> 형식이어야 합니다. 호스트를 생략하면 (예: <code>&quot;:4000&quot;</code>처럼) 서버는 컴퓨터의 모든 사용 가능한 네트워크 인터페이스에서 수신 대기합니다. 일반적으로 주소에 호스트를 지정해야 하는 경우는 컴퓨터에 여러 네트워크 인터페이스가 있고 그 중 하나에서만 수신 대기하려는 경우입니다.</p>
 
 <p>In other Go projects or documentation you might sometimes see network addresses written using named ports like <code>&quot;:http&quot;</code> or <code>&quot;:http-alt&quot;</code> instead of a number. If you use a named port then the <code>http.ListenAndServe()</code> function will attempt to look up the relevant port number from your <code>/etc/services</code> file when starting the server, returning an error if a match can&rsquo;t be found.</p>
+<p>다른 Go 프로젝트나 문서에서는 숫자 대신 <code>&quot;:http&quot;</code> 또는 <code>&quot;:http-alt&quot;</code> 와 같은 명명된 포트를 사용하여 네트워크 주소가 표시되는 경우가 있습니다. 명명된 포트를 사용하면 <code>http.ListenAndServe()</code> 함수가 서버를 시작할 때 <code>/etc/services</code> 파일에서 해당 포트 번호를 찾으려고 시도하며, 일치하는 항목을 찾을 수 없는 경우 오류가 반환됩니다.</p>
 
 <h4 id="using-go-run">Using go run</h4>
 
@@ -135,8 +145,8 @@ $ go run .
 <p>개발 중에는 <code>go run</code> 명령어가 코드를 실행하는 편리한 방법입니다. 이는 사실상 코드를 컴파일하여 <code>/tmp</code> 디렉터리에 실행 가능한 바이너리를 생성한 다음, 이 바이너리를 한 단계에서 실행하는 단축키입니다.</p>
 
 <p>It accepts either a space-separated list of <code>.go</code> files, the path to a specific package (where the <code>.</code> character represents your current directory), or the full module path. For our application at the moment, the three following commands are all equivalent:</p>
+<p>이 명령은 <code>.go</code> 파일의 공백으로 구분된 목록, 특정 패키지의 경로(여기서 <code>.</code> 문자는 현재 디렉토리를 나타냅니다) 또는 전체 모듈 경로를 허용합니다. 현재 우리의 애플리케이션에서는 세 가지 다음 명령이 모두 동등합니다.</p>
 
-<p>현재 우리 애플리케이션에서는 아래 세 가지 명령어가 모두 동등합니다.</p>
 
 <figure class="code bash">
 <pre>$ go run .

@@ -46,7 +46,7 @@
 
 <p>For this project we&rsquo;ll implement an outline structure which follows a <a href="https://go.dev/doc/modules/layout#server-project">popular and tried-and-tested</a> approach. It&rsquo;s a solid starting point, and you should be able to reuse the general structure in a wide variety of projects.
 </p>
-<p>이 프로젝트에서는 널리 사용되고 검증된 방식을 따르는 개요 구조를 구현할 것입니다. 이는 견고한 시작점이며, 이 일반적인 구조를 다양한 프로젝트에서 재사용할 수 있어야 합니다.</p>
+<p>이 프로젝트에서는 <a href="https://go.dev/doc/modules/layout#server-project">널리 사용되고 검증된 방식</a>을 따르는 구조로 구현할 것입니다. 이는 견고한 시작점이며, 이 일반적인 구조를 다양한 프로젝트에서 재사용할 수 있어야 합니다.</p>
 
 <p>If you&rsquo;re following along, make sure that you&rsquo;re in the root of your project repository and run the following commands:
 </p>
@@ -72,27 +72,40 @@ $ touch cmd/web/handlers.go</pre>
 <p>이제 각 디렉토리가 어떤 용도로 사용될지에 대해 잠시 이야기해 보겠습니다.</p>
 <ul>
 <li><p>The <code>cmd</code> directory will contain the <em>application-specific</em> code for the executable applications in the project. For now our project will have just one executable application &mdash; the web application &mdash; which will live under the <code>cmd/web</code> directory.
-"<code>cmd</code> 디렉토리에는 프로젝트의 실행 가능한 애플리케이션에 대한 애플리케이션 특정 코드가 포함됩니다. 현재 프로젝트에서는 <code>cmd/web</code> 디렉토리에 위치한 웹 애플리케이션만을 가지게 될 것입니다."</p></li>
+</p>
+<p><code>cmd</code> 디렉토리에는 프로젝트의 실행 가능한 애플리케이션에 대한 애플리케이션 특정 코드가 포함됩니다. 현재 프로젝트에서는 <code>cmd/web</code> 디렉토리에 위치한 웹 애플리케이션만을 가지게 될 것입니다.</p>
+</li>
 
-<li><p>The <code>internal</code> directory will contain the ancillary <em>non-application-specific</em> code used in the project. We&rsquo;ll use it to hold potentially reusable code like validation helpers and the SQL database models for the project."<code>internal</code> 디렉토리에는 프로젝트에서 사용되는 부수적이고 애플리케이션과 관련 없는 코드가 포함됩니다. 이 디렉토리는 프로젝트에서 재사용 가능한 코드를 보관하는 데 사용되며, 검증 도우미 및 프로젝트의 SQL 데이터베이스 모델과 같은 코드를 포함할 것입니다."</p></li>
+<li><p>The <code>internal</code> directory will contain the ancillary <em>non-application-specific</em> code used in the project. We&rsquo;ll use it to hold potentially reusable code like validation helpers and the SQL database models for the project.</p>
+<p><code>internal</code> 디렉토리에는 프로젝트에서 사용되는 부수적이고 애플리케이션과 관련 없는 코드가 포함됩니다. 이 디렉토리는 프로젝트에서 재사용 가능한 코드를 보관하는 데 사용되며, 검증 헬퍼 및 프로젝트의 SQL 데이터베이스 모델과 같은 코드를 포함할 것입니다.</p>
+</li>
 
-<li><p>The <code>ui</code> directory will contain the <em>user-interface assets</em> used by the web application. Specifically, the <code>ui/html</code> directory will contain HTML templates, and the <code>ui/static</code> directory will contain static files (like CSS and images)."<code>ui</code> 디렉토리에는 웹 애플리케이션에서 사용되는 사용자 인터페이스 자산이 포함됩니다. 구체적으로 <code>ui/html</code>디렉토리에는 HTML 템플릿이, 그리고 <code>ui/static</code> 디렉토리에는 정적 파일(예: CSS 및 이미지)이 포함될 것입니다."</p></li>
+<li><p>The <code>ui</code> directory will contain the <em>user-interface assets</em> used by the web application. Specifically, the <code>ui/html</code> directory will contain HTML templates, and the <code>ui/static</code> directory will contain static files (like CSS and images).</p>
+<p><code>ui</code> 디렉토리에는 웹 애플리케이션에서 사용되는 사용자 인터페이스 자원이 포함됩니다. 구체적으로 <code>ui/html</code>디렉토리에는 HTML 템플릿이, 그리고 <code>ui/static</code> 디렉토리에는 정적 파일(예: CSS 및 이미지)이 포함될 것입니다.</p>
+</li>
 </ul>
 
-<p><em>So why are we using this structure?</em>"그래서 우리는 왜 이 구조를 사용할까요?"</p>
+<p><em>So why are we using this structure?</em></p>
+<p>그래서 우리는 왜 이 구조를 사용할까요?</p>
 
-<p>There are two big benefits:"이 구조를 사용하는 두 가지 큰 이점이 있습니다."</p>
+<p>There are two big benefits:</p>
+<p>이 구조를 사용하는 두 가지 큰 이점이 있습니다.</p>
 
 <ol>
 <li><p>It gives a clean separation between Go and non-Go assets. All the Go code we write will live exclusively under the <code>cmd</code> and <code>internal</code> directories, leaving the project root free to hold non-Go assets like UI files, makefiles and module definitions (including our <code>go.mod</code> file).
-"Go 코드와 Go 이외의 자산 사이에 깔끔한 분리를 제공합니다. 작성한 모든 Go 코드는 <code>cmd</code> 및 <code>internal</code> 디렉토리에 독점적으로 존재하게 되어 프로젝트 루트는 UI 파일, makefiles 및 모듈 정의(우리의 go.mod 파일 포함)와 같은 Go 이외의 자산을 보유할 수 있게 됩니다."</p></li>
+</p>
+<p>Go 코드와 Go 이외의 자원 사이에 깔끔한 분리를 제공합니다. 작성한 모든 Go 코드는 <code>cmd</code> 및 <code>internal</code> 디렉토리에 독점적으로 존재하게 되어 프로젝트 루트는 UI 파일, makefiles 및 모듈 정의(우리의 <code>go.mod</code> 파일 포함)와 같은 Go 이외의 자원을 보유할 수 있게 됩니다.</p>
+</li>
 
-<li><p>It scales really nicely if you want to add another executable application to your project. For example, you might want to add a CLI (Command Line Interface) to automate some administrative tasks in the future. With this structure, you could create this CLI application under <code>cmd/cli</code> and it will be able to import and reuse all the code you&rsquo;ve written under the <code>internal</code> directory."이 구조는 프로젝트에 또 다른 실행 가능한 애플리케이션을 추가하려는 경우에 매우 효율적으로 확장됩니다. 예를 들어 나중에 어떤 관리 작업을 자동화하기 위해 CLI(Command Line Interface)를 추가하고 싶을 수 있습니다. 이 구조를 사용하면 <code>cmd/cli</code> 디렉토리 아래에 이 CLI 애플리케이션을 생성할 수 있으며, <code>internal</code> 디렉토리 아래에 작성한 모든 코드를 가져와 재사용할 수 있게 됩니다."</p></li>
+<li><p>It scales really nicely if you want to add another executable application to your project. For example, you might want to add a CLI (Command Line Interface) to automate some administrative tasks in the future. With this structure, you could create this CLI application under <code>cmd/cli</code> and it will be able to import and reuse all the code you&rsquo;ve written under the <code>internal</code> directory.</p>
+<p>이 구조는 프로젝트에 또 다른 실행 가능한 애플리케이션을 추가하려는 경우에 매우 효율적으로 확장됩니다. 예를 들어 나중에 어떤 관리 작업을 자동화하기 위해 CLI(Command Line Interface)를 추가하고 싶을 수 있습니다. 이 구조를 사용하면 <code>cmd/cli</code> 디렉토리 아래에 이 CLI 애플리케이션을 생성할 수 있으며, <code>internal</code> 디렉토리 아래에 작성한 모든 코드를 가져와 재사용할 수 있게 됩니다.</p>
+</li>
 </ol>
 
 <h3 id="refactoring-your-existing-code">Refactoring your existing code</h3>
 
-<p>Let&rsquo;s quickly port the code we&rsquo;ve already written to this new structure."우리가 이미 작성한 코드를 빠르게 이 새로운 구조로 이전해 보겠습니다."</p>
+<p>Let&rsquo;s quickly port the code we&rsquo;ve already written to this new structure.</p>
+<p>우리가 이미 작성한 코드를 빠르게 이 새로운 구조로 이전해 보겠습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -156,7 +169,8 @@ $ touch cmd/web/handlers.go</pre>
 <span class="p">}</span></pre>
 </figure>
 
-<p>So now our web application consists of multiple <code>.go</code> files under the <code>cmd/web</code> directory. To run these, we can use the <code>go run</code> command like so:"이제 웹 애플리케이션은 <code>cmd/web</code> 디렉토리 아래에 여러 .go 파일로 구성되어 있습니다. 이를 실행하려면 다음과 같이 <code>go run</code> 명령어를 사용할 수 있습니다."</p>
+<p>So now our web application consists of multiple <code>.go</code> files under the <code>cmd/web</code> directory. To run these, we can use the <code>go run</code> command like so:</p>
+<p>이제 웹 애플리케이션은 <code>cmd/web</code> 디렉토리 아래에 여러 .go 파일로 구성되어 있습니다. 이를 실행하려면 다음과 같이 <code>go run</code> 명령어를 사용할 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -171,11 +185,14 @@ $ go run ./cmd/web
 <h4 id="the-internal-directory">The internal directory</h4>
 
 <p>It&rsquo;s important to point out that the directory name <code>internal</code> carries a special meaning and behavior in Go: any packages which live under this directory can only be imported by code <em>inside the parent of the <code>internal</code> directory</em>. In our case, this means that any packages which live in <code>internal</code> can only be imported by code inside our <code>snippetbox</code> project directory.
-"Go 언어에서 <code>internal</code> 디렉토리 이름은 특별한 의미와 동작을 가지고 있습니다. 이 디렉토리 아래에 있는 모든 패키지는 <code>internal</code> 디렉토리의 부모 디렉토리 내의 코드에서만 가져올 수 있습니다. 우리의 경우에는 <code>internal</code> 디렉토리에 있는 패키지는 오직 <code>snippetbox</code> 프로젝트 디렉토리 내의 코드에서만 가져올 수 있습니다."</p>
+</p>
+<p>Go 언어에서 <code>internal</code> 디렉토리 이름은 특별한 의미와 동작을 가지고 있습니다. 이 디렉토리 아래에 있는 모든 패키지는 <code>internal</code> 디렉토리의 부모 디렉토리 내의 코드에서만 가져올 수 있습니다. 우리의 경우에는 <code>internal</code> 디렉토리에 있는 패키지는 오직 <code>snippetbox</code> 프로젝트 디렉토리 내의 코드에서만 가져올 수 있습니다.</p>
 
-<p>Or, looking at it the other way, this means that any packages under <code>internal</code> <em>cannot be imported by code outside of our project</em>."또는 다른 관점에서 보면, <code>internal</code> 하위의 패키지는 프로젝트 외부의 코드에서 가져올 수 없다는 것을 의미합니다."</p>
+<p>Or, looking at it the other way, this means that any packages under <code>internal</code> <em>cannot be imported by code outside of our project</em>.</p>
+<p>또는 다른 관점에서 보면, <code>internal</code> 하위의 패키지는 프로젝트 외부의 코드에서 가져올 수 없다는 것을 의미합니다.</p>
 
-<p>This is useful because it prevents other codebases from importing and relying on the (potentially unversioned and unsupported) packages in our <code>internal</code> directory &mdash; even if the project code is publicly available somewhere like GitHub."이는 다른 코드베이스가 우리의 <code>internal</code> 디렉토리의 (아마 버전 관리되지 않고 지원되지 않을 수 있는) 패키지를 가져와 의존하지 못하도록 하는데 유용합니다. 심지어 프로젝트 코드가 GitHub과 같은 곳에서 공개적으로 사용 가능하더라도 말이죠."</p>
+<p>This is useful because it prevents other codebases from importing and relying on the (potentially unversioned and unsupported) packages in our <code>internal</code> directory &mdash; even if the project code is publicly available somewhere like GitHub.</p>
+<p>이는 다른 코드베이스가 우리의 <code>internal</code> 디렉토리의 (아마 버전 관리되지 않고 지원되지 않을 수 있는) 패키지를 가져와 의존하지 못하도록 하는데 유용합니다. 심지어 프로젝트 코드가 GitHub과 같은 곳에서 공개적으로 사용 가능하더라도 말이죠.</p>
 
 		</main>
 		<footer>

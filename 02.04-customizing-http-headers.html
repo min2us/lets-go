@@ -154,6 +154,8 @@ Method Not Allowed</samp></pre>
 우리가 할 수 있는 또 다른 개선은 해당 URL에 대해 지원되는 요청 메서드를 사용자에게 알려주기 위해 <code>405 Method Not Allowed</code> 응답에 <u><code>Allow</code>  헤더를 포함시킵니다.</u>
 </p>
 <p>We can do this by using the <code>w.Header().Set()</code> method to add a new header to the <dfn>response header map</dfn>, like so:</p>
+<p>
+이를 수행하기 위해 <code>w.Header().Set()</code> 메서드를 사용하여 <dfn>응답 헤더 맵(response header map)</dfn>에 새 헤더를 추가할 수 있습니다. 아래와 같이 작성할 수 있습니다.</p>
 
 <figure class="code go">
 <figcaption>File: main.go</figcaption>
@@ -181,7 +183,7 @@ Method Not Allowed</samp></pre>
 <aside class="important"><p>
 <strong>Important:</strong> Changing the response header map after a call to <code>w.WriteHeader()</code> or <code>w.Write()</code> will have no effect on the headers that the user receives. <u>You need to make sure that your response header map contains all the headers you want <em>before</em> you call these methods.</u>
 </p>
-<p>중요한 점은 <code>w.WriteHeader()</code> 또는 <code>w.Write()</code>  를 호출한 후에는 응답 헤더 맵을 변경해도 사용자가 수신하는 헤더에는 영향을 미치지 않는다는 것입니다. 이러한 메서드를 호출하기 전에 응답 헤더 맵에 원하는 모든 헤더가 포함되어 있는지 확인해야 합니다.</p>
+<p><strong>중요:</strong> 중요한 점은 <code>w.WriteHeader()</code> 또는 <code>w.Write()</code>  를 호출한 후에는 응답 헤더 맵을 변경해도 사용자가 수신하는 헤더에는 영향을 미치지 않는다는 것입니다. 이러한 메서드를 호출하기 전에 응답 헤더 맵에 원하는 모든 헤더가 포함되어 있는지 확인해야 합니다.</p>
 </aside>
 
 <p>Let&rsquo;s take a look at this in action again by sending a non-<code>POST</code> request to our <code>/snippet/create</code> URL, like so:</p>
@@ -209,6 +211,7 @@ Method Not Allowed</samp></pre>
 만약 위의 <code>snippetCreate()</code> 함수에서처럼 <code>200</code> 상태 코드가 아닌 상태 코드와 일반 텍스트 응답 본문을 보내려면 <code>http.Error()</code> 단축키를 사용하는 것이 좋습니다. 이는 주어진 메시지와 상태 코드를 사용하여 <code>w.WriteHeader()</code> 및 <code>w.Write()</code> 메서드를 뒷면에서 자동으로 호출하는 가벼운 도우미 함수입니다.</p>
 
 <p>Let&rsquo;s update the code to use this instead.</p>
+<p>이를 대신 사용하도록 코드를 업데이트해봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: main.go</figcaption>
