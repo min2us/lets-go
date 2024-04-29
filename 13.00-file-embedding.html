@@ -31,12 +31,20 @@
 			<h1 id="file-embedding">File embedding</h1>
 
 <p>The Go standard library includes an <a href="https://pkg.go.dev/embed/"><code>embed</code></a> package, which makes it possible to <em>embed external files into your Go program itself</em>.</p>
+<p>Go 표준 라이브러리는 외부 파일을 Go 프로그램 자체에 포함시킬 수 있는 <code>embed</code> 패키지가 포함되어 있습니다. </p>
+
+<p><code>① so that S + V</code>: ~하기 위하여, ~할 수 있도록<p>
 
 <p>In this section of the book, we&rsquo;ll update our application so that it embeds the files from our <code>ui</code> directory &mdash; starting with the static CSS, JavaScript and image files, and then moving on to the HTML templates.</p>
 
+<p>이 책의 이 섹션에서는, 우리의 애플리케이션을 업데이트하여 <code>ui</code> 디렉토리에서 파일을 포함시킬 것입니다 — 먼저 정적 CSS, JavaScript 및 이미지 파일부터 시작하여 HTML 템플릿으로 진행할 것입니다.</p>
+
 <p>Although using the <code>embed</code> package is completely optional (and our application works fine as-is), it opens up the opportunity to create  Go programs that are self-contained and have everything that they need to run <em>as part of the compiled binary executable</em>. In turn, that makes it easier to deploy or distribute your web application.</p>
 
+<p><code>embed</code> 패키지를 사용하는 것은 완전히 선택 사항입니다(우리의 애플리케이션은 현재도 잘 작동합니다). 그러나 이를 사용하면 Go 프로그램을 자체 포함형으로 만들고 컴파일된 이진 실행 파일의 일부로 실행에 필요한 모든 것을 갖추는 기회가 열립니다. 이는 결과적으로 웹 애플리케이션을 배포하거나 배포하는 것을 더 쉽게 만듭니다</p>
+
 <p>Let&rsquo;s jump straight in and explain how to use it.</p>
+<p>바로 시작하여 그것을 사용하는 방법을 설명해보겠습니다.</p>
 
 		</main>
 		<footer>

@@ -31,8 +31,11 @@
 			<h2 id="embedding-html-templates">Embedding HTML templates</h2>
 
 <p>Next let&rsquo;s update our application so that the template cache uses embedded HTML template files, instead reading them from your hard disk at runtime.</p>
+<p>다음으로 애플리케이션을 업데이트하여 템플릿 캐시<sup>template cache</sup> 실행 시 하드 디스크에서 읽는 대신 <em>임베디드 HTML 템플릿 파일</em> 을 사용하도록 합시다.</p>
 
 <p>Head back to the <code>ui/efs.go</code> file, and update it so that <code>ui.Files</code>  embeds the contents of the <code>ui/html</code> directory (which contains our templates) too. Like so:</p>
+
+<p><code>ui/efs.go</code> 파일로 돌아가서, <code>ui.Files</code> 가 <code>ui/html</code> 디렉토리(템플릿을 포함하는)의 내용도 임베드하도록 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: ui/efs.go</figcaption>
@@ -48,12 +51,22 @@
 
 <p>Then we need to update the <code>newTemplateCache()</code> function in <code>cmd/web/templates.go</code> so that it reads the templates from <code>ui.Files</code>. To do this, we&rsquo;ll need to leverage a couple of the special features that Go has for working with embedded filesystems:</p>
 
+<p>그런 다음 <code>cmd/web/templates.go</code> 파일의 <code>newTemplateCache()</code> 함수를 업데이트하여 템플릿을 <code>ui.Files</code> 에서 읽도록 해야 합니다. 이를 위해 Go에서 임베디드 파일 시스템을 사용하는 데 도움이 되는 몇 가지 특별한 기능을 활용해야 합니다.</p>
+
 <ul>
-<li>The <a href="https://pkg.go.dev/io/fs#Glob"><code>fs.Glob()</code></a> function returns a slice of filepaths matching a glob pattern. It&rsquo;s effectively the same as the <code>filepath.Glob()</code> function that we used earlier in the book, except that it works on embedded filesystems.</li>
-<li>The <a href="https://pkg.go.dev/html/template#Template.ParseFS"><code>Template.ParseFS()</code></a> method can be used to parse the HTML templates from an embedded filesystem into a template set. This is effectively a replacement for <em>both</em> the <code>Template.ParseFiles()</code> and <code>Template.ParseGlob()</code> methods that we used earlier. <code>Template.ParseFiles()</code> is also a <em>variadic function</em>, which allows you to parse multiple templates in a single call to <code>ParseFiles()</code>.</li>
+<li>The <a href="https://pkg.go.dev/io/fs#Glob"><code>fs.Glob()</code></a> function returns a slice of filepaths matching a glob pattern. It&rsquo;s effectively the same as the <code>filepath.Glob()</code> function that we used earlier in the book, except that it works on embedded filesystems.
+
+<p><code>fs.Glob()</code> 함수는 glob 패턴과 일치하는 파일 경로의 슬라이스를 반환합니다. 이는 이 책에서 이전에 사용한 <code>filepath.Glob()</code> 함수와 효과적으로 동일하지만, 임베디드 파일 시스템에서 작동합니다.</p>
+</li>
+
+<li>The <a href="https://pkg.go.dev/html/template#Template.ParseFS"><code>Template.ParseFS()</code></a> method can be used to parse the HTML templates from an embedded filesystem into a template set. This is effectively a replacement for <em>both</em> the <code>Template.ParseFiles()</code> and <code>Template.ParseGlob()</code> methods that we used earlier. <code>Template.ParseFiles()</code> is also a <em>variadic function</em>, which allows you to parse multiple templates in a single call to <code>ParseFiles()</code>.
+
+<p><code>Template.ParseFS()</code> 메서드는 임베디드 파일 시스템에서 HTML 템플릿을 템플릿 세트로 파싱하는 데 사용될 수 있습니다. 이는 이전에 사용한 <code>Template.ParseFiles()</code> 및 <code>Template.ParseGlob()</code> 메서드 모두의 효과적인 대체품입니다. <code>Template.ParseFiles()</code> 도 가변인자 함수<sup>variadic function</sup>로, <code>ParseFiles()</code> 를 한 번 호출하여 여러 템플릿을 파싱할 수 있습니다.</p>
+</li>
 </ul>
 
 <p>Let&rsquo;s put these to use in our <code>cmd/web/templates.go</code> file:</p>
+<p>이제 이들을 <code>cmd/web/templates.go</code> 파일에서 사용해 봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -109,9 +122,10 @@
 </figure>
 
 <p>Now that this is done, when our application is built into a binary it will contain all the UI files that it needs to run.</p>
+<p>이제 이 작업이 완료되면, 애플리케이션이 바이너리로 빌드될 때 실행에 필요한 모든 UI 파일이 포함될 것입니다.</p>
 
 <p>You can try this out quickly by building an executable binary in your <code>/tmp</code> directory, copying over the TLS certificates, and running the binary. Like so:</p>
-
+<p><code>/tmp</code> 디렉토리에 실행 가능한 바이너리를 빌드하고 TLS 인증서를 복사한 다음 바이너리를 실행하여 빠르게 이를 시도해볼 수 있습니다.</p>
 <figure class="code bash">
 <pre>$ go build -o /tmp/web ./cmd/web/
 $ cp -r ./tls /tmp/
@@ -121,14 +135,16 @@ $ ./web
 </figure>
 
 <p>And again, you should be able to visit <a href="https://localhost:4000/"><code>https://localhost:4000</code></a> in your browser and everything should work correctly &mdash; despite the binary being in a location where it does not have access to the original UI files on disk.</p>
-
+<p>그리고 다시 한 번, 브라우저에서 <code>https://localhost:4000</code> 을 방문하여 모든 것이 올바르게 작동하는지 확인할 수 있어야 합니다. 이때 이진 파일이 디스크의 원본 UI 파일에 액세스할 수 없는 위치에 있더라도 문제가 없어야 합니다.</p>
 <figure class="img">
 <img src="assets/img/13.02-01.png" alt="13.02-01.png" />
 </figure>
 
 <aside class="important"><p>
 <strong>Note:</strong> If you&rsquo;d like to learn about building binaries and deploying applications, there is a lot more information and detailed explanation available in <a href="https://lets-go-further.alexedwards.net/">Let&rsquo;s Go Further</a>.
-</p></aside>
+</p>
+<p><strong>중요:</strong> 이진 파일 빌드와 애플리케이션 배포에 대해 더 자세히 알고 싶다면, '더 나아가기(Let’s Go Further)'에서 더 많은 정보와 자세한 설명이 제공됩니다.</p>
+</aside>
 
 		</main>
 		<footer>

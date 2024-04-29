@@ -31,12 +31,14 @@
 			<h2 id="embedding-static-files">Embedding static files</h2>
 
 <p>If you&rsquo;re following along, the first thing to do is create a new <code>ui/efs.go</code> file:</p>
+<p>만약 따라오고 있다면, 첫 번째 할 일은 새로운 <code>ui/efs.go</code> 파일을 생성하는 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ touch ui/efs.go</pre>
 </figure>
 
 <p>Then add the following code:</p>
+<p>그런 다음에 다음 코드를 추가합니다.</p>
 
 <figure class="code go">
 <figcaption>File: ui/efs.go</figcaption>
@@ -51,28 +53,47 @@
 </figure>
 
 <p>The important line here is <code>//go:embed &quot;static&quot;</code>.</p>
+<p>여기서 중요한 라인은 <code>//go:embed &quot;static&quot;</code> 입니다.</p>
 
 <p>This looks like a comment, but it is actually a special <em>comment directive</em>. When our application is compiled (as part of either <code>go build</code> or <code>go run</code>), this comment directive instructs Go to store the files from our <code>ui/static</code> folder in an <em>embedded filesystem</em> referenced by the global variable <code>Files</code>.</p>
 
+<p>이것은 주석처럼 보이지만 사실은 특별한 주석 지시문<sup>comment directive</sup> 입니다. 우리 애플리케이션이 컴파일될 때(<code>go build</code> 또는 <code>go run</code>의 일부로), 이 주석 지시문은 Go에게 <code>ui/static</code> 폴더의 파일을 전역 변수 <code>Files</code> 로 참조되는 <em>embedded filesystem</em>에 저장하도록 지시합니다.</p>
+
 <p>There are a few important details about this which we need to explain.</p>
+<p>이에 대해 설명할 몇 가지 중요한 세부 사항이 있습니다.</p>
 
 <ul>
-<li><p>The comment directive must be placed <em>immediately above</em> the variable in which you want to store the embedded files.</p></li>
+<li><p>The comment directive must be placed <em>immediately above</em> the variable in which you want to store the embedded files.</p>
+<p>주석 지시문<sup>comment directive</sup> 은 임베디드 파일을 저장하려는 변수 <u>바로 위에</u> 위치해야 합니다.</p>
+</li>
 
-<li><p>The directive has the format <code>go:embed &quot;&lt;path&gt;&quot;</code>. The path is relative to the <code>.go</code> file containing the directive, so &mdash; in our case &mdash; <code>go:embed &quot;static&quot;</code> embeds the directory <code>ui/static</code> from our project.</p></li>
+<li><p>The directive has the format <code>go:embed &quot;&lt;path&gt;&quot;</code>. The path is relative to the <code>.go</code> file containing the directive, so &mdash; in our case &mdash; <code>go:embed &quot;static&quot;</code> embeds the directory <code>ui/static</code> from our project.</p>
 
-<li><p>You can only use the <code>go:embed</code> directive on global variables at package level, not within functions or methods. If you try to use it within a function or method, you’ll get the error <code>&quot;go:embed cannot apply to var inside func&quot;</code> at compile time.</p></li>
+<p>이 지시문은 <code>go:embed &quot;&lt;path&gt;&quot;</code> 형식을 가집니다. 경로<sup><code>path</code></sup> 는 지시문을 포함하는 <code>.go</code> 파일을 기준으로 상대적으로 지정됩니다. 따라서 — 우리의 경우 — <code>go:embed &quot;static&quot;</code>은 프로젝트의 <code>ui/static</code> 디렉토리를 포함합니다.</p>
+</li>
 
-<li><p>Paths cannot not contain <code>.</code> or <code>..</code> elements, nor may they begin or end with a <code>/</code>. This essentially restricts you to only embedding files or directories that are within the same directory as the <code>.go</code> file containing the <code>go:embed</code> directive.</p></li>
+<li><p>You can only use the <code>go:embed</code> directive on global variables at package level, not within functions or methods. If you try to use it within a function or method, you’ll get the error <code>&quot;go:embed cannot apply to var inside func&quot;</code> at compile time.</p>
+<p><code>go:embed</code> 지시문<sup>directive</sup> 은 패키지 수준의 전역 변수에서만 사용할 수 있습니다. 함수나 메서드 내부에서는 사용할 수 없습니다. 함수나 메서드 내부에서 사용하려고 하면 컴파일 시에 <code>&quot;go:embed cannot apply to var inside func&quot;</code> 오류가 발생합니다.</p>
 
-<li><p>The embedded file system is <em>always</em> rooted in the directory which contains the <code>go:embed</code> directive. So, in the example above, our <code>Files</code> variable contains an <a href="https://pkg.go.dev/embed/#FS"><code>embed.FS</code></a> embedded filesystem and the root of that filesystem is our <code>ui</code> directory.</p></li>
+</li>
+
+<li><p>Paths cannot not contain <code>.</code> or <code>..</code> elements, nor may they begin or end with a <code>/</code>. This essentially restricts you to only embedding files or directories that are within the same directory as the <code>.go</code> file containing the <code>go:embed</code> directive.</p>
+<p>경로에는 <code>.</code> 이나 <code>..</code> 요소가 포함되어 있을 수 없으며, 시작이나 끝에 <code>/</code> 로 시작하거나 끝날 수 없습니다. 이는 본질적으로 <code>go:embed</code>  지시문<sup>directive</sup> 을 포함하는 <code>.go</code> 파일과 동일한 디렉터리에 있는 파일 또는 디렉터리만 포함할 수 있도록 제한합니다.</p>
+</li>
+
+<li><p>The embedded file system is <em>always</em> rooted in the directory which contains the <code>go:embed</code> directive. So, in the example above, our <code>Files</code> variable contains an <a href="https://pkg.go.dev/embed/#FS"><code>embed.FS</code></a> embedded filesystem and the root of that filesystem is our <code>ui</code> directory.</p>
+<p>임베디드 파일 시스템<sup>embedded file system</sup> 은 항상 <code>go:embed</code> 지시문<sup>directive</sup> 을 포함하는 디렉터리를 기준으로 합니다. 따라서 위의 예시에서 우리의 <code>Files</code> 변수에는 <code>embed.FS</code> 임베디드 파일 시스템<sup>embedded file system</sup> 이 포함되어 있으며, 해당 파일 시스템의 루트는 우리의 <code>ui</code> 디렉터리입니다.</p>
+</li>
 </ul>
 
 <h3 id="using-the-embedded-static-files">Using the embedded static files</h3>
 
 <p>Now let&rsquo;s switch up our application so that it serves our static CSS, JavaScript and image files from the embedded file system &mdash; instead of reading them from the disk at runtime.</p>
 
+<p>이제 애플리케이션을 변경하여 실행 시 디스크에서 파일을 읽는 대신 임베디드 파일 시스템<sup>embedded file system</sup> 에서 정적 CSS, JavaScript 및 이미지 파일을 제공하도록 변경해 봅시다.</p>
+
 <p>Open your <code>cmd/web/routes.go</code> file and update it as follows:</p>
+<p><code>cmd/web/routes.go</code> 파일을 열고 다음과 같이 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -129,11 +150,14 @@
 
 <p>If you save these changes and then restart the application, you should find that everything compiles and runs correctly. When you visit <a href="https://localhost:4000/"><code>https://localhost:4000</code></a> in your browser, the static files should be served from the embedded filesystem and everything should look normal.</p>
 
+<p>이 변경 사항을 저장한 후 애플리케이션을 다시 시작하면 모든 것이 올바르게 컴파일되고 실행될 것입니다. 브라우저에서 <code>https://localhost:4000</code></a> 을 방문하면 정적 파일이 임베디드 파일 시스템<sup>embedded file system</sup> 에서 제공되어 모든 것이 정상적으로 보여야 합니다.</p>
+
 <figure class="img">
 <img src="assets/img/13.01-01.png" alt="13.01-01.png" />
 </figure>
 
 <p>If you want, you can also navigate directly to the static files to check that they are still available. For example, visiting <a href="https://localhost:4000/static/css/main.css"><code>https://localhost:4000/static/css/main.css</code></a> should display the CSS stylesheet for the webpage from the embedded filesystem.</p>
+<p>원한다면 정적 파일로 직접 이동하여 여전히 사용 가능한지 확인할 수도 있습니다. 예를 들어, <code>https://localhost:4000/static/css/main.css</code> 를 방문하면 임베디드 파일 시스템<sup>embedded file system</sup> 에서 웹 페이지의 CSS 스타일시트가 표시됩니다</p>
 
 <figure class="img">
 <img src="assets/img/13.01-02.png" alt="13.01-02.png" />
@@ -147,6 +171,8 @@
 
 <p>It&rsquo;s totally OK to specify multiple paths in one embed directive. For example, we could individually embed the <code>ui/static/css</code>, <code>ui/static/img</code> and <code>ui/static/js</code> directories like so:</p>
 
+<p>하나의 embed 지시문<sup>directive</sup> 에서 여러 경로<sup>path</sup>를 지정하는 것은 전혀 문제가 되지 않습니다. 예를 들어, 다음과 같이 <code>ui/static/css</code>, <code>ui/static/img</code> 및 <code>ui/static/js</code> 디렉토리를 개별적으로 포함할 수 있습니다.</p>
+
 <figure class="code go">
 <pre><span class="c1">//go:embed &#34;static/css&#34; &#34;static/img&#34; &#34;static/js&#34; 
 </span><span class="c1"></span><span class="kd">var</span> <span class="nx">Files</span> <span class="nx">embed</span><span class="p">.</span><span class="nx">FS</span></pre>
@@ -154,13 +180,18 @@
 
 <aside class="important"><p>
 <strong>Important:</strong> The path separator in embed path patterns should always be a forward slash <code>/</code>, even on Windows machines.
-</p></aside>
+</p>
+<p><strong>중요:</strong> 임베드 경로 패턴에서의 경로 구분자<sup>path separator</sup> 는 항상 슬래시 <code>/</code> 여야 합니다. 심지어 윈도우 기기에서도 그렇습니다.</p>
+</aside>
 
 <h4 id="embedding-specific-files">Embedding specific files</h4>
 
 <p>I alluded to this at the start of the chapter, but it&rsquo;s possible for an embed path to point to a <em>specific file</em>. Embedding isn&rsquo;t just limited to directories.</p>
+<p>이 장의 시작에서 이에 대해 암시했지만, embed 경로가 특정 파일<sup>specific file</sup> 을 가리킬 수도 있습니다. 임베딩은 디렉터리에만 제한되는 것이 아닙니다.</p>
 
 <p>For example, lets&rsquo;s pretend that our <code>ui/static/css</code> directory contains some additional assets that we don&rsquo;t want to embed, such as <a href="https://www.keycdn.com/blog/sass-vs-less">Sass or Less</a> files. In that case, we could embed just the <code>ui/static/css/main.css</code> file like so:</p>
+
+<p>예를 들어, <code>ui/static/css</code> 디렉터리에 <a href="https://www.keycdn.com/blog/sass-vs-less">Sass 또는 Less</a> 파일과 같은 추가 자산이 포함되어 있지만 임베드하지 않으려는 경우를 가정해 봅시다. 이 경우에는 <code>ui/static/css/main.css</code> 파일만 임베드할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="c1">//go:embed &#34;static/css/main.css&#34; &#34;static/img&#34; &#34;static/js&#34; 
@@ -170,6 +201,7 @@
 <h4 id="wildcard-paths">Wildcard paths</h4>
 
 <p>The character <code>*</code> can be used as a &lsquo;wildcard&rsquo; in an embed path. Continuing with the example above, we could rewrite the embed directive so that only <code>.css</code> files under <code>ui/static/css</code> are embedded:</p>
+<p>위의 예시를 계속해서, <code>*</code> 문자는 embed 경로에서 &lsquo;wildcard&rsquo; 로 사용할 수 있습니다. 위의 예시를 따라서 <code>ui/static/css</code> 아래의 <code>.css</code> 파일만 임베드되도록 embed 지시문<sup>directive</sup>을 다시 작성할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="c1">//go:embed &#34;static/css/*.css&#34; &#34;static/img&#34; &#34;static/js&#34; 
@@ -177,6 +209,7 @@
 </figure>
 
 <p>Related to that, if you use the wildcard path <code>&quot;*&quot;</code> without any qualifiers, like this:</p>
+<p>그와 관련하여, 이와 같이 어떤 한정자<sup>qualifier</sup> 없이 와일드카드 경로 <code>&quot;*&quot;</code> 를 사용한다면</p>
 
 <figure class="code go">
 <pre><span class="c1">//go:embed &#34;*&#34;
@@ -184,10 +217,13 @@
 </figure>
 
 <p>&hellip; then it will embed everything in the current directory, including the <code>.go</code> file that contains the embed directive itself! Most of the time you don&rsquo;t want that, so it&rsquo;s more common to explicitly embed specific subdirectories or files instead.</p>
+<p>...그렇게 하면 현재 디렉터리에 있는 모든 것이 임베드됩니다. 이는 임베드 지시문을 포함하는 <code>.go</code> 파일까지 포함됩니다! 대부분의 경우 이는 원하지 않으므로, 보다 일반적으로 특정 하위 디렉터리나 파일을 명시적으로 임베드하는 것이 더 흔합니다</p>
 
 <h4 id="the-all-prefix">The all prefix</h4>
 
 <p>Finally, if a path is to a directory, then all files in that directory are recursively embedded &mdash; <em>except</em> for files with names that begin with <code>.</code> or <code>_</code> characters. If you want to include those files  too, then you should use the <code>all:</code> prefix at the start of the path.</p>
+
+<p>마지막으로, 경로가 디렉터리를 가리킨다면 해당 디렉터리의 모든 파일이 재귀적으로 임베드됩니다. 다만 파일명이 <code>.</code> 또는 <code>_</code> 문자로 시작하는 파일은 제외됩니다. 이러한 파일도 포함하고 싶다면 경로의 시작 부분에 <code>all:</code> 접두사를 사용해야 합니다.</p>
 
 <figure class="code go">
 <pre><span class="c1">//go:embed &#34;all:static&#34;
