@@ -31,8 +31,10 @@
 			<h2 id="unit-testing-and-sub-tests">Unit testing and sub-tests</h2>
 
 <p>In this chapter we&rsquo;ll create a unit test to make sure that our <code>humanDate()</code> function (which we made back in the <a href="05.06-custom-template-functions.html">custom template functions</a> chapter) is outputting <code>time.Time</code> values in the exact format that we want.</p>
+<p>이 장에서는 우리가 이전에 만들었던 <a href="05.06-custom-template-functions.html">custom template functions</a> 장에서 <code>humanDate()</code> 함수를 생성하여, 시간(<code>time.Time</code>) 값들을 우리가 원하는 정확한 형식으로 출력하는지 확인하는 단위 테스트를 만들 것입니다.</p>
 
 <p>If you can&rsquo;t remember, the <code>humanDate()</code> function looks like this:</p>
+<p>만약 기억이 나지 않는다면, <code>humanDate()</code> 함수는 다음과 같이 보입니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -48,18 +50,23 @@
 </figure>
 
 <p>The reason that I want to start by testing this is because it&rsquo;s a simple function. We can explore the basic syntax and patterns for writing tests without getting too caught-up in <em>the functionality</em> that we&rsquo;re testing.</p>
+<p>
+이 함수를 테스트하는 이유는 그것이 간단한 함수이기 때문입니다. 우리는 테스트 작성의 기본 문법과 패턴을 탐구할 수 있습니다. 테스트할 <em>기능</em>에 너무 많이 얽매이지 않고 진행할 수 있습니다.</p>
 
 <h3 id="creating-a-unit-test">Creating a unit test</h3>
 
 <p>Let&rsquo;s jump straight in and create a <dfn>unit test</dfn> for this function.</p>
+<p>그럼 바로 들어가서 이 함수에 대한 <dfn>단위 테스트</dfn>를 작성해보겠습니다.</p>
 
 <p>In Go, it&rsquo;s standard practice to write your tests in <code>*_test.go</code> files which live directly alongside the code that you&rsquo;re testing. So, in this case, the first thing that we&rsquo;re going to do is create a new <code>cmd/web/templates_test.go</code> file to hold the test:</p>
+<p>Go 언어에서는 일반적으로 테스트를 <code>*_test.go</code> 파일에 작성하는 것이 표준 관행입니다. 이 파일들은 테스트할 코드와 직접적으로 인접하게 위치합니다. 따라서 이 경우에는 먼저 <code>cmd/web/templates_test.go</code> 파일을 생성하여 테스트를 담을 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/templates_test.go</pre>
 </figure>
 
 <p>And then we can create a new unit test for the <code>humanDate</code> function like so:</p>
+<p>그리고 나서 <code>humanDate</code> 함수에 대한 새로운 단위 테스트를 다음과 같이 작성할 수 있습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates_test.go</figcaption>
@@ -86,18 +93,28 @@
 </figure>
 
 <p>This pattern is the basic one that you&rsquo;ll use for nearly all tests that you write in Go. The important things to take away are:</p>
+<p>이 패턴은 Go에서 작성하는 거의 모든 테스트에 사용할 수 있는 기본적인 패턴입니다. 중요한 점은 다음과 같습니다.</p>
 
 <ul>
-<li><p>The test is just regular Go code, which calls the <code>humanDate()</code> function and checks that the result matches what we expect.</p></li>
+<li><p>The test is just regular Go code, which calls the <code>humanDate()</code> function and checks that the result matches what we expect.</p>
+<p>이 테스트는 단순히 <code>humanDate()</code> 함수를 호출하고 그 결과가 우리가 기대하는 대로 맞는지 확인하는 일반적인 Go 코드입니다.</p>
+</li>
 
-<li><p>Your unit tests are contained in a normal Go function with the signature <code>func(*testing.T)</code>.</p></li>
+<li><p>Your unit tests are contained in a normal Go function with the signature <code>func(*testing.T)</code>.</p>
+<p>단위 테스트는 일반적인 Go 함수 형태를 가지며 시그니처는 <code>func(*testing.T)</code> 입니다.</p>
+</li>
 
-<li><p>To be a valid unit test, the name of this function <em>must</em> begin with the word <code>Test</code>. Typically this is then followed by the name of the function, method or type that you&rsquo;re testing to help make it obvious at a glance <em>what</em> is being tested.</p></li>
+<li><p>To be a valid unit test, the name of this function <em>must</em> begin with the word <code>Test</code>. Typically this is then followed by the name of the function, method or type that you&rsquo;re testing to help make it obvious at a glance <em>what</em> is being tested.</p>
+<p>유효한 단위 테스트가 되려면 이 함수의 이름은 반드시 <code>Test</code> 로 시작해야 합니다. 일반적으로 이후에는 테스트하는 함수, 메서드 또는 타입의 이름이 옵니다. 이는 한눈에 보고 테스트 대상이 무엇인지 명확하게 알 수 있도록 돕습니다.</p>
+</li>
 
-<li><p>You can use the <a href="https://pkg.go.dev/testing/#T.Errorf"><code>t.Errorf()</code></a> function to mark a test as <em>failed</em> and log a descriptive message about the failure. It&rsquo;s important to note that calling <code>t.Errorf()</code> <em>doesn&rsquo;t stop execution of your test</em> &mdash; after you call it Go will continue executing any remaining test code as normal.</p></li>
+<li><p>You can use the <a href="https://pkg.go.dev/testing/#T.Errorf"><code>t.Errorf()</code></a> function to mark a test as <em>failed</em> and log a descriptive message about the failure. It&rsquo;s important to note that calling <code>t.Errorf()</code> <em>doesn&rsquo;t stop execution of your test</em> &mdash; after you call it Go will continue executing any remaining test code as normal.</p>
+<p>테스트를 실패로 표시하고 실패에 대한 설명 메시지를 기록하기 위해 <code>t.Errorf()</code> 함수를 사용할 수 있습니다. 중요한 점은 <code>t.Errorf()</code> 를 호출하더라도 테스트 실행이 중지되지 않는다는 것입니다. <code>t.Errorf()</code> 를 호출한 후에도 Go는 남아 있는 테스트 코드를 정상적으로 실행합니다.</p>
+</li>
 </ul>
 
 <p>Let&rsquo;s try this out. Save the file, then use the <code>go test</code> command to run all the tests in our <code>cmd/web</code> package like so:</p>
+<p>이제 이를 시도해보겠습니다. 파일을 저장한 후에, 다음과 같이 go test 명령을 사용하여 cmd/web 패키지의 모든 테스트를 실행할 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ go test ./cmd/web
