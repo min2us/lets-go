@@ -31,12 +31,15 @@
 			<h2 id="setting-up-an-html-form">Setting up an HTML form</h2>
 
 <p>Let&rsquo;s begin by making a new <code>ui/html/pages/create.tmpl</code> file to hold the HTML for the form:</p>
+<p>새로운 <code>ui/html/pages/create.tmpl</code> 파일을 만들어 폼의 HTML을 저장하겠습니다.</p>
 
 <figure class="code bash">
 <pre>$ touch ui/html/pages/create.tmpl</pre>
 </figure>
 
 <p>&hellip; and then add the following markup, using the same template patterns that we used earlier in the book.</p>
+<p>
+... 그리고 책에서 이전에 사용한 동일한 템플릿 패턴을 사용하여 다음과 같은 마크업을 추가합니다.</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/pages/create.tmpl</figcaption>
@@ -66,8 +69,14 @@
 </figure>
 
 <p>There&rsquo;s nothing particularly special about this so far. Our <code>main</code> template contains a standard HTML form which sends three form values: <code>title</code>, <code>content</code> and <code>expires</code> (the number of days until the snippet should expire). The only thing to really point out is the form&rsquo;s <code>action</code> and <code>method</code> attributes &mdash; we&rsquo;ve set these up so that the form will <code>POST</code> the data to the URL <code>/snippet/create</code> when it&rsquo;s submitted.</p>
+<p>
+지금까지는 특별한 점이 없습니다. 우리의 <code>main</code> 템플릿에는 표준 HTML 폼이 포함되어 있으며, 이 폼은 세 가지 폼 값을 전송합니다: <code>title</code>, <code>content</code> and <code>expires</code> (스니펫이 만료될 때까지의 일수). 실제로 주목할 점은 폼의 <code>action</code> 과 <code>method</code> 속성입니다. 이 속성들을 설정하여 폼이 제출될 때 데이터를 <code>/snippet/create</code> URL로 <code>POST</code> 하도록 하였습니다.	
+</p>
 
 <p>Now let&rsquo;s add a new &lsquo;Create snippet&rsquo; link to the navigation bar for our application, so that clicking it will take the user to this new form.</p>
+<p>
+이제 애플리케이션의 탐색 바에 'Create snippet' 링크를 추가하여 클릭 시 사용자가 이 새로운 폼으로 이동할 수 있도록 하겠습니다.	
+</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/partials/nav.tmpl</figcaption>
@@ -81,6 +90,9 @@
 </figure>
 
 <p>And finally, we need to update the <code>snippetCreateForm</code> handler so that it renders our new page like so:</p>
+<p>
+	마지막으로, <code>snippetCreateForm</code> 핸들러를 업데이트하여 새로운 페이지를 다음과 같이 렌더링하도록 해야 합니다.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -98,6 +110,10 @@
 </figure>
 
 <p>At this point you can fire up the application and visit <a href="http://localhost:4000/snippet/create"><code>http://localhost:4000/snippet/create</code></a> in your browser. You should see a form which looks like this:</p>
+
+<p>
+	이 시점에서 애플리케이션을 실행하고 브라우저에서 <a href="http://localhost:4000/snippet/create"><code>http://localhost:4000/snippet/create</code></a> 로 방문해 보세요. 그러면 다음과 같은 폼이 표시될 것입니다.
+</p>
 
 <figure class="img">
 <img src="assets/img/08.01-01.png" alt="08.01-01.png" />

@@ -28,27 +28,44 @@
 		</header>
 		<main class="wrapper text">
 			<div class="chapter">Chapter 8.</div>
-			<h1 id="processing-forms">Processing forms</h1>
+			<h1 id="processing-forms">Processing forms 폼 처리</h1>
 
 <p>In this section of the book we&rsquo;re going to focus on adding an HTML form for creating new snippets. The form will look a bit like this:</p>
+<p>이번 섹션에서는 새로운 스니펫을 생성하기 위한 HTML 폼을 추가하는 것에 중점을 둘 것입니다. 폼은 다음과 같은 형태가 될 것입니다.</p>
 
 <p><img class="sketch" src="assets/img/08.00-01.png" alt="08.00-01.png"></img></p>
 
 <p>The high-level flow for processing this form will follow a standard <code>Post-Redirect-Get</code> pattern and will work like so:</p>
-
+<p>이 폼을 처리하는 고수준 흐름은 표준 <code>Post-Redirect-Get</code> 패턴을 따를 것이며 다음과 같이 동작할 것입니다.</p>
 <ol>
-<li>The user is shown the blank form when they make a <code>GET</code> request to <code>/snippet/create</code>.</li>
-<li>The user completes the form and it&rsquo;s submitted to the server via a <code>POST</code> request to <code>/snippet/create</code>.</li>
-<li>The form data will be validated by our <code>snippetCreatePost</code> handler. If there are any validation failures the form will be re-displayed with the appropriate form fields highlighted. If it passes our validation checks, the data for the new snippet will be added to the database and then we&rsquo;ll redirect the user to <code>&quot;/snippet/view/:id&quot;</code>.</li>
+<li>The user is shown the blank form when they make a <code>GET</code> request to <code>/snippet/create</code>.
+<p>사용자가 <code>/snippet/create</code> 로 <code>GET</code> 요청을 하면 빈 폼이 표시됩니다.</p>
+</li>
+
+<li>The user completes the form and it&rsquo;s submitted to the server via a <code>POST</code> request to <code>/snippet/create</code>.
+<p>사용자가 폼을 작성하고 <code>/snippet/create</code> 로 <code>POST</code> 요청을 통해 서버에 제출합니다.</p>
+</li>
+<li>The form data will be validated by our <code>snippetCreatePost</code> handler. If there are any validation failures the form will be re-displayed with the appropriate form fields highlighted. If it passes our validation checks, the data for the new snippet will be added to the database and then we&rsquo;ll redirect the user to <code>&quot;/snippet/view/:id&quot;</code>.
+<p>폼 데이터는 <code>snippetCreatePost</code> 핸들러에 의해 검증됩니다. 검증 실패 시, 적절한 폼 필드가 강조된 상태로 폼이 다시 표시됩니다. 검증을 통과하면 새로운 스니펫의 데이터가 데이터베이스에 추가되고, 사용자는 <code>&quot;/snippet/view/:id&quot;</code> 로 리디렉션됩니다.</p>
+</li>
 </ol>
 
 <p>As part of this you&rsquo;ll learn:</p>
+<p>이 과정의 일환으로 여러분은 다음을 배우게 될 것입니다.</p>
 
 <ul>
-<li>How to <a href="08.02-parsing-form-data.html">parse and access</a> form data sent in a <code>POST</code> request.</li>
-<li>Some techniques for performing common <a href="08.03-validating-form-data.html">validation checks</a> on the form data.</li>
-<li>A <a href="08.04-displaying-errors-and-repopulating-fields.html">user-friendly pattern</a> for alerting the user to validation failures and re-populating form fields with previously submitted data.</li>
-<li>How to <a href="08.05-creating-validation-helpers.html">keep your handlers clean</a> by using helpers for form processing and validation.</li>
+<li>How to <a href="08.02-parsing-form-data.html">parse and access</a> form data sent in a <code>POST</code> request.
+<p><code>POST</code> 요청으로 전송된 폼 데이터를 파싱하고 접근하는 방법.</p>
+</li>
+<li>Some techniques for performing common <a href="08.03-validating-form-data.html">validation checks</a> on the form data.
+<p>폼 데이터에 대한 일반적인 검증 체크를 수행하는 몇 가지 기법.</p>
+</li>
+<li>A <a href="08.04-displaying-errors-and-repopulating-fields.html">user-friendly pattern</a> for alerting the user to validation failures and re-populating form fields with previously submitted data.
+<p>사용자에게 검증 실패를 알리고, 이전에 제출한 데이터로 폼 필드를 다시 채우는 사용자 친화적인 패턴.</p>
+</li>
+<li>How to <a href="08.05-creating-validation-helpers.html">keep your handlers clean</a> by using helpers for form processing and validation.
+<p>폼 처리 및 검증을 위한 헬퍼를 사용하여 핸들러를 깔끔하게 유지하는 방법.</p>
+</li>
 </ul>
 
 		</main>
