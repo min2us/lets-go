@@ -31,16 +31,35 @@
 			<h2 id="parsing-form-data">Parsing form data</h2>
 
 <p>Thanks to the work we did previously in the <a href="07.00-advanced-routing.html">advanced routing</a> section, any <code>POST /snippets/create</code> requests are already being dispatched to our <code>snippetCreatePost</code> handler. We&rsquo;ll now update this handler to process and use the form data when it&rsquo;s submitted.</p>
+<p>
+이전의 <a href="07.00-advanced-routing.html">고급 라우팅</a> 섹션에서 작업한 덕분에, <code>POST /snippets/create</code> 요청은 이미 <code>snippetCreatePost</code> 핸들러로 전달되고 있습니다. 이제 이 핸들러를 업데이트하여 폼이 제출될 때 폼 데이터를 처리하고 사용할 수 있도록 하겠습니다.	
+</p>
 
 <p>At a high-level, we can break this down into two distinct steps.</p>
+<p>
+고수준에서 이를 두 가지 별개의 단계로 나눌 수 있습니다.	
+</p>
 
 <ol>
-<li><p>First, we need to use the <a href="https://pkg.go.dev/net/http/#Request.ParseForm"><code>r.ParseForm()</code></a> method to parse the request body. This checks that the request body is well-formed, and then stores the form data in the request&rsquo;s <a href="https://pkg.go.dev/net/http/#Request"><code>r.PostForm</code></a> map. If there are any errors encountered when parsing the body (like there is no body, or it&rsquo;s too large to process) then it will return an error. The <code>r.ParseForm()</code> method is also idempotent; it can safely be called multiple times on the same request without any side-effects.</p></li>
+<li><p>First, we need to use the <a href="https://pkg.go.dev/net/http/#Request.ParseForm"><code>r.ParseForm()</code></a> method to parse the request body. This checks that the request body is well-formed, and then stores the form data in the request&rsquo;s <a href="https://pkg.go.dev/net/http/#Request"><code>r.PostForm</code></a> map. If there are any errors encountered when parsing the body (like there is no body, or it&rsquo;s too large to process) then it will return an error. The <code>r.ParseForm()</code> method is also idempotent; it can safely be called multiple times on the same request without any side-effects.</p>
 
-<li><p>We can then get to the form data contained in <code>r.PostForm</code> by using the <code>r.PostForm.Get()</code> method. For example, we can retrieve the value of the <code>title</code> field with <code>r.PostForm.Get(&quot;title&quot;)</code>. If there is no matching field name in the form this will return the empty string <code>&quot;&quot;</code>, similar to the way that query string parameters worked earlier in the book.</p></li>
+<p>
+	먼저, <code>r.ParseForm()</code> 메서드를 사용하여 요청 본문을 파싱해야 합니다. 이 메서드는 요청 본문이 올바르게 형성되었는지 확인한 후, 폼 데이터를 요청의 <code>r.PostForm</code> 맵에 저장합니다. 본문을 파싱하는 과정에서 오류가 발생하면 (예: 본문이 없거나 처리하기에 너무 큰 경우) 오류를 반환합니다. <code>r.ParseForm()</code> 메서드는 또한 멱등성(idempotent) 속성을 가지며, 같은 요청에 대해 여러 번 호출해도 부작용이 없습니다.
+</p>
+</li>
+
+<li><p>We can then get to the form data contained in <code>r.PostForm</code> by using the <code>r.PostForm.Get()</code> method. For example, we can retrieve the value of the <code>title</code> field with <code>r.PostForm.Get(&quot;title&quot;)</code>. If there is no matching field name in the form this will return the empty string <code>&quot;&quot;</code>, similar to the way that query string parameters worked earlier in the book.</p>
+
+<p>
+그 다음, <code>r.PostForm.Get()</code>  메서드를 사용하여 <code>r.PostForm</code> 에 포함된 폼 데이터에 접근할 수 있습니다. 예를 들어, <code>r.PostForm.Get(&quot;title&quot;)</code> 을 사용하여 <code>title</code> 필드의 값을 가져올 수 있습니다. 폼에 일치하는 필드 이름이 없으면 이 메서드는 빈 문자열 <code>&quot;&quot;</code>을 반환하며, 이는 책에서 이전에 쿼리 문자열 매개변수와 비슷한 방식으로 작동합니다.	
+</p>
+</li>
 </ol>
 
 <p>Open your <code>cmd/web/handlers.go</code> file and update it to include the following code:</p>
+<p>
+<code>cmd/web/handlers.go</code> 파일을 열고 다음 코드를 포함하도록 업데이트하세요.
+</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -86,12 +105,18 @@
 </figure>
 
 <p>Alright, let&rsquo;s give this a try!  Restart the application and try filling in the form with the title and content of a snippet, a bit like this:</p>
+<p>
+	좋습니다, 이제 시도해 봅시다! 애플리케이션을 재시작하고, 스니펫의 제목과 내용을 입력하여 폼을 작성해 보세요. 대략 이런 식으로요.
+</p>
 
 <figure class="img">
 <img src="assets/img/08.02-01.png" alt="08.02-01.png" />
 </figure>
 
 <p>And then submit the form. If everything has worked, you should be redirected to a page displaying your new snippet like so:</p>
+<p>
+	그리고 폼을 제출해 보세요. 모든 것이 잘 작동하면, 새로운 스니펫을 표시하는 페이지로 리디렉션될 것입니다. 대략 이런 모습일 것입니다.
+</p>
 
 <figure class="img">
 <img src="assets/img/08.02-02.png" alt="08.02-02.png" />
@@ -104,22 +129,43 @@
 <h4 id="the-r-form-map">The r.Form map</h4>
 
 <p>In our code above, we accessed the form values via the <code>r.PostForm</code> map. But an alternative approach is to use the (subtly different) <code>r.Form</code> map.</p>
+<p>
+	위 코드에서는 <code>r.PostForm</code> 맵을 통해 폼 값을 접근했습니다. 그러나 대안으로는 약간 다른 <code>r.Form</code> 맵을 사용할 수도 있습니다.
+</p>
 
 <p>The <code>r.PostForm</code> map is populated only for <code>POST</code>, <code>PATCH</code> and <code>PUT</code> requests, and contains the form data from the request body.</p>
+<p>
+	<code>r.PostForm</code> 맵은 <code>POST</code>, <code>PATCH</code> 및 <code>PUT</code> 요청에 대해서만 채워지며, 요청 본문에 포함된 폼 데이터를 담고 있습니다.
+</p>
 
 <p>In contrast, the <code>r.Form</code> map is populated for all requests (irrespective of their HTTP method), and contains the form data from any request body <strong>and</strong> any query string parameters. So, if our form was submitted to <code>/snippet/create?foo=bar</code>, we could also get the value of the <code>foo</code> parameter by calling <code>r.Form.Get(&quot;foo&quot;)</code>. In the event of a conflict, the request body value will take precedent over the query string parameter.</p>
+<p>
+	반면, <code>r.Form</code> 맵은 모든 요청에 대해 채워지며 (HTTP 메서드와 상관없이), <strong>요청 본문과 쿼리 문자열 매개변수</strong>에서 폼 데이터를 포함합니다. 따라서 만약 폼이 <code>/snippet/create?foo=bar</code>로 제출되었다면, <code>r.Form.Get(&quot;foo&quot;)</code>을 호출하여 <code>foo</code> 매개변수의 값을 얻을 수도 있습니다. 충돌이 발생할 경우, 요청 본문에 있는 값이 쿼리 문자열 매개변수보다 우선합니다.
+</p>
 
 <p>Using the <code>r.Form</code> map can be useful if your application sends data in an HTML form and in the URL, or you have an application that is agnostic about how parameters are passed. But in our case those things aren&rsquo;t applicable. We expect our form data to be sent in the request body only, so it&rsquo;s sensible for us to access it via <code>r.PostForm</code>.</p>
+<p>
+	<code>r.Form</code> 맵을 사용하는 것은 애플리케이션이 HTML 폼과 URL 모두에 데이터를 전송하거나, 매개변수가 전달되는 방식에 대해 무관한 애플리케이션의 경우 유용할 수 있습니다. 하지만 우리 경우에는 이러한 사항이 적용되지 않습니다. 우리는 폼 데이터가 요청 본문에만 전송될 것으로 예상하므로, <code>r.PostForm</code> 을 통해 접근하는 것이 합리적입니다.
+</p>
 
 <h4 id="the-formvalue-and-postformvalue-methods">The FormValue and PostFormValue methods</h4>
 
 <p>The <code>net/http</code> package also provides the methods <a href="https://pkg.go.dev/net/http/#Request.FormValue"><code>r.FormValue()</code></a> and <a href="https://pkg.go.dev/net/http/#Request.PostFormValue"><code>r.PostFormValue()</code></a>. These are essentially shortcut functions that call <code>r.ParseForm()</code> for you, and then fetch the appropriate field value from <code>r.Form</code> or <code>r.PostForm</code> respectively.</p>
+<p>
+	<code>net/http</code> 패키지는 또한 <code>r.FormValue()</code>와 <code>r.PostFormValue()</code> 메서드를 제공합니다. 이 메서드들은 본질적으로 <code>r.ParseForm()</code>을 호출한 후, 각각 <code>r.Form</code> 또는 <code>r.PostForm</code> 에서 적절한 필드 값을 가져오는 단축 함수입니다.
+</p>
 
 <p>I recommend avoiding these shortcuts because they <em>silently ignore any errors</em> returned by <code>r.ParseForm()</code>. That&rsquo;s not ideal &mdash; it means our application could be encountering errors and failing for users, but there&rsquo;s no feedback mechanism to let them know.</p>
+<p>
+	이러한 단축 함수는 <code>r.ParseForm()</code> 에서 반환된 오류를 조용히 무시하기 때문에 사용하는 것을 권장하지 않습니다. 이는 이상적이지 않으며, 애플리케이션이 오류를 발생시키고 사용자에게 실패할 수 있지만, 오류를 알릴 피드백 메커니즘이 없다는 것을 의미합니다.
+</p>
 
 <h4 id="multiple-value-fields">Multiple-value fields</h4>
 
 <p>Strictly speaking, the <code>r.PostForm.Get()</code> method that we&rsquo;ve used above only returns the <em>first</em> value for a specific form field. This means you can&rsquo;t use it with form fields which potentially send multiple values, such as a group of checkboxes.</p>
+<p>
+	엄밀히 말하면, 위에서 사용한 <code>r.PostForm.Get()</code> 메서드는 특정 폼 필드에 대해 <em>첫 번째</em> 값만 반환합니다. 이는 여러 값을 보낼 수 있는 폼 필드, 예를 들어 여러 개의 체크박스 그룹과 함께 사용할 수 없다는 의미입니다.
+</p>
 
 <figure class="code html">
 <pre><span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;checkbox&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;items&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;foo&#34;</span><span class="p"></span><span class="p">&gt;</span> Foo
@@ -128,6 +174,9 @@
 </figure>
 
 <p>In this case you&rsquo;ll need to work with the <code>r.PostForm</code> map directly. The underlying type of the <code>r.PostForm</code> map is <a href="https://pkg.go.dev/net/url/#Values"><code>url.Values</code></a>, which in turn has the underlying type <code>map[string][]string</code>. So, for fields with multiple values you can loop over the underlying map to access them like so:</p>
+<p>
+	이 경우에는 <code>r.PostForm</code> 맵을 직접 다루어야 합니다. <code>r.PostForm</code> 맵의 기본 타입은 <code>url.Values</code> 이며, 이는 다시 기본 타입이 <code>map[string][]string</code> 입니다. 따라서 여러 값을 가지는 필드의 경우, 다음과 같이 내부 맵을 반복하여 값을 접근할 수 있습니다.
+</p>
 
 <figure class="code go">
 <pre><span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">item</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">r</span><span class="p">.</span><span class="nx">PostForm</span><span class="p">[</span><span class="s">&#34;items&#34;</span><span class="p">]</span> <span class="p">{</span>
@@ -138,8 +187,15 @@
 <h4 id="limiting-form-size">Limiting form size</h4>
 
 <p>Unless you&rsquo;re sending multipart data (i.e. your form has the <code>enctype=&quot;multipart/form-data&quot;</code> attribute) then <code>POST</code>, <code>PUT</code> and <code>PATCH</code> request bodies are limited to 10MB. If this is exceeded then <code>r.ParseForm()</code> will return an error.</p>
+<p>
+
+멀티파트 데이터(즉, 폼에 <code>enctype=&quot;multipart/form-data&quot;</code> 속성이 있는 경우)를 전송하지 않는 한, <code>POST</code>, <code>PUT</code> 및 <code>PATCH</code> 요청 본문은 10MB로 제한됩니다. 이 한도를 초과하면 <code>r.ParseForm()</code> 은 오류를 반환합니다.
+</p>
 
 <p>If you want to change this limit, you can use the <a href="https://pkg.go.dev/net/http/#MaxBytesReader"><code>http.MaxBytesReader()</code></a> function like so:</p>
+<p>
+	이 제한을 변경하려면 <code>http.MaxBytesReader()</code> 함수를 사용할 수 있습니다. 다음과 같이 설정할 수 있습니다
+</p>
 
 <figure class="code go">
 <pre>
@@ -154,8 +210,14 @@
 </figure>
 
 <p>With this code only the first 4096 bytes of the request body will be read during <code>r.ParseForm()</code>. Trying to read beyond this limit will cause the <code>MaxBytesReader</code> to return an error, which will subsequently be surfaced by <code>r.ParseForm()</code>.</p>
+<p>
+이 코드를 사용하면 <code>r.ParseForm()</code> 동안 요청 본문에서 처음 4096바이트만 읽게 됩니다. 이 한도를 초과하려고 하면 <code>MaxBytesReader</code> 가 오류를 반환하며, 이 오류는 이후에 <code>r.ParseForm()</code> 에 의해 노출됩니다.	
+</p>
 
 <p>Additionally &mdash; if the limit is hit &mdash; <code>MaxBytesReader</code> sets a flag on <code>http.ResponseWriter</code> which instructs the server to close the underlying TCP connection.</p>
+<p>
+	추가적으로, 한도에 도달하면 <code>MaxBytesReader</code> 는 <code>http.ResponseWriter</code> 에 플래그를 설정하여 서버가 기본 TCP 연결을 닫도록 지시합니다.
+</p>
 
 		</main>
 		<footer>
