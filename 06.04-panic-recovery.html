@@ -31,27 +31,27 @@
 			<h2 id="panic-recovery">Panic recovery</h2>
 
 <p>In a simple Go application, <a href="https://pkg.go.dev/builtin/#panic">when your code panics</a> it will result in the application being terminated straight away.
-<br>
+<br><br>
 간단한 Go 애플리케이션에서 코드가 패닉 상태에 빠지면 애플리케이션이 즉시 종료됩니다.
 </p>
 
 <p>But our web application is a bit more sophisticated. Go&rsquo;s HTTP server assumes that the effect of any panic is isolated to the goroutine serving the active HTTP request (<a href="02.09-the-http-handler-interface.html">remember</a>, every request is handled in it&rsquo;s own goroutine).
-<br>
+<br><br>
 그러나 우리의 웹 애플리케이션은 좀 더 정교합니다. Go의 HTTP 서버는 패닉의 효과가 활성 HTTP 요청을 처리하는 고루틴에 격리되어 있다고 가정합니다. (기억하세요, 각 요청은 고유한 고루틴에서 처리됩니다).
 </p>
 
 <p>Specifically, following a panic our server will log a stack trace to the server error log (which we will talk about <a href="10.02-the-server-error-log.html">later in the book</a>), unwind the stack for the affected goroutine (calling any deferred functions along the way) and close the underlying HTTP connection. But it won&rsquo;t terminate the application, so importantly, any panic in your handlers <em>won&rsquo;t</em> bring down your server.
-<br>
+<br><br>
 구체적으로 패닉이 발생하면 서버는 해당 패닉에 대한 스택 트레이스를 서버 오류 로그에 기록하고 (이에 대해서는 나중에 책에서 다룰 것입니다), 영향을 받는 고루틴의 스택을 해제하고 (이 과정에서 지연된 함수를 호출합니다), 기본 HTTP 연결을 닫습니다. 그러나 애플리케이션을 종료하지는 않으므로 중요한 점은 핸들러에서 발생한 패닉이 서버를 다운시키지 않는다는 것입니다.
 </p>
 
 <p><em>But if a panic does happen in one of our handlers, what will the user see?</em>
-<br>
+<br><br>
 그러나 만약 우리의 핸들러 중 하나에서 패닉이 발생한다면, 사용자는 <u>어떤 메시지</u>를 볼 수 있을까요?
 </p>
 
 <p>Let&rsquo;s take a look and introduce a deliberate panic into our <code>home</code> handler.
-<br>
+<br><br>
 자세히 살펴보고 의도적으로 <code>home</code> 핸들러에 패닉을 도입해보겠습니다.
 </p>
 
@@ -92,7 +92,7 @@
 </figure>
 
 <p>&hellip; and make a HTTP request for the home page from a second terminal window:
-<br>
+<br><br>
 두 번째 터미널 창에서 홈페이지에 대한 HTTP 요청을 생성합니다.
 </p>
 
@@ -102,22 +102,22 @@
 </figure>
 
 <p>Unfortunately, all we get is an empty response due to Go closing the underlying HTTP connection following the panic.
-<br>
+<br><br>
 불행하게도 패닉이 발생한 후 Go가 기본 HTTP 연결을 닫아버리므로 우리는 빈 응답만 얻게 됩니다.
 </p>
 
 <p>This isn&rsquo;t a great experience for the user. It would be more appropriate and meaningful to send them a proper HTTP response with a <code>500 Internal Server Error</code> status instead.
-<br>
+<br><br>
 이는 사용자에게 좋은 경험이 아닙니다. 오히려 적절하고 의미 있는 응답으로 <code>500 Internal Server Error</code> 상태를 함께 전송하는 것이 바람직합니다.
 </p>
 
 <p>A neat way of doing this is to create some middleware which <em>recovers</em> the panic and calls our <code>app.serverError()</code> helper method. To do this, we can leverage the fact that deferred functions are always called when the stack is being unwound following a panic.
-<br>
+<br><br>
 이를 수행하는 깔끔한 방법은 패닉을 복구하고 <code>app.serverError()</code> 헬퍼 메서드를 호출하는 미들웨어를 만드는 것입니다. 이를 위해 패닉이 발생한 후 스택이 해제되는 동안 지연된 함수가 항상 호출된다는 사실을 활용할 수 있습니다.
 </p>
 
 <p>Open up your <code>middleware.go</code> file and add the following code: 
-<br>
+<br><br>
 <code>middleware.go</code> 파일을 열고 다음 코드를 추가하세요.
 </p>
 
@@ -159,20 +159,20 @@
 
 <ul>
 <li><p>Setting the <code>Connection: Close</code> header on the response acts as a trigger to make Go&rsquo;s HTTP server automatically close the current connection after a response has been sent. It also informs the user that the connection <em>will be closed</em>. Note: If the protocol being used is HTTP/2, Go will <a href="https://go-review.googlesource.com/c/net/+/121415/">automatically</a> strip the <code>Connection: Close</code> header from the response (so it is not malformed) and send a <code>GOAWAY</code> frame.
-<br>
+<br><br>
 응답에 <code>Connection: Close</code> 헤더를 설정하면 Go의 HTTP 서버가 응답을 보낸 후에 현재 연결을 자동으로 닫도록 트리거 역할을 합니다. 또한 사용자에게 연결이 닫힐 것임을 알려줍니다. 참고: 사용 중인 프로토콜이 HTTP/2인 경우 Go는 자동으로 응답에서 <code>Connection: Close</code> 헤더를 제거하고 (오류가 발생하지 않도록) <code>GOAWAY</code> 프레임을 보냅니다.
 
 </p>
 </li>
 
 <li><p>The value returned by the builtin <code>recover()</code> function has the type <code>any</code>, and its underlying type could be <code>string</code>, <code>error</code>, or something else &mdash; whatever the parameter passed to <code>panic()</code> was. In our case, it&rsquo;s the string <code>&quot;oops! something went wrong&quot;</code>. In the code above, we normalize this into an <code>error</code> by using the <code>fmt.Errorf()</code> function to create a new <code>error</code> object containing the default textual representation of the <code>any</code> value, and then pass this <code>error</code> to the <code>app.serverError()</code> helper method.
-<br>
+<br><br>
 내장된 <code>recover()</code> 함수가 반환하는 값은 <code>any</code> 타입이며, 그 기본 타입은 <code>string</code>, <code>error</code> 또는 다른 것일 수 있습니다. 즉, <code>panic()</code> 에 전달된 매개변수가 무엇이든 해당합니다. 우리의 경우에는 문자열 <code>&quot;oops! something went wrong&quot;</code> 입니다. 위의 코드에서는 <code>fmt.Errorf()</code> 함수를 사용하여 이를 새로운 <code>error</code> 객체로 정규화하고, 이 <code>error</code> 를 <code>app.serverError()</code> 헬퍼 메서드에 전달합니다.
 </p></li>
 </ul>
 
 <p>Let&rsquo;s now put this to use in the <code>routes.go</code> file, so that it is the <em>first</em> thing in our chain to be executed (so that it covers panics in all subsequent middleware and handlers).
-<br>
+<br><br>
 이제 <code>routes.go</code> 파일에서 이를 사용하여 체인에서 가장 먼저 실행되도록 합시다 (이렇게 하면 모든 후속 미들웨어 및 핸들러의 패닉을 처리할 수 있습니다).
 </p>
 
@@ -198,7 +198,7 @@
 </figure>
 
 <p>If you restart the application and make a request for the homepage now, you should see a nicely formed <code>500 Internal Server Error</code> response following the panic, including the <code>Connection: close</code> header that we talked about.
-<br>
+<br><br>
 애플리케이션을 다시 시작하고 지금 홈페이지에 대한 요청을 만들면, 패닉 후에 <code>Connection: close</code> 헤더를 포함한 잘 구성된 <code>500 Internal Server Error</code> 응답이 나타날 것입니다.
 </p>
 
@@ -224,7 +224,7 @@ Internal Server Error</samp></pre>
 </figure>
 
 <p>Before we continue, head back to your <code>home</code> handler and remove the deliberate panic from the code.
-<br>
+<br><br>
 계속 진행하기 전에 <code>home</code> 핸들러로 돌아가서 코드에서 의도적인 패닉을 제거하세요.
 </p>
 
@@ -262,17 +262,17 @@ Internal Server Error</samp></pre>
 <h4 id="panic-recovery-in-background-goroutines">Panic recovery in background goroutines</h4>
 
 <p>It&rsquo;s important to realize that our middleware will only recover panics that happen in the <em>same goroutine that executed the <code>recoverPanic()</code> middleware</em>.
-<br>
+<br><br>
 우리의 미들웨어는 <code>recoverPanic()</code> 미들웨어를 실행한 동일한 고루틴에서 발생한 패닉만 복구할 수 있다는 것을 인식하는 것이 중요합니다.
 </p>
 
 <p>If, for example, you have a handler which spins up another goroutine (e.g. to do some background processing), then any panics that happen in the second goroutine will not be recovered &mdash; not by the <code>recoverPanic()</code> middleware&hellip; and not by the panic recovery built into Go HTTP server. They will cause your application to exit and bring down the server.
-<br>
+<br><br>
 예를 들어 핸들러에서 다른 고루틴을 생성하여 (예: 백그라운드 처리를 수행하기 위해), 두 번째 고루틴에서 발생한 패닉은 <code>recoverPanic()</code> 미들웨어나 Go HTTP 서버의 패닉 복구에 의해 복구되지 않습니다. 이러한 패닉은 애플리케이션을 종료하고 서버를 다운시키게 됩니다.
 </p>
 
 <p>So, if you are spinning up additional goroutines from within your web application and there is any chance of a panic, you must make sure that you recover any panics from within those too. For example:
-<br>
+<br><br>
 따라서 웹 애플리케이션 내에서 추가적인 고루틴을 생성하고 패닉의 가능성이 있는 경우, 해당 고루틴 내에서 발생한 패닉을 복구하는 것을 확실히해야 합니다. 
 </p>
 

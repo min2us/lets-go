@@ -32,35 +32,35 @@
 			미들웨어 작동방식
 
 <p><a href="02.09-the-http-handler-interface.html">Earlier in the book</a> I said something that I&rsquo;d like to expand on in this chapter:
-<br>
-"이 책 앞부분에서 언급한 내용 중 이번 챕터에서 더 확장하고 싶은 것이 있습니다."
+<br><br>
+이 책 앞부분에서 언급한 내용 중 이번 챕터에서 더 확장하고 싶은 것이 있습니다.
 </p>
 
 <blockquote>
 <p>&ldquo;You can think of a Go web application as a chain of <code>ServeHTTP()</code> methods being called one after another.&rdquo;
-<br>
-"Go 웹 애플리케이션을 차례로 호출되는 <code>ServeHTTP()</code> 메서드 체인으로 생각할 수 있습니다."
+<br><br>
+Go 웹 애플리케이션을 차례로 호출되는 <code>ServeHTTP()</code> 메서드 체인으로 생각할 수 있습니다.
 </p>
 </blockquote>
 
 <p>Currently, in our application, when our server receives a new HTTP request it calls the servemux’s <code>ServeHTTP()</code> method. This looks up the relevant handler based on the request URL path, and in turn calls that handler’s <code>ServeHTTP()</code> method.
-<br>
-"현재 우리 애플리케이션에서 서버가 새 HTTP 요청을 받으면 servemux의 <code>ServeHTTP()</code> 메서드를 호출합니다. 이 메서드는 요청 URL 경로를 기반으로 관련 핸들러를 찾아 그 핸들러의 <code>ServeHTTP()</code> 메서드를 차례로 호출합니다."
+<br><br>
+현재 우리 애플리케이션에서 서버가 새 HTTP 요청을 받으면 servemux의 <code>ServeHTTP()</code> 메서드를 호출합니다. 이 메서드는 요청 URL 경로를 기반으로 관련 핸들러를 찾아 그 핸들러의 <code>ServeHTTP()</code> 메서드를 차례로 호출합니다.
 </p>
 
 <p>The basic idea of middleware is to insert another handler into this chain. The middleware handler executes some logic, like logging a request, and then calls the <code>ServeHTTP()</code> method of the <em>next</em> handler in the chain.
-<br>
-"미들웨어의 기본 아이디어는 이 체인에 다른 핸들러를 삽입하는 것입니다. 미들웨어 핸들러는 요청을 기록하는 등의 로직을 실행한 다음 체인에서 <em>next</em> 핸들러의 <code>ServeHTTP()</code> 메서드를 호출합니다."
+<br><br>
+미들웨어의 기본 아이디어는 이 체인에 다른 핸들러를 삽입하는 것입니다. 미들웨어 핸들러는 요청을 기록하는 등의 로직을 실행한 다음 체인에서 <em>next</em> 핸들러의 <code>ServeHTTP()</code> 메서드를 호출합니다.
 </p>
 
 <p>In fact, we&rsquo;re actually already using some middleware in our application &mdash; the <code>http.StripPrefix()</code> function from <a href="02.08-serving-static-files.html">serving static files</a>, which removes a specific prefix from the request&rsquo;s URL path before passing the request on to the file server.
-<br>
-"사실, 우리 애플리케이션에서는 이미 몇 가지 미들웨어를 사용 중입니다. <a href="02.08-serving-static-files.html">serving static files</a> 에서 가져온 <code>http.StripPrefix()</code>  함수는 요청을 파일 서버로 전달하기 전에 요청의 URL 경로에서 특정 접두사를 제거합니다."
+<br><br>
+사실, 우리 애플리케이션에서는 이미 몇 가지 미들웨어를 사용 중입니다. <a href="02.08-serving-static-files.html">serving static files</a> 에서 가져온 <code>http.StripPrefix()</code>  함수는 요청을 파일 서버로 전달하기 전에 요청의 URL 경로에서 특정 접두사를 제거합니다.
 </p>
 
 <h3 id="the-pattern">The pattern</h3>
 
-<p>The standard pattern for creating your own middleware looks like this: <br>"자체 미들웨어를 생성하는 표준 패턴은 다음과 같습니다."</p>
+<p>The standard pattern for creating your own middleware looks like this: <br><br>자체 미들웨어를 생성하는 표준 패턴은 다음과 같습니다.</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="nf">myMiddleware</span><span class="p">(</span><span class="nx">next</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span><span class="p">)</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Handler</span> <span class="p">{</span>
@@ -74,42 +74,42 @@
 </figure>
 
 <p>The code itself is pretty succinct, but there&rsquo;s quite a lot in it to get your head around.
-<br>
-"코드 자체는 매우 간결하지만 그 안에는 이해해야 할 것이 꽤 많이 들어 있습니다."
+<br><br>
+코드 자체는 매우 간결하지만 그 안에는 이해해야 할 것이 꽤 많이 들어 있습니다.
 </p>
 
 <ul>
 <li><p>The <code>myMiddleware()</code> function is essentially a wrapper around the <code>next</code> handler, which we pass to it as a parameter.
-<br>
-"<code>myMiddleware()</code> 함수는 본질적으로 우리가 매개변수로 전달하는 <code>next</code> 핸들러를 감싼 래퍼 역할을 합니다."
+<br><br>
+<code>myMiddleware()</code> 함수는 본질적으로 우리가 매개변수로 전달하는 <code>next</code> 핸들러를 감싼 래퍼 역할을 합니다.
 </p></li>
 
 <li><p>It establishes a function <code>fn</code> which <em>closes over</em> the <code>next</code> handler to form a closure. When <code>fn</code> is run it executes our middleware logic and then transfers control to the <code>next</code> handler by calling it&rsquo;s <code>ServeHTTP()</code> method.
-<br>
-"이 함수는 <code>next</code> 핸들러를 포함하여 클로저를 형성하는 함수 <code>fn</code> 을 설정합니다. <code>fn</code> 이 실행되면 미들웨어 로직을 실행한 다음 그 <code>next</code> 핸들러에게 제어를 전달하기 위해 그 핸들러의 <code>ServeHTTP()</code> 메서드를 호출합니다."
+<br><br>
+이 함수는 <code>next</code> 핸들러를 포함하여 클로저를 형성하는 함수 <code>fn</code> 을 설정합니다. <code>fn</code> 이 실행되면 미들웨어 로직을 실행한 다음 그 <code>next</code> 핸들러에게 제어를 전달하기 위해 그 핸들러의 <code>ServeHTTP()</code> 메서드를 호출합니다.
 </p></li>
 
 <li><p>Regardless of what you do with a closure it will always be able to access the variables that are local to the scope it was created in &mdash; which in this case means that <code>fn</code> will always have access to the <code>next</code> variable.
-<br>
-"클로저를 사용하더라도 해당 클로저가 생성된 스코프에서 로컬 변수에 항상 접근할 수 있습니다. 이 경우에는 <code>fn</code> 이 항상 <code>next</code> 변수에 접근할 수 있게 됩니다."
+<br><br>
+클로저를 사용하더라도 해당 클로저가 생성된 스코프에서 로컬 변수에 항상 접근할 수 있습니다. 이 경우에는 <code>fn</code> 이 항상 <code>next</code> 변수에 접근할 수 있게 됩니다.
 </p></li>
 
 <li><p>In the final line of code, we then convert this closure to a <code>http.Handler</code> and return it using the <code>http.HandlerFunc()</code> adapter.
-<br>
-"코드의 마지막 라인에서는 이 클로저를 <code>http.Handler</code>로 변환하고 <code>http.HandlerFunc()</code> 어댑터를 사용하여 반환합니다."
+<br><br>
+코드의 마지막 라인에서는 이 클로저를 <code>http.Handler</code>로 변환하고 <code>http.HandlerFunc()</code> 어댑터를 사용하여 반환합니다.
 </p></li>
 </ul>
 
 <p>If this feels confusing, you can think of it more simply: <code>myMiddleware()</code> is a function that accepts the next handler in a chain as a parameter. It <em>returns a handler</em> which executes some logic and then calls the next handler.
-<br>
-"이게 헷갈리면 더 간단하게 생각할 수 있습니다: <code>myMiddleware()</code>은 체인에서 다음 핸들러를 매개변수로 받는 함수입니다. 이 함수는 어떤 로직을 실행한 다음 다음 핸들러를 호출하는 핸들러를 반환합니다."
+<br><br>
+이게 헷갈리면 더 간단하게 생각할 수 있습니다: <code>myMiddleware()</code>은 체인에서 다음 핸들러를 매개변수로 받는 함수입니다. 이 함수는 어떤 로직을 실행한 다음 다음 핸들러를 호출하는 핸들러를 반환합니다.
 </p>
 
 <h3 id="simplifying-the-middleware">Simplifying the middleware</h3>
 
 <p>A tweak to this pattern is to use an anonymous function inside <code>myMiddleware()</code> middleware, like so:
-<br>
-"이 패턴을 조금 수정하는 방법은 <code>myMiddleware()</code> 미들웨어 내부에 익명 함수를 사용하는 것입니다. 다음과 같이:"
+<br><br>
+이 패턴을 조금 수정하는 방법은 <code>myMiddleware()</code> 미들웨어 내부에 익명 함수를 사용하는 것입니다. 다음과 같이:
 </p>
 
 <figure class="code go">
@@ -122,20 +122,20 @@
 </figure>
 
 <p>This pattern is very common in the wild, and the one that you’ll probably see most often if you’re reading the source code of other applications or third-party packages.
-<br>
-"이 패턴은 실제로 매우 흔하며, 다른 애플리케이션 또는 제3자 패키지의 소스 코드를 읽을 때 가장 자주 볼 수 있는 패턴 중 하나입니다."
+<br><br>
+이 패턴은 실제로 매우 흔하며, 다른 애플리케이션 또는 제3자 패키지의 소스 코드를 읽을 때 가장 자주 볼 수 있는 패턴 중 하나입니다.
 </p>
 
 <h3 id="positioning-the-middleware">Positioning the middleware</h3>
 
 <p>It&rsquo;s important to explain that where you position the middleware in the chain of handlers will affect the behavior of your application.
-<br>
-"미들웨어를 핸들러 체인에서 어디에 위치시키는지는 애플리케이션의 동작에 영향을 미칩니다. 이 부분을 설명하는 것이 중요합니다."
+<br><br>
+미들웨어를 핸들러 체인에서 어디에 위치시키는지는 애플리케이션의 동작에 영향을 미칩니다. 이 부분을 설명하는 것이 중요합니다.
 </p>
 
 <p>If you position your middleware before the servemux in the chain then it will act on every request that your application receives.
-<br>
-"미들웨어를 체인에서 servemux 앞에 위치시키면 애플리케이션이 받는 모든 요청에 영향을 미칠 것입니다."
+<br><br>
+미들웨어를 체인에서 servemux 앞에 위치시키면 애플리케이션이 받는 모든 요청에 영향을 미칠 것입니다.
 </p>
 
 <figure class="code plain">
@@ -143,13 +143,13 @@
 </figure>
 
 <p>A good example of where this would be useful is middleware to log requests &mdash; as that&rsquo;s typically something you would want to do for <em>all</em> requests.
-<br>
-"이것이 유용할 수 있는 좋은 예시는 요청을 기록하는 미들웨어입니다. 일반적으로 이것은 모든 요청에 대해 수행하고 싶은 작업이기 때문입니다."
+<br><br>
+이것이 유용할 수 있는 좋은 예시는 요청을 기록하는 미들웨어입니다. 일반적으로 이것은 모든 요청에 대해 수행하고 싶은 작업이기 때문입니다.
 </p>
 
 <p>Alternatively, you can position the middleware after the servemux in the chain &mdash; by wrapping a specific application handler. This would cause your middleware to only be executed for a specific route.
-<br>
-"또는 미들웨어를 체인에서 servemux 뒤에 위치시킬 수 있습니다. 이는 특정 응용 프로그램 핸들러를 감싸는 방식으로 이루어집니다. 이렇게 하면 미들웨어가 특정 경로에 대해서만 실행되도록 할 수 있습니다."
+<br><br>
+또는 미들웨어를 체인에서 servemux 뒤에 위치시킬 수 있습니다. 이는 특정 응용 프로그램 핸들러를 감싸는 방식으로 이루어집니다. 이렇게 하면 미들웨어가 특정 경로에 대해서만 실행되도록 할 수 있습니다.
 </p>
 
 <figure class="code plain">
@@ -157,13 +157,13 @@
 </figure>
 
 <p>An example of this would be something like authorization middleware, which you may only want to run on specific routes.
-<br>
-"이를 위한 예시로는 특정 경로에서만 실행하고 싶은 권한 부여 미들웨어가 있을 수 있습니다."
+<br><br>
+이를 위한 예시로는 특정 경로에서만 실행하고 싶은 권한 부여 미들웨어가 있을 수 있습니다.
 </p>
 
 <p>We&rsquo;ll demonstrate how to do both of these things in practice as we progress through the book.
-<br>
-"책을 진행하면서 실제로 이러한 두 가지를 어떻게 수행하는지를 보여드릴 것입니다."
+<br><br>
+책을 진행하면서 실제로 이러한 두 가지를 어떻게 수행하는지를 보여드릴 것입니다.
 </p>
 
 		</main>

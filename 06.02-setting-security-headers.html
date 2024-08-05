@@ -31,8 +31,8 @@
 			<h2 id="setting-security-headers">Setting security headers</h2>
 
 <p>Let&rsquo;s put the pattern we learned in the previous chapter to use, and make our own middleware which automatically adds the following HTTP security headers to every response, inline with <a href="https://owasp.org/www-project-secure-headers">current OWASP guidance</a>.
-<br>
-"이전 장에서 배운 패턴을 활용하여 우리만의 미들웨어를 만들어 보겠습니다. 이 미들웨어는 <a href="https://owasp.org/www-project-secure-headers">현재 OWASP 가이드라인</a>에 따라 모든 응답에 자동으로 다음 HTTP 보안 헤더를 추가합니다."
+<br><br>
+이전 장에서 배운 패턴을 활용하여 우리만의 미들웨어를 만들어 보겠습니다. 이 미들웨어는 <a href="https://owasp.org/www-project-secure-headers">현재 OWASP 가이드라인</a>에 따라 모든 응답에 자동으로 다음 HTTP 보안 헤더를 추가합니다.
 </p>
 
 <figure class="code plain">
@@ -44,47 +44,47 @@ X-XSS-Protection: 0</pre>
 </figure>
 
 <p>If you’re not familiar with these headers, I&rsquo;ll quickly explain what they do.
-<br>
-"이 헤더들이 익숙하지 않다면, 간단히 이들이 하는 일을 설명하겠습니다."
+<br><br>
+이 헤더들이 익숙하지 않다면, 간단히 이들이 하는 일을 설명하겠습니다.
 </p>
 
 <ul>
 <li><p><code>Content-Security-Policy</code> (often abbreviated to <em>CSP</em>) headers are used to restrict where the resources for your web page (e.g. JavaScript, images, fonts etc) can be loaded from. Setting a strict CSP policy helps prevent a variety of cross-site scripting, clickjacking, and other code-injection attacks.
-<br>
-"<code>Content-Security-Policy</code> 헤더(일반적으로 <em>CSP</em>로 줄여짐)는 웹 페이지의 리소스 (e.g. JavaScript, images, fonts etc)가 로드될 수 있는 위치를 제한하는 데 사용됩니다. 엄격한 CSP 정책을 설정하면 다양한 cross-site scripting, clickjacking 및 기타 code-injection 공격을 방지하는 데 도움이 됩니다."
+<br><br>
+<code>Content-Security-Policy</code> 헤더(일반적으로 <em>CSP</em>로 줄여짐)는 웹 페이지의 리소스 (e.g. JavaScript, images, fonts etc)가 로드될 수 있는 위치를 제한하는 데 사용됩니다. 엄격한 CSP 정책을 설정하면 다양한 cross-site scripting, clickjacking 및 기타 code-injection 공격을 방지하는 데 도움이 됩니다.
 </p>
 
 <p>CSP headers and how they work is a big topic, and I recommend reading <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">this primer</a> if you haven&rsquo;t come across them before. But, in our case, the header tells the browser that it&rsquo;s OK to load fonts from <code>fonts.gstatic.com</code>, stylesheets from <code>fonts.googleapis.com</code> and <code>self</code> (our own origin), and then <em>everything else</em> only from <code>self</code>. Inline JavaScript is blocked by default.
-<br>
-"CSP 헤더 및 작동 방식은 큰 주제이며, 이전에 접한 적이 없다면 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">이 기초 가이드</a>를 읽는 것을 추천합니다. 그러나 우리의 경우에는 헤더가 브라우저에게 <code>fonts.gstatic.com</code>에서 폰트를 로드하는 것, <code>fonts.googleapis.com</code> 및 <code>self</code>(자체 출처)에서 스타일시트를 로드하는 것이 허용되며, 그 외의 모든 것은 <code>self</code>에서만 로드할 수 있음을 알려줍니다. 기본적으로 Inline JavaScript는 차단됩니다."
+<br><br>
+CSP 헤더 및 작동 방식은 큰 주제이며, 이전에 접한 적이 없다면 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP">이 기초 가이드</a>를 읽는 것을 추천합니다. 그러나 우리의 경우에는 헤더가 브라우저에게 <code>fonts.gstatic.com</code>에서 폰트를 로드하는 것, <code>fonts.googleapis.com</code> 및 <code>self</code>(자체 출처)에서 스타일시트를 로드하는 것이 허용되며, 그 외의 모든 것은 <code>self</code>에서만 로드할 수 있음을 알려줍니다. 기본적으로 Inline JavaScript는 차단됩니다.
 </p></li>
 
 <li><p><code>Referrer-Policy</code> is used to control what information is included in a <code>Referer</code> header when a user navigates away from your web page. In our case, we&rsquo;ll set the value to <code>origin-when-cross-origin</code>, which means that the full URL will be included for <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy">same-origin requests</a>, but for all other requests information like the URL path and any query string values will be stripped out.
-<br>
-"<code>Referrer-Policy</code>는 사용자가 웹 페이지를 벗어날 때 <code>Referer</code> 헤더에 포함되는 정보를 제어하는 데 사용됩니다. 우리의 경우에는 값을 <code>origin-when-cross-origin</code> 으로 설정할 것이며, 이는 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy">동일 출처 요청</a>에 대해 전체 URL이 포함되지만 다른 모든 요청에 대해서는 URL 경로 및 쿼리 문자열 값과 같은 정보가 제거될 것을 의미합니다."
+<br><br>
+<code>Referrer-Policy</code>는 사용자가 웹 페이지를 벗어날 때 <code>Referer</code> 헤더에 포함되는 정보를 제어하는 데 사용됩니다. 우리의 경우에는 값을 <code>origin-when-cross-origin</code> 으로 설정할 것이며, 이는 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy">동일 출처 요청</a>에 대해 전체 URL이 포함되지만 다른 모든 요청에 대해서는 URL 경로 및 쿼리 문자열 값과 같은 정보가 제거될 것을 의미합니다.
 
 </p></li>
 
 <li><p><code>X-Content-Type-Options: nosniff</code> instructs browsers to <em>not</em> MIME-type sniff the content-type of the response, which in turn helps to prevent <a href="https://security.stackexchange.com/questions/7506/using-file-extension-and-mime-type-as-output-by-file-i-b-combination-to-dete/7531#7531">content-sniffing attacks</a>.
-<br>
-"<code>X-Content-Type-Options: nosniff</code> 은 브라우저에게 응답의 콘텐츠 유형을 MIME-type으로 스니핑하지 말도록 지시하며, 이는 결과적으로 <code>content-sniffing attacks</code> 을 방지하는 데 도움이 됩니다."
+<br><br>
+<code>X-Content-Type-Options: nosniff</code> 은 브라우저에게 응답의 콘텐츠 유형을 MIME-type으로 스니핑하지 말도록 지시하며, 이는 결과적으로 <code>content-sniffing attacks</code> 을 방지하는 데 도움이 됩니다.
 </p></li>
 
 <li><p><code>X-Frame-Options: deny</code> is used to help prevent <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Types_of_attacks#click-jacking">clickjacking</a> attacks in older browsers that don&rsquo;t support CSP headers.
-<br>
-"<code>X-Frame-Options: deny</code> 는 CSP 헤더를 지원하지 않는 이전 브라우저에서 clickjacking 공격을 방지하는 데 도움이 됩니다."
+<br><br>
+<code>X-Frame-Options: deny</code> 는 CSP 헤더를 지원하지 않는 이전 브라우저에서 clickjacking 공격을 방지하는 데 도움이 됩니다.
 </p></li>
 
 <li><p><code>X-XSS-Protection: 0</code> is used to <em>disable</em> the blocking of cross-site scripting attacks. Previously it was good practice to set this header to <code>X-XSS-Protection: 1; mode=block</code>, but when you&rsquo;re using CSP headers like we are <a href="https://owasp.org/www-project-secure-headers/#x-xss-protection">the recommendation</a> is to disable this feature altogether.
-<br>
-"<code>X-XSS-Protection: 0</code> 은 크로스사이트 스크립팅 공격 차단을 비활성화하는 데 사용됩니다. 이전에는 이 헤더를 <code>X-XSS-Protection: 1; mode=block</code> 로 설정하는 것이 좋은 방법이었지만, 우리처럼 CSP 헤더를 사용하는 경우 이 기능을 완전히 비활성화하는 것이 권장됩니다."
+<br><br>
+<code>X-XSS-Protection: 0</code> 은 크로스사이트 스크립팅 공격 차단을 비활성화하는 데 사용됩니다. 이전에는 이 헤더를 <code>X-XSS-Protection: 1; mode=block</code> 로 설정하는 것이 좋은 방법이었지만, 우리처럼 CSP 헤더를 사용하는 경우 이 기능을 완전히 비활성화하는 것이 권장됩니다.
 
 </p></li>
 </ul>
 
 <p>OK, let&rsquo;s get back to our Go code and begin by creating a new <code>middleware.go</code> file. We&rsquo;ll use this to hold all the custom middleware that we write throughout this book.
-<br>
-"좋아요, 이제 Go 코드로 돌아가서 새로운 <code>middleware.go</code> 파일을 만들어 보겠습니다. 이 파일은 이 책 전체에서 작성하는 모든 사용자 지정 미들웨어를 보관하는 데 사용할 것입니다."
+<br><br>
+좋아요, 이제 Go 코드로 돌아가서 새로운 <code>middleware.go</code> 파일을 만들어 보겠습니다. 이 파일은 이 책 전체에서 작성하는 모든 사용자 지정 미들웨어를 보관하는 데 사용할 것입니다.
 </p>
 
 <figure class="code bash">
@@ -92,8 +92,8 @@ X-XSS-Protection: 0</pre>
 </figure>
 
 <p>Then open it up and add a <code>secureHeaders()</code> function using the pattern that we introduced in the previous chapter:
-<br>
-"그런 다음 파일을 열고 이전 장에서 소개한 패턴을 사용하여 <code>secureHeaders()</code> 함수를 추가해주세요:"
+<br><br>
+그런 다음 파일을 열고 이전 장에서 소개한 패턴을 사용하여 <code>secureHeaders()</code> 함수를 추가해주세요:
 </p>
 
 <figure class="code go">
@@ -122,8 +122,8 @@ X-XSS-Protection: 0</pre>
 </figure>
 
 <p>Because we want this middleware to act on every request that is received, we need it to be executed <em>before</em> a request hits our servemux. We want the flow of control through our application to look like:
-<br>
-"이 미들웨어를 수신된 모든 요청에 적용하려면 해당 미들웨어가 servemux에 도달하기 전에 실행되어야 합니다. 우리는 응용 프로그램을 통한 제어 흐름이 다음과 같아 보이길 원합니다:"
+<br><br>
+이 미들웨어를 수신된 모든 요청에 적용하려면 해당 미들웨어가 servemux에 도달하기 전에 실행되어야 합니다. 우리는 응용 프로그램을 통한 제어 흐름이 다음과 같아 보이길 원합니다:
 </p>
 
 <figure class="code plain">
@@ -131,8 +131,8 @@ X-XSS-Protection: 0</pre>
 </figure>
 
 <p>To do this we&rsquo;ll need the <code>secureHeaders</code> middleware function to <em>wrap our servemux</em>. Let’s update the <code>routes.go</code> file to do exactly that:
-<br>
-"이를 위해 <code>secureHeaders</code> 미들웨어 함수가 servemux를 래핑하도록 해야 합니다. 이를 위해 <code>routes.go</code> 파일을 업데이트해 보겠습니다:"
+<br><br>
+이를 위해 <code>secureHeaders</code> 미들웨어 함수가 servemux를 래핑하도록 해야 합니다. 이를 위해 <code>routes.go</code> 파일을 업데이트해 보겠습니다:
 </p>
 
 <figure class="code go">
@@ -162,13 +162,13 @@ X-XSS-Protection: 0</pre>
 
 <aside class="important"><p>
 <strong>Important:</strong> Make sure that you update the signature of the <code>routes()</code> method so that it returns a <code>http.Handler</code> here, otherwise you&rsquo;ll get a compile-time error.
-<br>
-"<strong>Important:</strong> 여기에서 <code>routes()</code> 메서드의 시그니처를 <code>http.Handler</code> 를 반환하도록 업데이트하는 것을 잊지 마세요. 그렇지 않으면 컴파일 시간 오류가 발생합니다."
+<br><br>
+<strong>Important:</strong> 여기에서 <code>routes()</code> 메서드의 시그니처를 <code>http.Handler</code> 를 반환하도록 업데이트하는 것을 잊지 마세요. 그렇지 않으면 컴파일 시간 오류가 발생합니다.
 </p></aside>
 
 <p>Go ahead and give this a try. Run the application then open a terminal window and try making some requests with curl. You should see that the security headers are now included in every response.
-<br>
-"계속 진행해보세요. 응용 프로그램을 실행한 다음 터미널 창을 열고 curl로 몇 가지 요청을 시도해보세요. 모든 응답에 보안 헤더가 포함되어 있는 것을 확인할 수 있어야 합니다."
+<br><br>
+계속 진행해보세요. 응용 프로그램을 실행한 다음 터미널 창을 열고 curl로 몇 가지 요청을 시도해보세요. 모든 응답에 보안 헤더가 포함되어 있는 것을 확인할 수 있어야 합니다.
 </p>
 
 <figure class="code bash">
@@ -191,8 +191,8 @@ Content-Type: text/html; charset=utf-8</samp></pre>
 <h4 id="flow-of-control">Flow of control</h4>
 
 <p>It&rsquo;s important to know that when the last handler in the chain returns, control is passed back up the chain in the reverse direction. So when our code is being executed the flow of control actually looks like this:
-<br>
-"중요한 것은 체인의 마지막 핸들러가 반환되면 제어가 반대 방향으로 다시 체인을 따라 전달된다는 것입니다. 따라서 우리의 코드가 실행될 때 제어 흐름은 실제로 다음과 같이 보입니다:"
+<br><br>
+중요한 것은 체인의 마지막 핸들러가 반환되면 제어가 반대 방향으로 다시 체인을 따라 전달된다는 것입니다. 따라서 우리의 코드가 실행될 때 제어 흐름은 실제로 다음과 같이 보입니다:
 </p>
 
 <figure class="code plain">
@@ -200,8 +200,8 @@ Content-Type: text/html; charset=utf-8</samp></pre>
 </figure>
 
 <p>In any middleware handler, code which comes before <code>next.ServeHTTP()</code> will be executed on the way down the chain, and any code after <code>next.ServeHTTP()</code>  &mdash; or in a deferred function &mdash; will be executed on the way back up.
-<br>
-"<u>어떤 미들웨어 핸들러에서든 <code>next.ServeHTTP()</code> 이전에 오는 코드는 체인을 따라 내려갈 때 실행되고, <code>next.ServeHTTP()</code> 이후의 코드나 지연된 함수에서는 체인을 따라 다시 올라갈 때 실행됩니다.</u>"
+<br><br>
+<u>어떤 미들웨어 핸들러에서든 <code>next.ServeHTTP()</code> 이전에 오는 코드는 체인을 따라 내려갈 때 실행되고, <code>next.ServeHTTP()</code> 이후의 코드나 지연된 함수에서는 체인을 따라 다시 올라갈 때 실행됩니다.</u>
 </p>
 
 <figure class="code go">
@@ -217,13 +217,13 @@ Content-Type: text/html; charset=utf-8</samp></pre>
 <h4 id="early-returns">Early returns</h4>
 
 <p>Another thing to mention is that if you call <code>return</code> in your middleware function <em>before</em> you call <code>next.ServeHTTP()</code>, then the chain will stop being executed and control will flow back upstream.
-<br>
-"언급할 사항 중 하나는 middleware 함수에서 <code>next.ServeHTTP()</code> 를 호출하기 전에 <code>return</code> 을 호출하면 체인이 더 이상 실행되지 않고 제어가 상류로 흐르게 된다는 것입니다."
+<br><br>
+언급할 사항 중 하나는 middleware 함수에서 <code>next.ServeHTTP()</code> 를 호출하기 전에 <code>return</code> 을 호출하면 체인이 더 이상 실행되지 않고 제어가 상류로 흐르게 된다는 것입니다.
 </p>
 
 <p>As an example, a common use-case for early returns is authentication middleware which only allows execution of the chain to continue if a particular check is passed. For instance:
-<br>
-"예를 들어 특정 확인이 통과되지 않으면 체인의 실행을 계속 허용하지 않는 인증 미들웨어의 경우, 조기 반환은 일반적인 사용 사례입니다. 다음과 같이:"
+<br><br>
+예를 들어 특정 확인이 통과되지 않으면 체인의 실행을 계속 허용하지 않는 인증 미들웨어의 경우, 조기 반환은 일반적인 사용 사례입니다. 다음과 같이:
 </p>
 
 <figure class="code go">
@@ -243,20 +243,20 @@ Content-Type: text/html; charset=utf-8</samp></pre>
 </figure>
 
 <p>We&rsquo;ll use this &lsquo;early return&rsquo; pattern <a href="11.06-user-authorization.html">later in the book</a> to restrict access to certain parts of our application.
-<br>
-"이 &lsquo;early return&rsquo; 패턴은 이 책에서 응용 프로그램의 특정 부분에 대한 액세스를 제한하는 데 나중에 사용할 것입니다."
+<br><br>
+이 &lsquo;early return&rsquo; 패턴은 이 책에서 응용 프로그램의 특정 부분에 대한 액세스를 제한하는 데 나중에 사용할 것입니다.
 </p>
 
 <h4 id="debugging-csp-issues">Debugging CSP issues</h4>
 
 <p>While CSP headers are great and you should definitely use them, it&rsquo;s worth saying that I&rsquo;ve spent many hours trying to debug problems, only to eventually realize that a critical resource or script is being blocked by my own CSP rules 🤦.
-<br>
-"CSP 헤더는 훌륭하며 꼭 사용해야 합니다. 그러나 나는 자주 문제를 디버깅하는 데 많은 시간을 소비했는데, 결국에는 내 자체 CSP 규칙에 의해 중요한 리소스나 스크립트가 차단되고 있음을 깨닫게 되었습니다. 🤦"
+<br><br>
+CSP 헤더는 훌륭하며 꼭 사용해야 합니다. 그러나 나는 자주 문제를 디버깅하는 데 많은 시간을 소비했는데, 결국에는 내 자체 CSP 규칙에 의해 중요한 리소스나 스크립트가 차단되고 있음을 깨닫게 되었습니다. 🤦
 </p>
 
 <p>If you&rsquo;re working on a project which is using CSP headers, like this one, I recommend keeping your web browser developer tools handy and getting into the habit of checking the logs early on if you run into any unexpected problems. In Firefox, any blocked resources will be shown as an error in the console logs &mdash; similar to this:
-<br>
-"이와 같이 CSP 헤더를 사용하는 프로젝트에서 작업하고 있다면, 웹 브라우저 개발자 도구를 항상 준비하고 예상치 못한 문제에 부딪힐 때 로그를 확인하는 습관을 들이는 것이 좋습니다. Firefox에서는 차단된 리소스가 콘솔 로그에서 오류로 표시됩니다. 다음과 비슷합니다:"
+<br><br>
+이와 같이 CSP 헤더를 사용하는 프로젝트에서 작업하고 있다면, 웹 브라우저 개발자 도구를 항상 준비하고 예상치 못한 문제에 부딪힐 때 로그를 확인하는 습관을 들이는 것이 좋습니다. Firefox에서는 차단된 리소스가 콘솔 로그에서 오류로 표시됩니다. 다음과 비슷합니다:
 </p>
 
 <figure class="img">
