@@ -33,48 +33,48 @@
 <h3 id="the-database-sql-package">The database/sql package</h3>
 
 <p>As you&rsquo;re probably starting to realize, the <code>database/sql</code> package essentially provides a standard interface between your Go application and the world of SQL databases.
-<br>
-"아마도 깨달으셨을 것처럼, <code>database/sql</code>패키지는 본질적으로 Go 응용 프로그램과 SQL 데이터베이스의 세계 간의 표준 인터페이스를 제공합니다."
+<br><br>
+아마도 깨달으셨을 것처럼, <code>database/sql</code>패키지는 본질적으로 Go 응용 프로그램과 SQL 데이터베이스의 세계 간의 표준 인터페이스를 제공합니다.
 </p>
 
 <p>So long as you use the <code>database/sql</code> package, the Go code you write will generally be portable and will work with any kind of SQL database &mdash; whether it&rsquo;s MySQL, PostgreSQL, SQLite or something else. This means that your application isn&rsquo;t so tightly coupled to the database that you&rsquo;re currently using, and the theory is that you can swap databases in the future without re-writing all of your code (driver-specific quirks and SQL implementations aside).
-<br>
-"<code>database/sql</code>패키지를 사용하는 한, 작성한 Go 코드는 일반적으로 이식 가능하며 MySQL, PostgreSQL, SQLite 또는 기타 어떤 종류의 SQL 데이터베이스와도 작동할 것입니다. 이는 현재 사용 중인 데이터베이스에 애플리케이션이 너무 강하게 결합되지 않았다는 것을 의미하며, 이론적으로는 향후에 코드를 전부 다시 작성하지 않고도 데이터베이스를 교체할 수 있다는 것입니다 (드라이버 특정 특이점과 SQL 구현을 제외하고)."
+<br><br>
+<code>database/sql</code>패키지를 사용하는 한, 작성한 Go 코드는 일반적으로 이식 가능하며 MySQL, PostgreSQL, SQLite 또는 기타 어떤 종류의 SQL 데이터베이스와도 작동할 것입니다. 이는 현재 사용 중인 데이터베이스에 애플리케이션이 너무 강하게 결합되지 않았다는 것을 의미하며, 이론적으로는 향후에 코드를 전부 다시 작성하지 않고도 데이터베이스를 교체할 수 있다는 것입니다 (드라이버 특정 특이점과 SQL 구현을 제외하고).
 </p>
 
 <p>It&rsquo;s important to note that while <code>database/sql</code> generally does a good job of providing a standard interface for working with SQL databases, there <em>are</em> some idiosyncrasies in the way that different drivers and databases operate. It&rsquo;s always a good idea to read over the documentation for a new driver to understand any quirks and edge cases before you begin using it.
-<br>
-"d<code>database/sql</code>은 일반적으로 SQL 데이터베이스와 작업하기 위한 표준 인터페이스를 제공하는 데 일반적으로 잘 작동하지만, 서로 다른 드라이버 및 데이터베이스가 작동하는 방식에는 몇 가지 독특한 점이 있습니다. 새로운 드라이버의 문서를 읽어서 사용하기 전에 어떤 특이한 동작이나 예외 상황이 있는지 이해하는 것이 항상 좋은 아이디어입니다."
+<br><br>
+<code>database/sql</code>은 일반적으로 SQL 데이터베이스와 작업하기 위한 표준 인터페이스를 제공하는 데 일반적으로 잘 작동하지만, 서로 다른 드라이버 및 데이터베이스가 작동하는 방식에는 몇 가지 독특한 점이 있습니다. 새로운 드라이버의 문서를 읽어서 사용하기 전에 어떤 특이한 동작이나 예외 상황이 있는지 이해하는 것이 항상 좋은 아이디어입니다.
 </p>
 
 <h3 id="verbosity">Verbosity</h3>
 
 <p>If you&rsquo;re coming from Ruby, Python or PHP, the code for querying SQL databases may feel a bit verbose, especially if you&rsquo;re used to dealing with an abstraction layer or ORM.
-<br>
-"만약 Ruby, Python 또는 PHP에서 왔다면, SQL 데이터베이스 쿼리 코드는 조금 장황하게 느껴질 수 있습니다. 특히 추상화 계층이나 ORM을 다루는 데 익숙하다면 더 그렇겠죠."
+<br><br>
+만약 Ruby, Python 또는 PHP에서 왔다면, SQL 데이터베이스 쿼리 코드는 조금 장황하게 느껴질 수 있습니다. 특히 추상화 계층이나 ORM을 다루는 데 익숙하다면 더 그렇겠죠.
 </p>
 
 <p>But the upside of the verbosity is that our code is non-magical; we can understand and control exactly what is going on. And with a bit of time, you&rsquo;ll find that the patterns for making SQL queries become familiar and you can copy-and-paste from previous work, or use developer tools like GitHub copilot to write the first draft of the code for you.
-<br>
-"그러나 장황함의 장점은 우리의 코드가 마법이 아니라는 것입니다. 우리는 정확히 무엇이 일어나고 있는지를 이해하고 제어할 수 있습니다. 시간이 지남에 따라 SQL 쿼리를 작성하는 패턴이 익숙해져서 이전 작업에서 복사하여 붙이거나 GitHub Copilot과 같은 개발 도구를 사용하여 코드 초고를 작성할 수 있을 것입니다."
+<br><br>
+그러나 장황함의 장점은 우리의 코드가 마법이 아니라는 것입니다. 우리는 정확히 무엇이 일어나고 있는지를 이해하고 제어할 수 있습니다. 시간이 지남에 따라 SQL 쿼리를 작성하는 패턴이 익숙해져서 이전 작업에서 복사하여 붙이거나 GitHub Copilot과 같은 개발 도구를 사용하여 코드 초고를 작성할 수 있을 것입니다.
 </p>
 
 <p>If the verbosity really is starting to grate on you, you might want to consider trying the <a href="https://github.com/jmoiron/sqlx"><code>jmoiron/sqlx</code></a> package. It&rsquo;s well designed and provides some good extensions that make working with SQL queries quicker and easier. Another, newer, option you may want to consider is the <a href="https://github.com/blockloop/scan"><code>blockloop/scan</code></a> package.
-<br>
-"만약 장황함이 실로 귀찮게 느껴진다면, <code>jmoiron/sqlx</code>패키지를 시도해보는 것이 좋을 수 있습니다. 이것은 잘 설계되어 있으며 SQL 쿼리 작업을 더 빠르고 쉽게 만들어주는 몇 가지 확장 기능을 제공합니다. 또 다른 최근 옵션으로는 <code>blockloop/scan</code>패키지를 고려해볼 수 있습니다."
+<br><br>
+만약 장황함이 실로 귀찮게 느껴진다면, <code>jmoiron/sqlx</code>패키지를 시도해보는 것이 좋을 수 있습니다. 이것은 잘 설계되어 있으며 SQL 쿼리 작업을 더 빠르고 쉽게 만들어주는 몇 가지 확장 기능을 제공합니다. 또 다른 최근 옵션으로는 <code>blockloop/scan</code>패키지를 고려해볼 수 있습니다.
 
 </p>
 
 <h3 id="managing-null-values">Managing null values</h3>
 
 <p>One thing that Go doesn&rsquo;t do very well is managing <code>NULL</code> values in database records.
-<br>
-"Go에서 잘 처리하지 못하는 한 가지는 데이터베이스 레코드에서의 <code>NULL</code> 값 관리입니다."
+<br><br>
+Go에서 잘 처리하지 못하는 한 가지는 데이터베이스 레코드에서의 <code>NULL</code> 값 관리입니다.
 </p>
 
 <p>Let&rsquo;s pretend that the <code>title</code> column in our <code>snippets</code> table contains a <code>NULL</code> value in a particular row. If we queried that row, then <code>rows.Scan()</code> would return the following error because it can&rsquo;t convert <code>NULL</code> into a string:
-<br>
-"우리의 <code>snippets</code> 테이블에서 특정 행의 <code>title</code> 컬럼이 <code>NULL</code> 값을 포함하고 있다고 가정해 봅시다. 그 행을 쿼리하면 <code>rows.Scan()</code>이 <code>NULL</code>을 문자열로 변환할 수 없어 다음과 같은 오류가 발생할 것입니다:"
+<br><br>
+우리의 <code>snippets</code> 테이블에서 특정 행의 <code>title</code> 컬럼이 <code>NULL</code> 값을 포함하고 있다고 가정해 봅시다. 그 행을 쿼리하면 <code>rows.Scan()</code>이 <code>NULL</code>을 문자열로 변환할 수 없어 다음과 같은 오류가 발생할 것입니다:
 </p>
 
 <figure class="code bash">
@@ -83,30 +83,30 @@
 </figure>
 
 <p>Very roughly, the fix for this is to change the field that you&rsquo;re scanning into from a <code>string</code> to a <code>sql.NullString</code> type. See <a href="https://gist.github.com/alexedwards/dc3145c8e2e6d2fd6cd9">this gist</a> for a working example.
-<br>
-"대략적으로 말하면, 이를 해결하기 위한 방법은 스캔 대상 필드를 <code>string</code>에서 <code>sql.NullString</code>유형으로 변경하는 것입니다. 동작하는 예제는 이 <a href="https://gist.github.com/alexedwards/dc3145c8e2e6d2fd6cd9">this gist</a>에서 확인할 수 있습니다."
+<br><br>
+대략적으로 말하면, 이를 해결하기 위한 방법은 스캔 대상 필드를 <code>string</code>에서 <code>sql.NullString</code>유형으로 변경하는 것입니다. 동작하는 예제는 이 <a href="https://gist.github.com/alexedwards/dc3145c8e2e6d2fd6cd9">this gist</a>에서 확인할 수 있습니다.
 </p>
 
 <p>But, as a rule, the easiest thing to do is simply avoid <code>NULL</code> values altogether. Set <code>NOT NULL</code> constraints on all your database columns, like we have done in this book, along with sensible <code>DEFAULT</code> values as necessary.
-<br>
-"그러나 원칙적으로 가장 쉬운 해결책은 단순히 <code>NULL</code> 값을 피하는 것입니다. 이 책에서와 같이 모든 데이터베이스 열에 <code>NOT NULL</code> 제약 조건을 설정하고 필요한 경우 합리적인 <code>DEFAULT</code> 값을 설정하십시오."
+<br><br>
+그러나 원칙적으로 가장 쉬운 해결책은 단순히 <code>NULL</code> 값을 피하는 것입니다. 이 책에서와 같이 모든 데이터베이스 열에 <code>NOT NULL</code> 제약 조건을 설정하고 필요한 경우 합리적인 <code>DEFAULT</code> 값을 설정하십시오.
 </p>
 
 <h3 id="working-with-transactions">Working with transactions</h3>
 
 <p>It&rsquo;s important to realize that calls to <code>Exec()</code>, <code>Query()</code> and <code>QueryRow()</code> can use <em>any connection from the <code>sql.DB</code> pool</em>. Even if you have two calls to <code>Exec()</code> immediately next to each other in your code, there is no guarantee that they will use the same database connection.
-<br>
-"<code>Exec()</code>, <code>Query()</code> and <code>QueryRow()</code> 호출은 <code>sql.DB</code>풀에서 어떤 연결이든 사용할 수 있다는 것을 깨달아야 합니다. 코드에서 두 개의 <code>Exec()</code>호출이 바로 옆에 있다고 하더라도 동일한 데이터베이스 연결을 사용할 것이 보장되지 않습니다."
+<br><br>
+<code>Exec()</code>, <code>Query()</code> and <code>QueryRow()</code> 호출은 <code>sql.DB</code>풀에서 어떤 연결이든 사용할 수 있다는 것을 깨달아야 합니다. 코드에서 두 개의 <code>Exec()</code>호출이 바로 옆에 있다고 하더라도 동일한 데이터베이스 연결을 사용할 것이 보장되지 않습니다.
 </p>
 
 <p>Sometimes this isn&rsquo;t acceptable. For instance, if you lock a table with MySQL&rsquo;s <code>LOCK TABLES</code> command you must call <code>UNLOCK TABLES</code> on exactly the same connection to avoid a deadlock.
-<br>
-"이는 때로 허용할 수 없는 상황일 수 있습니다. 예를 들어 MySQL의 <code>LOCK TABLES</code>명령으로 테이블을 잠근 경우 데드락을 피하려면 정확히 동일한 연결에서 <code>UNLOCK TABLES</code>를 호출해야 합니다."
+<br><br>
+이는 때로 허용할 수 없는 상황일 수 있습니다. 예를 들어 MySQL의 <code>LOCK TABLES</code>명령으로 테이블을 잠근 경우 데드락을 피하려면 정확히 동일한 연결에서 <code>UNLOCK TABLES</code>를 호출해야 합니다.
 </p>
 
 <p>To guarantee that the same connection is used you can wrap multiple statements in a <dfn>transaction</dfn>. Here&rsquo;s the basic pattern:
-<br>
-"동일한 연결을 보장하려면 여러 문을 <dfn>transaction</dfn>으로 래핑할 수 있습니다. 기본 패턴은 다음과 같습니다:"
+<br><br>
+동일한 연결을 보장하려면 여러 문을 <dfn>transaction</dfn>으로 래핑할 수 있습니다. 기본 패턴은 다음과 같습니다:
 </p>
 
 <figure class="code go">
@@ -154,14 +154,14 @@
 
 <aside class="important"><p>
 <strong>Important:</strong> You must <em>always</em> call either <code>Rollback()</code> or <code>Commit()</code> before your function returns. If you don&rsquo;t the connection will stay open and not be returned to the connection pool. This can lead to hitting your maximum connection limit/running out of resources. The simplest way to avoid this is to use <code>defer tx.Rollback()</code> like we are in the example above.
-<br>
-"<strong>중요:</strong> 함수가 반환되기 전에 반드시 <code>Rollback()</code> or <code>Commit()</code> 중 하나를 호출해야 합니다. 그렇지 않으면 연결은 열린 상태로 유지되고 연결 풀로 반환되지 않습니다. 이는 최대 연결 한도에 도달하거나 리소스가 고갈될 수 있습니다. 이를 피하는 가장 간단한 방법은 위의 예제에서처럼 <code>defer tx.Rollback()</code>을 사용하는 것입니다."
+<br><br>
+<strong>중요:</strong> 함수가 반환되기 전에 반드시 <code>Rollback()</code> or <code>Commit()</code> 중 하나를 호출해야 합니다. 그렇지 않으면 연결은 열린 상태로 유지되고 연결 풀로 반환되지 않습니다. 이는 최대 연결 한도에 도달하거나 리소스가 고갈될 수 있습니다. 이를 피하는 가장 간단한 방법은 위의 예제에서처럼 <code>defer tx.Rollback()</code>을 사용하는 것입니다.
 </p></aside>
 
 <p>Transactions are also super-useful if you want to execute multiple SQL statements as a
 <em>single atomic action</em>. So long as you use the <a href="https://pkg.go.dev/database/sql/#Tx.Rollback"><code>tx.Rollback()</code></a> method in the event of any errors, the transaction ensures that either:
-<br>
-"트랜잭션은 여러 SQL 문을 단일 원자적인 동작으로 실행하려는 경우에도 매우 유용합니다. <code>tx.Rollback()</code>메서드를 사용하여 모든 오류 상황에 대비한다면 트랜잭션은 다음 중 하나를 보장합니다:"
+<br><br>
+트랜잭션은 여러 SQL 문을 단일 원자적인 동작으로 실행하려는 경우에도 매우 유용합니다. <code>tx.Rollback()</code>메서드를 사용하여 모든 오류 상황에 대비한다면 트랜잭션은 다음 중 하나를 보장합니다:
 </p>
 
 <ul>
@@ -172,23 +172,23 @@
 <h3 id="prepared-statements">Prepared statements</h3>
 
 <p>As I mentioned earlier, the <code>Exec()</code>, <code>Query()</code> and <code>QueryRow()</code> methods all use prepared statements behind the scenes to help prevent SQL injection attacks. They set up a prepared statement on the database connection, run it with the parameters provided, and then close the prepared statement.
-<br>
-"앞에서 언급한대로 <code>Exec()</code>, <code>Query()</code> and <code>QueryRow()</code> 메서드는 모두 SQL 인젝션 공격을 방지하기 위해 prepared statement 을 사용합니다. 이들은 데이터베이스 연결에 prepared statement 을 설정하고 제공된 매개변수로 실행한 다음 prepared statement 을 닫습니다."
+<br><br>
+앞에서 언급한대로 <code>Exec()</code>, <code>Query()</code> and <code>QueryRow()</code> 메서드는 모두 SQL 인젝션 공격을 방지하기 위해 prepared statement 을 사용합니다. 이들은 데이터베이스 연결에 prepared statement 을 설정하고 제공된 매개변수로 실행한 다음 prepared statement 을 닫습니다.
 </p>
 
 <p>This might feel rather inefficient because we are creating and recreating the same prepared statements every single time.
-<br>
-"이것은 매번 동일한 prepared statements을 생성하고 다시 생성하기 때문에 다소 비효율적으로 느껴질 수 있습니다."
+<br><br>
+이것은 매번 동일한 prepared statements을 생성하고 다시 생성하기 때문에 다소 비효율적으로 느껴질 수 있습니다.
 </p>
 
 <p>In theory, a better approach could be to make use of the <a href="https://pkg.go.dev/database/sql/#DB.Prepare"><code>DB.Prepare()</code></a> method to create our own prepared statement once, and reuse that instead. This is particularly true for complex SQL statements (e.g. those which have multiple JOINS) <em>and</em> are repeated very often (e.g. a bulk insert of tens of thousands of records). In these instances, the cost of re-preparing statements may have a noticeable effect on run time.
-<br>
-"이론적으로는 <code>DB.Prepare()</code> 메서드를 사용하여 한 번만 prepared statement을 만들고 그것을 재사용하는 것이 더 나은 방법일 수 있습니다. 이는 특히 복잡한 SQL 문(예: 여러 JOIN을 포함하는 문) 및 매우 자주 반복되는 경우(예: 수만 건의 레코드를 대량으로 삽입하는 경우)에 해당합니다. 이러한 경우에는 문을 다시 준비하는 비용이 실행 시간에 미치는 영향이 눈에 띌 수 있습니다."
+<br><br>
+이론적으로는 <code>DB.Prepare()</code> 메서드를 사용하여 한 번만 prepared statement을 만들고 그것을 재사용하는 것이 더 나은 방법일 수 있습니다. 이는 특히 복잡한 SQL 문(예: 여러 JOIN을 포함하는 문) 및 매우 자주 반복되는 경우(예: 수만 건의 레코드를 대량으로 삽입하는 경우)에 해당합니다. 이러한 경우에는 문을 다시 준비하는 비용이 실행 시간에 미치는 영향이 눈에 띌 수 있습니다.
 </p>
 
 <p>Here&rsquo;s the basic pattern for using your own prepared statement in a web application:
-<br>
-"웹 애플리케이션에서 자체 prepared statement을 사용하는 기본 패턴은 다음과 같습니다:"
+<br><br>
+웹 애플리케이션에서 자체 prepared statement을 사용하는 기본 패턴은 다음과 같습니다:
 </p>
 
 <figure class="code go">
@@ -253,23 +253,23 @@
 <p>There are a few things to be wary of though. "그러나 조심해야 할 몇 가지 사항이 있습니다."</p>
 
 <p>Prepared statements exist on <em>database connections</em>. So, because Go uses a pool of <em>many database connections</em>, what actually happens is that the first time a prepared statement (i.e. the <code>sql.Stmt</code> object) is used it gets created on a particular database connection. The <code>sql.Stmt</code> object then remembers which connection in the pool was used. The next time, the <code>sql.Stmt</code> object will attempt to use the same database connection again. If that connection is closed or in use (i.e. not idle) the statement will be re-prepared on another connection.
-<br>
-"Prepared statement은 데이터베이스 연결에 존재합니다. 그래서 Go는 많은 데이터베이스 연결 풀을 사용하기 때문에 실제로는 prepared statement(즉, <code>sql.Stmt</code> 개체)이 처음 사용될 때 특정 데이터베이스 연결에 만들어집니다. 그런 다음 <code>sql.Stmt</code> 개체는 사용된 풀의 어떤 연결이었는지를 기억합니다. 다음 번에는 <code>sql.Stmt</code> 개체가 동일한 데이터베이스 연결을 다시 사용하려고 시도할 것입니다. 해당 연결이 닫혀 있거나 사용 중(즉, 유휴 상태가 아닌 경우)이면 문은 다른 연결에서 다시 준비됩니다."
+<br><br>
+Prepared statement은 데이터베이스 연결에 존재합니다. 그래서 Go는 많은 데이터베이스 연결 풀을 사용하기 때문에 실제로는 prepared statement(즉, <code>sql.Stmt</code> 개체)이 처음 사용될 때 특정 데이터베이스 연결에 만들어집니다. 그런 다음 <code>sql.Stmt</code> 개체는 사용된 풀의 어떤 연결이었는지를 기억합니다. 다음 번에는 <code>sql.Stmt</code> 개체가 동일한 데이터베이스 연결을 다시 사용하려고 시도할 것입니다. 해당 연결이 닫혀 있거나 사용 중(즉, 유휴 상태가 아닌 경우)이면 문은 다른 연결에서 다시 준비됩니다.
 </p>
 
 <p>Under heavy load, it&rsquo;s possible that a large amount of prepared statements will be created on multiple connections. This can lead to statements being prepared and re-prepared more often than you would expect &mdash; or even running into server-side limits on the number of statements (in MySQL the default maximum is 16,382 prepared statements).
-<br>
-"고부하 상황에서 여러 연결에 대해 많은 양의 prepared statement이 생성될 수 있습니다. 이는 예상보다 더 자주 문이 준비되고 다시 준비되는 경우를 야기할 수 있습니다. 때로는 문의 수에 대한 서버 측 제한에도 부딪힐 수 있습니다 (MySQL에서는 기본 최대값이 16,382개의 준비된 문입니다)."
+<br><br>
+고부하 상황에서 여러 연결에 대해 많은 양의 prepared statement이 생성될 수 있습니다. 이는 예상보다 더 자주 문이 준비되고 다시 준비되는 경우를 야기할 수 있습니다. 때로는 문의 수에 대한 서버 측 제한에도 부딪힐 수 있습니다 (MySQL에서는 기본 최대값이 16,382개의 준비된 문입니다).
 </p>
 
 <p>The code too is more complicated than not using prepared statements.
-<br>
-"또한 코드도 prepared statement을 사용하지 않을 때보다 더 복잡해집니다."
+<br><br>
+또한 코드도 prepared statement을 사용하지 않을 때보다 더 복잡해집니다.
 </p>
 
 <p>So, there is a trade-off to be made between performance and complexity. As with anything, you should measure the actual performance benefit of implementing your own prepared statements to determine if it&rsquo;s worth doing. For most cases, I would suggest that using the regular <code>Query()</code>, <code>QueryRow()</code> and <code>Exec()</code> methods &mdash; without preparing statements yourself &mdash; is a reasonable starting point.
-<br>
-"그래서 성능과 복잡성 사이에서는 트레이드오프가 있습니다. 모든 것과 마찬가지로 자체 prepared statement을 구현하는 것이 실제 성능 이점을 측정하여 그 가치를 결정해야 합니다. 대부분의 경우에는 일반적인 <code>Query()</code>, <code>QueryRow()</code> and <code>Exec()</code> 메서드를 사용하는 것이 자체적으로 문을 준비하지 않는 것이 합리적인 시작점이라고 제안하겠습니다."
+<br><br>
+그래서 성능과 복잡성 사이에서는 트레이드오프가 있습니다. 모든 것과 마찬가지로 자체 prepared statement을 구현하는 것이 실제 성능 이점을 측정하여 그 가치를 결정해야 합니다. 대부분의 경우에는 일반적인 <code>Query()</code>, <code>QueryRow()</code> and <code>Exec()</code> 메서드를 사용하는 것이 자체적으로 문을 준비하지 않는 것이 합리적인 시작점이라고 제안하겠습니다.
 </p>
 
 		</main>

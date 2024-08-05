@@ -31,8 +31,8 @@
 			<h2 id="setting-up-mysql">Setting up MySQL</h2>
 
 <p>If you&rsquo;re following along, you&rsquo;ll need to install MySQL on your computer at this point. The official MySQL documentation contains comprehensive <a href="https://dev.mysql.com/doc/refman/8.0/en/installing.html">installation instructions</a> for all types of operating systems, but if you&rsquo;re using Mac OS you should be able to install it with:
-<br>
-"따라오고 있다면, 이 시점에서 컴퓨터에 MySQL을 설치해야 합니다. 공식 MySQL 문서에는 모든 종류의 운영 체제에 대한 포괄적인 설치 지침이 포함되어 있지만, 만약 Mac OS를 사용 중이라면 다음과 같이 설치할 수 있어야 합니다:"
+<br><br>
+따라오고 있다면, 이 시점에서 컴퓨터에 MySQL을 설치해야 합니다. 공식 MySQL 문서에는 모든 종류의 운영 체제에 대한 포괄적인 설치 지침이 포함되어 있지만, 만약 Mac OS를 사용 중이라면 다음과 같이 설치할 수 있어야 합니다:
 </p>
 
 <figure class="code bash">
@@ -40,8 +40,8 @@
 </figure>
 
 <p>Or if you&rsquo;re using a Linux distribution which supports <code>apt</code> (like Debian and Ubuntu) you can install it with:
-<br>
-"또는 <code>apt</code> 를 지원하는 Linux 배포판을 사용 중이라면(Debian 및 Ubuntu와 같은) 다음과 같이 설치할 수 있습니다:"
+<br><br>
+또는 <code>apt</code> 를 지원하는 Linux 배포판을 사용 중이라면(Debian 및 Ubuntu와 같은) 다음과 같이 설치할 수 있습니다:
 </p>
 
 <figure class="code bash">
@@ -49,15 +49,15 @@
 </figure>
 
 <p>While you are installing MySQL you might be asked to set a password for the <code>root</code> user. Remember to keep a mental note of this if you are; you&rsquo;ll need it in the next step.
-<br>
-"MySQL을 설치하는 동안 <code>root</code> 사용자의 암호를 설정하라는 메시지가 나올 수 있습니다. 암호를 설정하는 경우 이를 기억해두세요. 다음 단계에서 필요할 것입니다."
+<br><br>
+MySQL을 설치하는 동안 <code>root</code> 사용자의 암호를 설정하라는 메시지가 나올 수 있습니다. 암호를 설정하는 경우 이를 기억해두세요. 다음 단계에서 필요할 것입니다.
 </p>
 
 <h3 id="scaffolding-the-database">Scaffolding the database</h3>
 
 <p>Once MySQL is installed you should be able to connect to it from your terminal as the <code>root</code> user. The command to do this will vary depending on the version of MySQL that you&rsquo;ve got installed. For MySQL 5.7 and newer you should be able to connect by typing this:
-<br>
-"MySQL이 설치되면 터미널에서 <code>root</code> 사용자로 연결할 수 있어야 합니다. 이를 수행하는 명령은 설치된 MySQL 버전에 따라 다를 것입니다. MySQL 5.7 이상의 경우 다음을 입력하여 연결할 수 있어야 합니다:"
+<br><br>
+MySQL이 설치되면 터미널에서 <code>root</code> 사용자로 연결할 수 있어야 합니다. 이를 수행하는 명령은 설치된 MySQL 버전에 따라 다를 것입니다. MySQL 5.7 이상의 경우 다음을 입력하여 연결할 수 있어야 합니다:
 </p>
 
 <figure class="code bash">
@@ -66,8 +66,8 @@ mysql&gt;</pre>
 </figure>
 
 <p>But if that doesn&rsquo;t work then try the following command instead, entering the   password that you set during the installation.
-<br>
-"그러나 작동하지 않는 경우 다음 명령을 대신 시도하고 설치 중에 설정한 암호를 입력하세요."
+<br><br>
+그러나 작동하지 않는 경우 다음 명령을 대신 시도하고 설치 중에 설정한 암호를 입력하세요.
 </p>
 
 <figure class="code bash">
@@ -77,8 +77,8 @@ mysql&gt;</pre>
 </figure>
 
 <p>Once connected, the first thing we need to do is establish a <dfn>database</dfn> in MySQL to store all the data for our project. Copy and paste the following commands into the mysql prompt to create a new <code>snippetbox</code> database using UTF8 encoding.
-<br>
-"연결된 후에는 MySQL에서 프로젝트의 모든 데이터를 저장할 <dfn>database</dfn>를 설정해야 합니다. 다음 명령을 MySQL 프롬프트에 복사하여 UTF8 인코딩을 사용하여 새로운 <code>snippetbox</code> database 를 만드세요."
+<br><br>
+연결된 후에는 MySQL에서 프로젝트의 모든 데이터를 저장할 <dfn>database</dfn>를 설정해야 합니다. 다음 명령을 MySQL 프롬프트에 복사하여 UTF8 인코딩을 사용하여 새로운 <code>snippetbox</code> database 를 만드세요.
 </p>
 
 <figure class="code sql">
@@ -90,8 +90,8 @@ mysql&gt;</pre>
 </figure>
 
 <p>Then copy and paste the following SQL statement to create a new <code>snippets</code> table to hold the text snippets for our application:
-<br>
-"그런 다음 다음 SQL 문을 복사하여 응용 프로그램의 텍스트 스니펫을 저장할 새로운 <code>snippets</code> 테이블을 만드세요:"
+<br><br>
+그런 다음 다음 SQL 문을 복사하여 응용 프로그램의 텍스트 스니펫을 저장할 새로운 <code>snippets</code> 테이블을 만드세요:
 </p>
 
 <figure class="code sql">
@@ -109,13 +109,13 @@ mysql&gt;</pre>
 </figure>
 
 <p>Each record in this table will have an integer <code>id</code> field which will act as the unique identifier for the text snippet. It will also have a short text <code>title</code> and the snippet content itself will be stored in the <code>content</code> field. We&rsquo;ll also keep some metadata about the times that the snippet was <code>created</code> and when it <code>expires</code>.
-<br>
-"이 테이블의 각 레코드는 텍스트 스니펫의 고유 식별자로 작용할 정수 <code>id</code> 필드를 갖게 됩니다. 또한 짧은 텍스트 <code>title</code> 이 있고, 스니펫 내용은 <code>content</code> 필드에 저장됩니다. 또한 스니펫이 <code>created</code> 및 <code>expires</code>에 대한 몇 가지 메타데이터를 유지할 것입니다."
+<br><br>
+이 테이블의 각 레코드는 텍스트 스니펫의 고유 식별자로 작용할 정수 <code>id</code> 필드를 갖게 됩니다. 또한 짧은 텍스트 <code>title</code> 이 있고, 스니펫 내용은 <code>content</code> 필드에 저장됩니다. 또한 스니펫이 <code>created</code> 및 <code>expires</code>에 대한 몇 가지 메타데이터를 유지할 것입니다.
 </p>
 
 <p>Let&rsquo;s also add some placeholder entries to the <code>snippets</code> table (which we&rsquo;ll use in the next couple of chapters). I’ll use some short haiku as the content for the text snippets, but it really doesn’t matter what they contain.
-<br>
-"<code>snippets</code> 테이블에 일부 플레이스홀더 항목도 추가해 보겠습니다(다음 몇 장에서 사용될 것입니다). 나는 텍스트 스니펫의 내용으로 몇 마디의 하이쿠를 사용할 것이지만, 그 내용이 무엇이든 상관없습니다."
+<br><br>
+<code>snippets</code> 테이블에 일부 플레이스홀더 항목도 추가해 보겠습니다(다음 몇 장에서 사용될 것입니다). 나는 텍스트 스니펫의 내용으로 몇 마디의 하이쿠를 사용할 것이지만, 그 내용이 무엇이든 상관없습니다.
 </p>
 
 <figure class="code sql">
@@ -145,13 +145,13 @@ mysql&gt;</pre>
 <h3 id="creating-a-new-user">Creating a new user</h3>
 
 <p>From a security point of view, it&rsquo;s not a good idea to connect to MySQL as the <code>root</code> user from a web application. Instead it&rsquo;s better to create a database user with restricted permissions on the database.
-<br>
-"보안적인 측면에서 웹 응용 프로그램에서 <code>root</code> 사용자로 MySQL에 연결하는 것은 좋지 않은 아이디어입니다. 대신 데이터베이스에서 권한이 제한된 데이터베이스 사용자를 만드는 것이 더 좋습니다."
+<br><br>
+보안적인 측면에서 웹 응용 프로그램에서 <code>root</code> 사용자로 MySQL에 연결하는 것은 좋지 않은 아이디어입니다. 대신 데이터베이스에서 권한이 제한된 데이터베이스 사용자를 만드는 것이 더 좋습니다.
 </p>
 
 <p>So, while you&rsquo;re still connected to the MySQL prompt run the following commands to create a new <code>web</code> user with <code>SELECT</code> and <code>INSERT</code> privileges only on the database.
-<br>
-"그러므로 여전히 MySQL 프롬프트에 연결된 상태에서 다음 명령을 실행하여 데이터베이스에서 <code>SELECT</code> and <code>INSERT</code> 권한만을 갖는 새로운 <code>web</code> 사용자를 만드세요."
+<br><br>
+그러므로 여전히 MySQL 프롬프트에 연결된 상태에서 다음 명령을 실행하여 데이터베이스에서 <code>SELECT</code> and <code>INSERT</code> 권한만을 갖는 새로운 <code>web</code> 사용자를 만드세요.
 </p>
 
 <figure class="code sql">
@@ -161,13 +161,13 @@ mysql&gt;</pre>
 </span><span class="c1"></span><span class="k">ALTER</span> <span class="k">USER</span> <span class="s1">&#39;</span><span class="s1">web</span><span class="s1">&#39;</span><span class="o">@</span><span class="s1">&#39;</span><span class="s1">localhost</span><span class="s1">&#39;</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">&#39;</span><span class="s1">pass</span><span class="s1">&#39;</span><span class="p">;</span></pre>
 </figure>
 
-<p>Once that&rsquo;s done type <code>exit</code> to leave the MySQL prompt. "그게 끝나면 <code>exit</code> 를 입력하여 MySQL 프롬프트를 빠져나오세요."</p>
+<p>Once that&rsquo;s done type <code>exit</code> to leave the MySQL prompt. 그게 끝나면 <code>exit</code> 를 입력하여 MySQL 프롬프트를 빠져나오세요.</p>
 
 <h3 id="test-the-new-user">Test the new user</h3>
 
 <p>You should now be able to connect to the <code>snippetbox</code> database as the <code>web</code> user using the following command. When prompted enter the password that you just set.
-<br>
-"이제 다음 명령을 사용하여 <code>web</code> 사용자로 <code>snippetbox</code> 데이터베이스에 연결할 수 있어야 합니다. 프롬프트에서 요청되면 방금 설정한 암호를 입력하세요."
+<br><br>
+이제 다음 명령을 사용하여 <code>web</code> 사용자로 <code>snippetbox</code> 데이터베이스에 연결할 수 있어야 합니다. 프롬프트에서 요청되면 방금 설정한 암호를 입력하세요.
 </p>
 
 <figure class="code bash">
@@ -177,8 +177,8 @@ mysql&gt;</pre>
 </figure>
 
 <p>If the permissions are working correctly you should find that you&rsquo;re able to perform <code>SELECT</code> and <code>INSERT</code> operations on the database correctly, but other commands such as <code>DROP TABLE</code> and <code>GRANT</code> will fail.
-<br>
-"권한이 올바르게 작동하는 경우 데이터베이스에서 <code>SELECT</code> and <code>INSERT</code> 작업을 올바르게 수행할 수 있지만, <code>DROP TABLE</code> 및 <code>GRANT</code> 와 같은 다른 명령은 실패할 것입니다."
+<br><br>
+권한이 올바르게 작동하는 경우 데이터베이스에서 <code>SELECT</code> and <code>INSERT</code> 작업을 올바르게 수행할 수 있지만, <code>DROP TABLE</code> 및 <code>GRANT</code> 와 같은 다른 명령은 실패할 것입니다.
 </p>
 
 <figure class="code bash">

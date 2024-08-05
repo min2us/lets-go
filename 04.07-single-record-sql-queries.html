@@ -31,13 +31,13 @@
 			<h2 id="single-record-sql-queries">Single-record SQL queries</h2>
 
 <p>The pattern for executing a <code>SELECT</code> statement to retrieve a single record from the database is a little more complicated. Let&rsquo;s explain how to do it by updating our <code>SnippetModel.Get()</code> method so that it returns a single specific snippet based on its ID.
-<br>
-"데이터베이스에서 단일 레코드를 검색하는 <code>SELECT</code> 문을 실행하는 패턴은 조금 더 복잡합니다. 우리의 <code>SnippetModel.Get()</code> 메서드를 업데이트하여 ID를 기반으로 특정 스니펫을 반환하도록 하는 방법을 설명해 보겠습니다."
+<br><br>
+데이터베이스에서 단일 레코드를 검색하는 <code>SELECT</code> 문을 실행하는 패턴은 조금 더 복잡합니다. 우리의 <code>SnippetModel.Get()</code> 메서드를 업데이트하여 ID를 기반으로 특정 스니펫을 반환하도록 하는 방법을 설명해 보겠습니다.
 </p>
 
 <p>To do this, we&rsquo;ll need to run the following SQL query on the database:
-<br>
-"이를 위해 데이터베이스에서 다음과 같은 SQL 쿼리를 실행해야 합니다:"
+<br><br>
+이를 위해 데이터베이스에서 다음과 같은 SQL 쿼리를 실행해야 합니다:
 </p>
 
 <figure class="code sql">
@@ -46,18 +46,18 @@
 </figure>
 
 <p>Because our <code>snippets</code> table uses the <code>id</code> column as its primary key, this query will only ever return exactly one database row (or none at all). The query also includes a check on the expiry time so that we don&rsquo;t return any snippets that have expired.
-<br>
-"우리의 <code>snippets</code> 테이블은 주 키로 <code>id</code> 컬럼을 사용하고 있기 때문에 이 쿼리는 정확히 하나의 데이터베이스 행을 반환하거나 (전혀 없을 경우) 반환하지 않을 것입니다. 또한 만료 시간을 확인하는 쿼리도 포함되어 있어 만료된 스니펫을 반환하지 않습니다."
+<br><br>
+우리의 <code>snippets</code> 테이블은 주 키로 <code>id</code> 컬럼을 사용하고 있기 때문에 이 쿼리는 정확히 하나의 데이터베이스 행을 반환하거나 (전혀 없을 경우) 반환하지 않을 것입니다. 또한 만료 시간을 확인하는 쿼리도 포함되어 있어 만료된 스니펫을 반환하지 않습니다.
 </p>
 
 <p>Notice too that we&rsquo;re using a placeholder parameter again for the <code>id</code> value?
-<br>
-"또한 <code>id</code> 값에 대해 다시 플레이스홀더 매개변수를 사용하고 있다는 점에 주목하세요."
+<br><br>
+또한 <code>id</code> 값에 대해 다시 플레이스홀더 매개변수를 사용하고 있다는 점에 주목하세요.
 </p>
 
 <p>Open the <code>internal/models/snippets.go</code> file and add the following code:
-<br>
-"<code>internal/models/snippets.go</code> 파일을 열고 다음 코드를 추가하세요."
+<br><br>
+<code>internal/models/snippets.go</code> 파일을 열고 다음 코드를 추가하세요.
 </p>
 
 <figure class="code go">
@@ -114,8 +114,8 @@
 </figure>
 
 <p>Behind the scenes of <code>rows.Scan()</code> your  driver will automatically convert the raw output from the SQL database to the required native Go types. So long as you&rsquo;re sensible with the types that you&rsquo;re mapping between SQL and Go, these conversions should generally Just Work. Usually:
-<br>
-"<code>rows.Scan()</code> 의 내부에서는 드라이버가 SQL 데이터베이스의 원시 출력을 필요한 원시 Go 유형으로 자동으로 변환합니다. SQL과 Go 간에 매핑하는 유형을 현명하게 처리한다면 이러한 변환은 일반적으로 올바르게 작동해야 합니다. 대개는:"
+<br><br>
+<code>rows.Scan()</code> 의 내부에서는 드라이버가 SQL 데이터베이스의 원시 출력을 필요한 원시 Go 유형으로 자동으로 변환합니다. SQL과 Go 간에 매핑하는 유형을 현명하게 처리한다면 이러한 변환은 일반적으로 올바르게 작동해야 합니다. 대개는:
 </p>
 
 <ul>
@@ -128,14 +128,14 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> A quirk of our MySQL driver is that we need to use the <code>parseTime=true</code> parameter in our DSN to force it to convert <code>TIME</code> and <code>DATE</code> fields to <code>time.Time</code>. Otherwise it returns these as <code>[]byte</code> objects. This is one of the many <a href="https://github.com/go-sql-driver/mysql#parameters">driver-specific parameters</a> that it offers.
-<br>
-"<strong>Note:</strong> MySQL 드라이버의 특이점은 DSN에서 <code>parseTime=true</code> 매개변수를 사용하여 <code>TIME</code> and <code>DATE</code> 필드를 <code>time.Time</code> 으로 변환하도록 강제해야 한다는 것입니다. 그렇지 않으면 이러한 필드를 <code>[]byte</code> 객체로 반환합니다. 이는 이 드라이버가 제공하는 많은 드라이버별 매개변수 중 하나입니다."
+<br><br>
+<strong>Note:</strong> MySQL 드라이버의 특이점은 DSN에서 <code>parseTime=true</code> 매개변수를 사용하여 <code>TIME</code> and <code>DATE</code> 필드를 <code>time.Time</code> 으로 변환하도록 강제해야 한다는 것입니다. 그렇지 않으면 이러한 필드를 <code>[]byte</code> 객체로 반환합니다. 이는 이 드라이버가 제공하는 많은 드라이버별 매개변수 중 하나입니다.
 
 </p></aside>
 
 <p>If you try to run the application at this point, you should get a compile-time error saying that the <code>ErrNoRecord</code> value is undefined:
-<br>
-"이 시점에서 애플리케이션을 실행하려고 하면 <code>ErrNoRecord</code> 값이 정의되지 않았다는 컴파일 시간 오류가 발생할 것입니다."
+<br><br>
+이 시점에서 애플리케이션을 실행하려고 하면 <code>ErrNoRecord</code> 값이 정의되지 않았다는 컴파일 시간 오류가 발생할 것입니다.
 </p>
 
 <figure class="code bash">
@@ -145,8 +145,8 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 </figure>
 
 <p>Let&rsquo;s go ahead and create that now in a new <code>internal/models/errors.go</code> file. Like so:
-<br>
-"그럼 이제 <code>internal/models/errors.go</code> 파일을 만들어서 <code>ErrNoRecord</code> 를 정의해 봅시다. 다음과 같이:"
+<br><br>
+그럼 이제 <code>internal/models/errors.go</code> 파일을 만들어서 <code>ErrNoRecord</code> 를 정의해 봅시다. 다음과 같이:
 </p>
 
 <figure class="code bash">
@@ -165,20 +165,20 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 </figure>
 
 <p>As an aside, you might be wondering why we&rsquo;re returning the <code>ErrNoRecord</code> error from our <code>SnippetModel.Get()</code> method, instead of <code>sql.ErrNoRows</code> directly. The reason is to help encapsulate the model completely, so that our handlers aren&rsquo;t concerned with the underlying datastore or reliant on datastore-specific errors (like <code>sql.ErrNoRows</code>) for its behavior.
-<br>
-"한편, <code>SnippetModel.Get()</code> 메서드에서 <code>sql.ErrNoRows</code> 대신 <code>ErrNoRecord</code> 오류를 반환하는 이유는 모델을 완전히 캡슐화하여 핸들러가 기본 데이터 저장소에 대해 걱정하지 않거나 데이터 저장소별 오류 (예: <code>sql.ErrNoRows</code>)에 종속되지 않도록 하는 것입니다."
+<br><br>
+한편, <code>SnippetModel.Get()</code> 메서드에서 <code>sql.ErrNoRows</code> 대신 <code>ErrNoRecord</code> 오류를 반환하는 이유는 모델을 완전히 캡슐화하여 핸들러가 기본 데이터 저장소에 대해 걱정하지 않거나 데이터 저장소별 오류 (예: <code>sql.ErrNoRows</code>)에 종속되지 않도록 하는 것입니다.
 </p>
 
 <h3 id="using-the-model-in-our-handlers">Using the model in our handlers</h3>
 
 <p>Alright, let&rsquo;s put the <code>SnippetModel.Get()</code> method into action.
-<br>
-"좋습니다. 그러면 <code>SnippetModel.Get()</code> 메서드를 실행해 보겠습니다."
+<br><br>
+좋습니다. 그러면 <code>SnippetModel.Get()</code> 메서드를 실행해 보겠습니다.
 </p>
 
 <p>Open your <code>cmd/web/handlers.go</code> file and update the <code>snippetView</code> handler so that it returns the data for a specific record as a HTTP response:
-<br>
-"<code>cmd/web/handlers.go</code> 파일을 열고 <code>snippetView</code> 핸들러를 업데이트하여 특정 레코드의 데이터를 HTTP 응답으로 반환하도록 합니다."
+<br><br>
+<code>cmd/web/handlers.go</code> 파일을 열고 <code>snippetView</code> 핸들러를 업데이트하여 특정 레코드의 데이터를 HTTP 응답으로 반환하도록 합니다.
 </p>
 
 <figure class="code go">
@@ -225,8 +225,8 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 </figure>
 
 <p>Let&rsquo;s give this a try. Restart the application, then open your web browser and visit <a href="http://localhost:4000/snippet/view?id=1"><code>http://localhost:4000/snippet/view?id=1</code></a>. You should see a HTTP response which looks similar to this:
-<br>
-"이를 시도해 봅시다. 애플리케이션을 다시 시작한 다음 웹 브라우저를 열고 <code>http://localhost:4000/snippet/view?id=1</code>을 방문하세요. 다음과 같이 보이는 HTTP 응답을 확인해야 합니다:"
+<br><br>
+이를 시도해 봅시다. 애플리케이션을 다시 시작한 다음 웹 브라우저를 열고 <code>http://localhost:4000/snippet/view?id=1</code>을 방문하세요. 다음과 같이 보이는 HTTP 응답을 확인해야 합니다:
 </p>
 
 <figure class="img">
@@ -234,8 +234,8 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 </figure>
 
 <p>You might also want to try making some requests for other snippets which are expired or don&rsquo;t yet exist (like <code>id=99</code>) to verify that they return a <code>404 Not Found</code> response:
-<br>
-"만료된 스니펫이나 아직 존재하지 않는 다른 스니펫(예: <code>id=99</code>)에 대한 몇 가지 요청을 시도하여 <code>404 Not Found</code> 응답이 반환되는지 확인하는 것도 좋습니다."
+<br><br>
+만료된 스니펫이나 아직 존재하지 않는 다른 스니펫(예: <code>id=99</code>)에 대한 몇 가지 요청을 시도하여 <code>404 Not Found</code> 응답이 반환되는지 확인하는 것도 좋습니다.
 </p>
 
 <figure class="img">
@@ -249,8 +249,8 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 <h4 id="checking-for-specific-errors">Checking for specific errors</h4>
 
 <p>A couple of times in this chapter we&rsquo;ve used the <a href="https://tip.golang.org/pkg/errors/#Is"><code>errors.Is()</code></a> function to check whether an error matches a specific value. Like this:
-<br>
-"이 장에서 몇 차례에 걸쳐 <code>errors.Is()</code> 함수를 사용하여 오류가 특정 값을 일치하는지 확인했습니다. 다음과 같이:"
+<br><br>
+이 장에서 몇 차례에 걸쳐 <code>errors.Is()</code> 함수를 사용하여 오류가 특정 값을 일치하는지 확인했습니다. 다음과 같이:
 </p>
 
 <figure class="code go">
@@ -262,8 +262,8 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 </figure>
 
 <p>In very old versions of Go (prior to 1.13), the idiomatic way to compare errors was to use the equality operator <code>==</code>, like so:
-<br>
-"Go의 매우 오래된 버전(1.13 이전)에서는 오류를 비교하는 관용적인 방법은 등호 연산자 <code>==</code> 를 사용하는 것이었습니다. 다음과 같이:"
+<br><br>
+Go의 매우 오래된 버전(1.13 이전)에서는 오류를 비교하는 관용적인 방법은 등호 연산자 <code>==</code> 를 사용하는 것이었습니다. 다음과 같이:
 </p>
 
 <figure class="code go">
@@ -275,35 +275,35 @@ internal/models/snippets.go:82:25: undefined: ErrNoRecord</samp></pre>
 </figure>
 
 <p>But, while this code still compiles, it&rsquo;s safer and best practice to use the <code>errors.Is()</code> function instead.
-<br>
-"그러나 이 코드는 여전히 컴파일되지만, <code>errors.Is()</code> 함수를 대신 사용하는 것이 안전하며 최선의 실천 방법입니다."
+<br><br>
+그러나 이 코드는 여전히 컴파일되지만, <code>errors.Is()</code> 함수를 대신 사용하는 것이 안전하며 최선의 실천 방법입니다.
 </p>
 
 <p>This is because Go 1.13 introduced the ability to add additional information to errors by <a href="https://go.dev/blog/go1.13-errors#wrapping-errors-with-w"><em>wrapping them</em></a>. If an error happens to get wrapped, a entirely new error value is created &mdash; which in turn means that it&rsquo;s not possible to check the value of the original underlying error using the regular <code>==</code> equality operator.
-<br>
-"이는 Go 1.13에서 오류를 래핑하여 추가 정보를 추가할 수 있도록 하는 기능이 도입되었기 때문입니다. 오류가 래핑되면 새로운 완전히 새로운 오류 값이 생성되므로 일반 <code>==</code> 등호 연산자를 사용하여 원래의 기본 오류 값을 확인할 수 없습니다."
+<br><br>
+이는 Go 1.13에서 오류를 래핑하여 추가 정보를 추가할 수 있도록 하는 기능이 도입되었기 때문입니다. 오류가 래핑되면 새로운 완전히 새로운 오류 값이 생성되므로 일반 <code>==</code> 등호 연산자를 사용하여 원래의 기본 오류 값을 확인할 수 없습니다.
 </p>
 
 <p>The <code>errors.Is()</code> function works by <em>unwrapping</em> errors as necessary before checking for a match.
-<br>
-"<code>errors.Is()</code> 함수는 필요한 경우 오류를 언래핑하여 일치 여부를 확인합니다."
+<br><br>
+<code>errors.Is()</code> 함수는 필요한 경우 오류를 언래핑하여 일치 여부를 확인합니다.
 </p>
 
 <p>There is also another function, <a href="https://tip.golang.org/pkg/errors/#As"><code>errors.As()</code></a> which you can use to check if a (potentially wrapped) error has a specific <em>type</em>. We&rsquo;ll use this later on this book.
-<br>
-"또 다른 함수인 <code>errors.As()</code>도 있습니다. 이 함수는 (잠재적으로 래핑된) 오류가 특정 유형을 가지고 있는지 확인하는 데 사용할 수 있습니다. 이 기능은 나중에 이 책에서 사용할 것입니다."
+<br><br>
+또 다른 함수인 <code>errors.As()</code>도 있습니다. 이 함수는 (잠재적으로 래핑된) 오류가 특정 유형을 가지고 있는지 확인하는 데 사용할 수 있습니다. 이 기능은 나중에 이 책에서 사용할 것입니다.
 </p>
 
 <h4 id="shorthand-single-record-queries">Shorthand single-record queries</h4>
 
 <p>I&rsquo;ve deliberately made the code in <code>SnippetModel.Get()</code> slightly long-winded to help clarify and emphasize what is going on behind-the-scenes of your code.
-<br>
-"<code>SnippetModel.Get()</code> 의 코드를 약간 번잡하게 만들어서 코드 뒤의 내용이 무엇인지 명확하게 이해하고 강조하도록 의도적으로 했습니다."
+<br><br>
+<code>SnippetModel.Get()</code> 의 코드를 약간 번잡하게 만들어서 코드 뒤의 내용이 무엇인지 명확하게 이해하고 강조하도록 의도적으로 했습니다.
 </p>
 
 <p>In practice, you can shorten the code slightly by leveraging the fact that errors from <code>DB.QueryRow()</code> are deferred until <code>Scan()</code> is called. It makes no functional difference, but if you want it&rsquo;s perfectly OK to re-write the code to look something like this:
-<br>
-"실제로는 <code>DB.QueryRow()</code> 에서의 오류가 <code>Scan()</code> 이 호출될 때까지 지연되는 사실을 활용하여 코드를 약간 더 간결하게 만들 수 있습니다. 기능적인 차이는 없지만 원한다면 코드를 다음과 같이 다시 작성해도 전혀 문제가 없습니다:"
+<br><br>
+실제로는 <code>DB.QueryRow()</code> 에서의 오류가 <code>Scan()</code> 이 호출될 때까지 지연되는 사실을 활용하여 코드를 약간 더 간결하게 만들 수 있습니다. 기능적인 차이는 없지만 원한다면 코드를 다음과 같이 다시 작성해도 전혀 문제가 없습니다:
 </p>
 
 <figure class="code go">

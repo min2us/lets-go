@@ -31,20 +31,18 @@
 			<h2 id="centralized-error-handling">Centralized error handling</h2>
 
 <p>Let&rsquo;s neaten up our application by moving some of the error handling code into helper methods. This will help <a href="https://deviq.com/separation-of-concerns/">separate our concerns</a> and stop us repeating code as we progress through the build.
-<br>
-"어플리케이션을 정리하기 위해 일부 오류 처리 코드를 도우미 메서드로 이동해봅시다. 이렇게 하면 우리의 역할을 분리하고 빌드 진행 중에 코드를 반복하는 것을 방지하는 데 도움이 될 것입니다."
 </p>
+<p>어플리케이션을 정리하기 위해 일부 오류 처리 코드를 도우미 메서드로 이동해봅시다. 이렇게 하면 우리의 역할을 분리하고 빌드 진행 중에 코드를 반복하는 것을 방지하는 데 도움이 될 것입니다.</p>
 
 <p>Go ahead and add a new <code>helpers.go</code> file under the <code>cmd/web</code> directory:
-<br>
-"계속해서 <code>cmd/web</code> 디렉토리 아래에 새로운 <code>helpers.go</code> 파일을 추가하세요:"
 </p>
+<p>계속해서 <code>cmd/web</code> 디렉토리 아래에 새로운 <code>helpers.go</code> 파일을 추가하세요:</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/helpers.go</pre>
 </figure>
 
-<p>And add the following code: "그리고 다음 코드를 추가하세요:"</p>
+<p>And add the following code: 그리고 다음 코드를 추가하세요:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -83,15 +81,13 @@
 </figure>
 
 <p>In this code we&rsquo;ve also introduced one other new thing: the <a href="https://pkg.go.dev/net/http/#StatusText"><code>http.StatusText()</code></a> function. This returns a human-friendly text representation of a given HTTP status code &mdash; for example <code>http.StatusText(400)</code> will return the string <code>&quot;Bad Request&quot;</code>, and <code>http.StatusText(500)</code> will return the string <code>&quot;Internal Server Error&quot;</code>.
-<br>
-"이 코드에서 우리는 또 다른 새로운 것을 소개했습니다: <code>http.StatusText()</code> 함수입니다.
-이 함수는 주어진 HTTP 상태 코드에 대한 사용자 친화적인 텍스트 표현을 반환합니다. 예를 들어 <code>http.StatusText(400)</code> 은 문자열 <code>&quot;Bad Request&quot;</code> 를 반환하고, <code>http.StatusText(500)</code> 은 문자열 <code>&quot;Internal Server Error&quot;</code> 를 반환합니다."
 </p>
+<p>이 코드에서 우리는 또 다른 새로운 것을 소개했습니다: <code>http.StatusText()</code> 함수입니다.
+이 함수는 주어진 HTTP 상태 코드에 대한 사용자 친화적인 텍스트 표현을 반환합니다. 예를 들어 <code>http.StatusText(400)</code> 은 문자열 <code>&quot;Bad Request&quot;</code> 를 반환하고, <code>http.StatusText(500)</code> 은 문자열 <code>&quot;Internal Server Error&quot;</code> 를 반환합니다.</p>
 
 <p>Now that&rsquo;s done, head back to your <code>handlers.go</code> file and update it to use the new helpers:
-<br>
-"이제 완료되었으니, <code>handlers.go</code> 파일로 돌아가서 새로운 도우미 함수를 사용하도록 업데이트하세요."
 </p>
+<p>이제 완료되었으니, <code>handlers.go</code> 파일로 돌아가서 새로운 도우미 함수를 사용하도록 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -150,14 +146,12 @@
 </figure>
 
 <p>When that&rsquo;s updated, restart your application and make a request to <a href="http://localhost:4000/"><code>http://localhost:4000</code></a> in your browser.
-<br>
-"그것을 업데이트한 후에는 애플리케이션을 다시 시작하고 브라우저에서 <code>http://localhost:4000</code> 으로 요청을 보내세요."
 </p>
+<p>그것을 업데이트한 후에는 애플리케이션을 다시 시작하고 브라우저에서 <code>http://localhost:4000</code> 으로 요청을 보내세요.</p>
 
 <p>Again, this should result in our (deliberate) error being raised and you should see the corresponding log entry in your terminal, including the request method and URI as attributes.
-<br>
-"다시 말씀드리면, 이로 인해 (의도적인) 오류가 발생하고 터미널에서 해당하는 로그 항목을 확인해야 합니다. 이 항목에는 요청 메서드 및 URI가 속성으로 포함되어 있습니다."
 </p>
+<p>다시 말씀드리면, 이로 인해 (의도적인) 오류가 발생하고 터미널에서 해당하는 로그 항목을 확인해야 합니다. 이 항목에는 요청 메서드 및 URI가 속성으로 포함되어 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web
@@ -168,9 +162,8 @@ time=2023-09-05T18:02:18.316+02:00 level=ERROR msg=&#34;open ./ui/html/pages/hom
 <h3 id="revert-the-deliberate-error">Revert the deliberate error</h3>
 
 <p>At this point we don&rsquo;t need the deliberate error anymore, so go ahead and fix it like so:
-<br>
-"이 시점에서는 더 이상 의도적인 오류가 필요하지 않으므로 다음과 같이 수정하세요:"
 </p>
+<p>이 시점에서는 더 이상 의도적인 오류가 필요하지 않으므로 다음과 같이 수정하세요:</p>
 
 <figure class="code bash">
 <pre>$ mv ui/html/pages/home.bak ui/html/pages/home.tmpl</pre>
@@ -183,14 +176,12 @@ time=2023-09-05T18:02:18.316+02:00 level=ERROR msg=&#34;open ./ui/html/pages/hom
 <h4 id="stack-traces">Stack traces</h4>
 
 <p>You can use the <a href="https://pkg.go.dev/runtime/debug/#Stack"><code>debug.Stack()</code></a> function to get a <em>stack trace</em> outlining the execution path of the application for the <em>current goroutine</em>. Including this as an attribute in your log entries can be helpful for debugging errors.
-<br>
-"<em>현재 고루틴</em>에 대한 응용 프로그램의 실행 경로를 설명하는 스택 추적을 얻기 위해 <code>debug.Stack()</code> 함수를 사용할 수 있습니다. 이를 로그 항목의 속성으로 포함시키면 오류 디버깅에 도움이 될 수 있습니다."
 </p>
+<p><em>현재 고루틴</em>에 대한 응용 프로그램의 실행 경로를 설명하는 스택 추적을 얻기 위해 <code>debug.Stack()</code> 함수를 사용할 수 있습니다. 이를 로그 항목의 속성으로 포함시키면 오류 디버깅에 도움이 될 수 있습니다.</p>
 
 <p>If you want, you could update the <code>serverError()</code>method so that it includes a stack trace in the log entries like so:
-<br>
-"원한다면 <code>serverError()</code> 메서드를 다음과 같이 업데이트하여 로그 항목에 스택 추적을 포함시킬 수 있습니다:"
 </p>
+<p>원한다면 <code>serverError()</code> 메서드를 다음과 같이 업데이트하여 로그 항목에 스택 추적을 포함시킬 수 있습니다:</p>
 
 <figure class="code go">
 <pre><span class="kn">package</span> <span class="nx">main</span>
@@ -217,9 +208,8 @@ time=2023-09-05T18:02:18.316+02:00 level=ERROR msg=&#34;open ./ui/html/pages/hom
 </figure>
 
 <p>The log entry output would then look something like this (line breaks added for readability):
-<br>
-"그런 다음 로그 항목 출력은 다음과 같이 보일 것입니다 (가독성을 위해 줄 바꿈 추가):"
 </p>
+<p>그런 다음 로그 항목 출력은 다음과 같이 보일 것입니다 (가독성을 위해 줄 바꿈 추가):</p>
 
 <figure class="code bash">
 <pre><samp>time=2023-09-05T18:06:39.965+02:00 level=ERROR msg=&#34;open ./ui/html/pages/home.tmpl:

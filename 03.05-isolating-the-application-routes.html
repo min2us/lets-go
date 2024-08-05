@@ -31,14 +31,12 @@
 			<h2 id="isolating-the-application-routes">Isolating the application routes</h2>
 
 <p>While we&rsquo;re refactoring our code there&rsquo;s one more change worth making.
-<br>
-"코드를 리팩토링하는 동안 한 가지 더 변경할 가치가 있는 부분이 있습니다."
 </p>
+<p>코드를 리팩토링하는 동안 한 가지 더 변경할 가치가 있는 부분이 있습니다.</p>
 
 <p>Our <code>main()</code> function is beginning to get a bit crowded, so to keep it clear and focused I&rsquo;d like to move the route declarations for the application into a standalone <code>routes.go</code> file, like so:
-<br>
-"우리의 <code>main()</code> 함수는 조금 지저분해지고 있으므로 명확하고 집중된 상태를 유지하기 위해 응용 프로그램의 라우트 선언을 독립적인 <code>routes.go</code> 파일로 이동하고 싶습니다. 다음과 같이 하면 됩니다:"
 </p>
+<p>우리의 <code>main()</code> 함수는 조금 지저분해지고 있으므로 명확하고 집중된 상태를 유지하기 위해 응용 프로그램의 라우트 선언을 독립적인 <code>routes.go</code> 파일로 이동하고 싶습니다. 다음과 같이 하면 됩니다:</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/routes.go</pre>
@@ -65,7 +63,7 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>We can then update the <code>main.go</code> file to use this instead: "그런 다음 <code>main.go</code> 파일을 다음과 같이 업데이트할 수 있습니다:"</p>
+<p>We can then update the <code>main.go</code> file to use this instead: 그런 다음 <code>main.go</code> 파일을 다음과 같이 업데이트할 수 있습니다:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -94,14 +92,13 @@
 </figure>
 
 <p>This is quite a bit neater. The routes for our application are now isolated and encapsulated in the <code>app.routes()</code> method, and the responsibilities of our <code>main()</code> function are limited to:
-<br>
-"이렇게 하면 꽤나 깔끔해집니다. 응용 프로그램의 라우트는 이제 <code>app.routes()</code> 메서드에 격리되어 캡슐화되었으며, <code>main()</code> 함수의 책임은 제한되었습니다."
 </p>
+<p>이렇게 하면 꽤나 깔끔해집니다. 응용 프로그램의 라우트는 이제 <code>app.routes()</code> 메서드에 격리되어 캡슐화되었으며, <code>main()</code> 함수의 책임은 제한되었습니다.</p>
 
 <ul>
-<li>Parsing the runtime configuration settings for the application; "응용 프로그램의 런타임 구성 설정 파싱;"</li>
-<li>Establishing the dependencies for the handlers; and "핸들러의 종속성 설정;"</li>
-<li>Running the HTTP server. "HTTP 서버 실행."</li>
+<li>Parsing the runtime configuration settings for the application; 응용 프로그램의 런타임 구성 설정 파싱;</li>
+<li>Establishing the dependencies for the handlers; and 핸들러의 종속성 설정;</li>
+<li>Running the HTTP server. HTTP 서버 실행.</li>
 </ul>
 
 		</main>

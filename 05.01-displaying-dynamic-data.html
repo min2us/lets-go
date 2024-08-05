@@ -31,20 +31,20 @@
 			<h2 id="displaying-dynamic-data">Displaying dynamic data</h2>
 
 <p>Currently our <code>snippetView</code> handler function fetches a <code>models.Snippet</code> object from the database and then dumps the contents out in a plain-text HTTP response.
-<br>
-"현재 우리의 <code>snippetView</code> 핸들러 함수는 데이터베이스에서 <code>models.Snippet</code> 객체를 가져와서 그 내용을 일반 텍스트 HTTP 응답으로 출력합니다."
+<br><br>
+현재 우리의 <code>snippetView</code> 핸들러 함수는 데이터베이스에서 <code>models.Snippet</code> 객체를 가져와서 그 내용을 일반 텍스트 HTTP 응답으로 출력합니다.
 </p>
 
 <p>In this chapter we&rsquo;ll improve this so that the data is displayed in a proper HTML webpage which looks a bit like this:
-<br>
-"이 장에서는 이 데이터가 다음과 같이 조금 더 적절한 HTML 웹페이지에 표시되도록 개선할 것입니다."
+<br><br>
+이 장에서는 이 데이터가 다음과 같이 조금 더 적절한 HTML 웹페이지에 표시되도록 개선할 것입니다.
 </p>
 
 <p><img class="sketch" src="assets/img/05.01-01.png" alt="05.01-01.png"></img></p>
 
 <p>Let&rsquo;s start in the <code>snippetView</code> handler and add some code to render a new <code>view.tmpl</code> template file (which we will create in a minute). Hopefully this should look familiar to you from earlier in the book.
-<br>
-"<code>snippetView</code> 핸들러에서 시작하여 새로운 <code>view.tmpl</code> 템플릿 파일을 렌더링하는 코드를 추가해보겠습니다. (이것은 곧 생성할 것입니다.) 이 코드는 이 책의 이전 부분에서 익힌 내용과 조금 비슷하게 보일 것입니다."
+<br><br>
+<code>snippetView</code> 핸들러에서 시작하여 새로운 <code>view.tmpl</code> 템플릿 파일을 렌더링하는 코드를 추가해보겠습니다. (이것은 곧 생성할 것입니다.) 이 코드는 이 책의 이전 부분에서 익힌 내용과 조금 비슷하게 보일 것입니다.
 </p>
 
 <figure class="code go">
@@ -107,23 +107,23 @@
 </figure>
 
 <p>Next up we need to create the <code>view.tmpl</code> file containing the HTML markup for the page. But before we do, there&rsquo;s a little theory that I need to explain&hellip;
-<br>
-"다음으로는 페이지의 HTML 마크업을 포함하는 <code>view.tmpl</code> 파일을 생성해야 합니다. 그러나 그 전에 설명할 필요가 있는 약간의 이론이 있습니다..."
+<br><br>
+다음으로는 페이지의 HTML 마크업을 포함하는 <code>view.tmpl</code> 파일을 생성해야 합니다. 그러나 그 전에 설명할 필요가 있는 약간의 이론이 있습니다...
 </p>
 
 <p>Any data that you pass as the final parameter to <code>ts.ExecuteTemplate()</code> is represented within your HTML templates by the <code>.</code> character (referred to as <em>dot</em>).
-<br>
-"<code>ts.ExecuteTemplate()</code>의 마지막 매개변수로 전달하는 모든 데이터는 HTML 템플릿에서 <code>.</code> 문자(도트로 불림)을 통해 나타낼 수 있습니다."
+<br><br>
+<code>ts.ExecuteTemplate()</code>의 마지막 매개변수로 전달하는 모든 데이터는 HTML 템플릿에서 <code>.</code> 문자(도트로 불림)을 통해 나타낼 수 있습니다.
 </p>
 
 <p>In this specific case, the underlying type of dot will be a <code>models.Snippet</code> struct. When the underlying type of dot is a struct, you can render (or <em>yield</em>) the value of any exported field in your templates by postfixing dot with the field name. So, because our <code>models.Snippet</code> struct has a <code>Title</code> field, we could yield the snippet title by writing <code>{{.Title}}</code> in our templates.
-<br>
-"이 특정 케이스에서 dot의 기본 유형은 <code>models.Snippet</code> 구조체일 것입니다. dot의 기본 유형이 구조체인 경우 템플릿에서는 dot에 필드 이름을 접미사로 추가하여 해당 필드의 값을 렌더링(또는 출력)할 수 있습니다. 따라서 <code>models.Snippet</code> 구조체에는 <code>Title</code> 필드가 있으므로 템플릿에서 <code>{{.Title}}</code>을 작성하여 스니펫 제목을 얻을 수 있습니다."
+<br><br>
+이 특정 케이스에서 dot의 기본 유형은 <code>models.Snippet</code> 구조체일 것입니다. dot의 기본 유형이 구조체인 경우 템플릿에서는 dot에 필드 이름을 접미사로 추가하여 해당 필드의 값을 렌더링(또는 출력)할 수 있습니다. 따라서 <code>models.Snippet</code> 구조체에는 <code>Title</code> 필드가 있으므로 템플릿에서 <code>{{.Title}}</code>을 작성하여 스니펫 제목을 얻을 수 있습니다.
 </p>
 
 <p>I&rsquo;ll demonstrate. Create a new file at <code>ui/html/pages/view.tmpl</code> and add the following markup:
-<br>
-"실습을 통해 보여드리겠습니다. <code>ui/html/pages/view.tmpl</code> 이라는 새 파일을 만들고 다음과 같은 마크업을 추가하세요."
+<br><br>
+실습을 통해 보여드리겠습니다. <code>ui/html/pages/view.tmpl</code> 이라는 새 파일을 만들고 다음과 같은 마크업을 추가하세요.
 </p>
 
 <figure class="code bash">
@@ -150,8 +150,8 @@
 </figure>
 
 <p>If you restart the application and visit <a href="http://localhost:4000/snippet/view?id=1"><code>http://localhost:4000/snippet/view?id=1</code></a> in your browser, you should find that the relevant snippet is fetched from the database, passed to the template, and the content is rendered correctly.
-<br>
-"애플리케이션을 다시 시작하고 브라우저에서 <code>http://localhost:4000/snippet/view?id=1</code> 을 방문하면 관련된 스니펫이 데이터베이스에서 가져와 템플릿에 전달되며 내용이 올바르게 렌더링되는 것을 확인할 수 있어야 합니다."
+<br><br>
+애플리케이션을 다시 시작하고 브라우저에서 <code>http://localhost:4000/snippet/view?id=1</code> 을 방문하면 관련된 스니펫이 데이터베이스에서 가져와 템플릿에 전달되며 내용이 올바르게 렌더링되는 것을 확인할 수 있어야 합니다.
 </p>
 
 <figure class="img">
@@ -161,18 +161,18 @@
 <h3 id="rendering-multiple-pieces-of-data">Rendering multiple pieces of data (여러 데이터 조각 렌더링)</h3>
 
 <p>An important thing to explain is that Go’s <code>html/template</code> package allows you to pass in one &mdash; and only one &mdash; item of dynamic data when rendering a template. But in a real-world application there are often multiple pieces of dynamic data that you want to display in the same page.
-<br>
-"설명할 중요한 점은 Go의 <code>html/template</code> 패키지가 템플릿을 렌더링할 때 동적 데이터 항목을 하나만 전달할 수 있도록 허용한다는 것입니다. 그러나 실제 애플리케이션에서는 종종 동일한 페이지에 여러 조각의 동적 데이터를 표시하려고 합니다."
+<br><br>
+설명할 중요한 점은 Go의 <code>html/template</code> 패키지가 템플릿을 렌더링할 때 동적 데이터 항목을 하나만 전달할 수 있도록 허용한다는 것입니다. 그러나 실제 애플리케이션에서는 종종 동일한 페이지에 여러 조각의 동적 데이터를 표시하려고 합니다.
 </p>
 
 <p>A lightweight and type-safe way to achieve this is to wrap your dynamic data in a struct which acts like a single &lsquo;holding structure&rsquo; for your data.
-<br>
-"이를 달성하는 가벼우면서도 타입 안전한 방법은 동적 데이터를 구조체로 래핑하여 데이터에 대한 단일 &lsquo;holding structure&rsquo; 역할을 하는 것입니다."
+<br><br>
+이를 달성하는 가벼우면서도 타입 안전한 방법은 동적 데이터를 구조체로 래핑하여 데이터에 대한 단일 &lsquo;holding structure&rsquo; 역할을 하는 것입니다.
 </p>
 
 <p>Let&rsquo;s create a new <code>cmd/web/templates.go</code> file, containing a <code>templateData</code> struct to do exactly that.
-<br>
-"이를 정확히 수행하기 위해 <code>templateData</code> 구조체를 포함하는 새로운 <code>cmd/web/templates.go</code> 파일을 만들어 보겠습니다."
+<br><br>
+이를 정확히 수행하기 위해 <code>templateData</code> 구조체를 포함하는 새로운 <code>cmd/web/templates.go</code> 파일을 만들어 보겠습니다.
 </p>
 
 <figure class="code bash">
@@ -195,8 +195,8 @@
 </figure>
 
 <p>And then let&rsquo;s update the <code>snippetView</code> handler to use this new struct when executing our templates:
-<br>
-"그런 다음 <code>snippetView</code> 핸들러를 업데이트하여 템플릿을 실행할 때 이 새로운 구조체를 사용하도록 해보겠습니다."
+<br><br>
+그런 다음 <code>snippetView</code> 핸들러를 업데이트하여 템플릿을 실행할 때 이 새로운 구조체를 사용하도록 해보겠습니다.
 </p>
 
 <figure class="code go">
@@ -250,8 +250,8 @@
 </figure>
 
 <p>So now, our snippet data is contained in a <em><code>models.Snippet</code> struct within a <code>templateData</code> struct</em>. To yield the data, we need to chain the appropriate field names together like so:
-<br>
-"이제 스니펫 데이터는 <code>templateData</code> 구조체 내에 있는 <code>models.Snippet</code> 구조체에 포함되어 있습니다. 데이터를 얻으려면 다음과 같이 적절한 필드 이름을 연결해야 합니다:"
+<br><br>
+이제 스니펫 데이터는 <code>templateData</code> 구조체 내에 있는 <code>models.Snippet</code> 구조체에 포함되어 있습니다. 데이터를 얻으려면 다음과 같이 적절한 필드 이름을 연결해야 합니다:
 </p>
 
 <figure class="code html">
@@ -275,8 +275,8 @@
 </figure>
 
 <p>Feel free to restart the application and visit <a href="http://localhost:4000/snippet/view?id=1"><code>http://localhost:4000/snippet/view?id=1</code></a> again. You should see the same page rendered in your browser as before.
-<br>
-"애플리케이션을 다시 시작하고 다시 <code>http://localhost:4000/snippet/view?id=1</code> 을 방문해보세요. 브라우저에서 이전과 같은 페이지가 렌더링되는 것을 확인할 수 있어야 합니다."
+<br><br>
+애플리케이션을 다시 시작하고 다시 <code>http://localhost:4000/snippet/view?id=1</code> 을 방문해보세요. 브라우저에서 이전과 같은 페이지가 렌더링되는 것을 확인할 수 있어야 합니다.
 </p>
 
 <hr />
@@ -286,11 +286,11 @@
 <h4 id="dynamic-content-escaping">Dynamic content escaping</h4>
 
 <p>The <code>html/template</code> package automatically escapes any data that is yielded between <code>{{ }}</code> tags. This behavior is hugely helpful in avoiding <mark>cross-site scripting (XSS) attacks</mark>, and is the reason that you should use the <code>html/template</code> package instead of the more generic <code>text/template</code> package that Go also provides.
-<br>
-"<code>html/template</code> 패키지는 <code>{{ }}</code> 태그 사이에 생성된 데이터를 자동으로 이스케이프(escape) 처리합니다. 이 동작은 <mark>cross-site scripting (XSS) attacks</mark>을 피하는 데 큰 도움이 되며, 이것이 Go가 제공하는 더 일반적인 <code>text/template</code> 패키지 대신 <code>html/template</code> 패키지를 사용해야 하는 이유입니다."
+<br><br>
+<code>html/template</code> 패키지는 <code>{{ }}</code> 태그 사이에 생성된 데이터를 자동으로 이스케이프(escape) 처리합니다. 이 동작은 <mark>cross-site scripting (XSS) attacks</mark>을 피하는 데 큰 도움이 되며, 이것이 Go가 제공하는 더 일반적인 <code>text/template</code> 패키지 대신 <code>html/template</code> 패키지를 사용해야 하는 이유입니다.
 </p>
 
-<p>As an example of escaping, if the dynamic data you wanted to yield was: "이스케이핑의 예로, 반환하려는 동적 데이터가 다음과 같다면:"</p>
+<p>As an example of escaping, if the dynamic data you wanted to yield was: <br><br>이스케이핑의 예로, 반환하려는 동적 데이터가 다음과 같다면:</p>
 
 <figure class="code html">
 <pre><span class="p">&lt;</span><span class="nt">span</span><span class="p"></span><span class="p">&gt;</span>{{&#34;<span class="p">&lt;</span><span class="nt">script</span><span class="p"></span><span class="p">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;xss attack&#39;</span><span class="p">)</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>&#34;}}<span class="p">&lt;</span><span class="p">/</span><span class="nt">span</span><span class="p">&gt;</span></pre>
@@ -303,15 +303,15 @@
 </figure>
 
 <p>The <code>html/template</code> package is also smart enough to make escaping context-dependent. It will use the appropriate escape sequences depending on whether the data is rendered in a part of the page that contains HTML, CSS, Javascript or a URI.
-<br>
-"<code>html/template</code> 패키지는 이스케이핑을 컨텍스트에 따라 지능적으로 적용합니다. 데이터가 HTML, CSS, Javascript 또는 URI가 포함된 페이지 부분에 렌더링되는지 여부에 따라 적절한 이스케이프 시퀀스를 사용합니다."
+<br><br>
+<code>html/template</code> 패키지는 이스케이핑을 컨텍스트에 따라 지능적으로 적용합니다. 데이터가 HTML, CSS, Javascript 또는 URI가 포함된 페이지 부분에 렌더링되는지 여부에 따라 적절한 이스케이프 시퀀스를 사용합니다.
 </p>
 
 <h4 id="nested-templates">Nested templates</h4>
 
 <p>It&rsquo;s really important to note that when you&rsquo;re invoking one template from another template, dot needs to be explicitly passed or <em>pipelined</em> to the template being invoked. You do this by including it at the end of each <code>{{template}}</code> or <code>{{block}}</code> action, like so:
-<br>
-"다른 템플릿에서 템플릿을 호출할 때는 dot을 명시적으로 전달하거나 호출되는 템플릿에 파이프라인으로 전달해야 합니다. 이를 위해 각 <code>{{template}}</code> 또는 <code>{{block}}</code> 액션의 끝에 dot을 포함시킴으로써 수행합니다. 아래와 같이:"
+<br><br>
+다른 템플릿에서 템플릿을 호출할 때는 dot을 명시적으로 전달하거나 호출되는 템플릿에 파이프라인으로 전달해야 합니다. 이를 위해 각 <code>{{template}}</code> 또는 <code>{{block}}</code> 액션의 끝에 dot을 포함시킴으로써 수행합니다. 아래와 같이:
 </p>
 
 <figure class="code html">
@@ -320,20 +320,20 @@
 </figure>
 
 <p>As a general rule, my advice is to get into the habit of always pipelining dot whenever you invoke a template with the <code>{{template}}</code> or <code>{{block}}</code> actions, unless you have a good reason not to.
-<br>
-"일반적인 규칙으로는 <code>{{template}}</code> 또는 <code>{{block}}</code> 액션으로 템플릿을 호출할 때 항상 dot을 파이프라인으로 전달하는 습관을 들이는 것이 좋습니다. 특별한 이유가 없다면 이렇게 하는 것이 좋습니다."
+<br><br>
+일반적인 규칙으로는 <code>{{template}}</code> 또는 <code>{{block}}</code> 액션으로 템플릿을 호출할 때 항상 dot을 파이프라인으로 전달하는 습관을 들이는 것이 좋습니다. 특별한 이유가 없다면 이렇게 하는 것이 좋습니다.
 </p>
 
 <h4 id="calling-methods">Calling methods</h4>
 
 <p>If the type that you&rsquo;re yielding between <code>{{ }}</code> tags has methods defined against it, you can call these methods (so long as they are exported and they return only a single value &mdash; or a single value and an error).
-<br>
-"<code>{{ }}</code> 태그 사이에 반환되는 유형에 메서드가 정의되어 있다면 (내보내져(exported) 있고 단일 값 또는 단일 값과 오류를 반환하는 경우), 이러한 메서드를 호출할 수 있습니다."
+<br><br>
+<code>{{ }}</code> 태그 사이에 반환되는 유형에 메서드가 정의되어 있다면 (내보내져(exported) 있고 단일 값 또는 단일 값과 오류를 반환하는 경우), 이러한 메서드를 호출할 수 있습니다.
 </p>
 
 <p>For example, our <code>.Snippet.Created</code> struct field has the underlying type <code>time.Time</code>, meaning that you could render the name of the weekday by calling its <a href="https://pkg.go.dev/time/#Time.Unix"><code>Weekday()</code></a> method like so:
-<br>
-"예를 들어, 우리의 <code>.Snippet.Created</code> 구조체 필드는 <code>time.Time</code> 의 기본 유형을 가지고 있으므로 <code>Weekday()</code> 메서드를 호출하여 요일의 이름을 렌더링할 수 있습니다:"
+<br><br>
+예를 들어, 우리의 <code>.Snippet.Created</code> 구조체 필드는 <code>time.Time</code> 의 기본 유형을 가지고 있으므로 <code>Weekday()</code> 메서드를 호출하여 요일의 이름을 렌더링할 수 있습니다:
 </p>
 
 <figure class="code html">
@@ -341,8 +341,8 @@
 </figure>
 
 <p>You can also pass parameters to methods. For example, you could use the <a href="https://pkg.go.dev/time/#Time.AddDate"><code>AddDate()</code></a> method to add six months to a time like so:
-<br>
-"또한 메서드에 매개변수를 전달할 수도 있습니다. 예를 들어, <code>AddDate()</code> 메서드를 사용하여 시간에 여섯 개월을 추가할 수 있습니다:"
+<br><br>
+또한 메서드에 매개변수를 전달할 수도 있습니다. 예를 들어, <code>AddDate()</code> 메서드를 사용하여 시간에 여섯 개월을 추가할 수 있습니다:
 </p>
 
 <figure class="code html">
@@ -350,21 +350,21 @@
 </figure>
 
 <p>Notice that this is different syntax to calling functions in Go &mdash; the parameters are <em>not</em> surrounded by parentheses and are separated by a single space character, not a comma.
-<br>
-"이것은 Go에서 함수를 호출하는 문법과 다릅니다. 매개변수는 괄호로 둘러싸여 있지 않으며 쉼표가 아닌 공백으로 구분됩니다."
+<br><br>
+이것은 Go에서 함수를 호출하는 문법과 다릅니다. 매개변수는 괄호로 둘러싸여 있지 않으며 쉼표가 아닌 공백으로 구분됩니다.
 </p>
 
 <h4 id="html-comments">HTML comments</h4>
 
 <p>Finally, the <code>html/template</code> package always strips out any HTML comments you include in your templates, including any <a href="https://en.wikipedia.org/wiki/Conditional_comment">conditional comments</a>.
-<br>
-"마지막으로, <code>html/template</code> 패키지는 템플릿에 포함된 HTML 주석을 항상 제거합니다. 조건부 주석도 포함해서"
+<br><br>
+마지막으로, <code>html/template</code> 패키지는 템플릿에 포함된 HTML 주석을 항상 제거합니다. 조건부 주석도 포함해서
 
 </p>
 
 <p>The reason for this is to help avoid XSS attacks when rendering dynamic content. Allowing conditional comments would mean that Go isn&rsquo;t always able to anticipate how a browser will interpret the markup in a page, and therefore it wouldn&rsquo;t necessarily be able to escape everything appropriately. To solve this, Go simply strips out <em>all</em> HTML comments.
-<br>
-"이는 동적 콘텐츠를 렌더링할 때 XSS 공격을 방지하는 데 도움을 주기 위함입니다. 조건부 주석을 허용하면 Go가 브라우저가 페이지의 마크업을 어떻게 해석할지 항상 예측할 수 없으므로 모든 것을 적절하게 이스케이핑할 수 없을 것입니다. 이 문제를 해결하기 위해 Go는 모든 HTML 주석을 간단히 제거합니다."
+<br><br>
+이는 동적 콘텐츠를 렌더링할 때 XSS 공격을 방지하는 데 도움을 주기 위함입니다. 조건부 주석을 허용하면 Go가 브라우저가 페이지의 마크업을 어떻게 해석할지 항상 예측할 수 없으므로 모든 것을 적절하게 이스케이핑할 수 없을 것입니다. 이 문제를 해결하기 위해 Go는 모든 HTML 주석을 간단히 제거합니다.
 </p>
 
 		</main>

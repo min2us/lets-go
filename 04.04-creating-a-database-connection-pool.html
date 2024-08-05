@@ -31,13 +31,13 @@
 			<h2 id="creating-a-database-connection-pool">Creating a database connection pool</h2>
 
 <p>Now that the MySQL database is all set up and we&rsquo;ve got a driver installed, the natural next step is to connect to the database from our web application.
-<br>
-"이제 MySQL 데이터베이스가 모두 설정되었고 드라이버도 설치되었으니, 자연스럽게 다음 단계는 웹 애플리케이션에서 데이터베이스에 연결하는 것입니다."
+<br><br>
+이제 MySQL 데이터베이스가 모두 설정되었고 드라이버도 설치되었으니, 자연스럽게 다음 단계는 웹 애플리케이션에서 데이터베이스에 연결하는 것입니다.
 </p>
 
 <p>To do this we need Go&rsquo;s <a href="https://pkg.go.dev/database/sql/#Open"><code>sql.Open()</code></a> function, which you use a bit like this:
-<br>
-"이를 수행하기 위해 Go의 <code>sql.Open()</code> 함수가 필요합니다. 이 함수를 사용하는 방법은 다음과 같습니다:"
+<br><br>
+이를 수행하기 위해 Go의 <code>sql.Open()</code> 함수가 필요합니다. 이 함수를 사용하는 방법은 다음과 같습니다:
 </p>
 
 <figure class="code go">
@@ -53,43 +53,43 @@
 
 <ul>
 <li><p>The first parameter to <code>sql.Open()</code> is the <em>driver name</em> and the second parameter is the <em>data source name</em> (sometimes also called a <em>connection string</em> or <em>DSN</em>) which describes how to connect to your database.
-<br>
-"<code>sql.Open()</code> 함수의 첫 번째 매개변수는 드라이버 이름이며, 두 번째 매개변수는 데이터 소스 이름(때로는 연결 문자열 또는 DSN이라고도 함)으로 데이터베이스에 연결하는 방법을 설명합니다."
+<br><br>
+<code>sql.Open()</code> 함수의 첫 번째 매개변수는 드라이버 이름이며, 두 번째 매개변수는 데이터 소스 이름(때로는 연결 문자열 또는 DSN이라고도 함)으로 데이터베이스에 연결하는 방법을 설명합니다.
 </p>
 </li>
 
 <li><p>The format of the data source name will depend on which database and driver you&rsquo;re using. Typically, you can find information and examples in the documentation for your specific driver. For the driver we&rsquo;re using you can find that documentation <a href="https://github.com/go-sql-driver/mysql#dsn-data-source-name">here</a>.
-<br>
-"데이터 소스 이름의 형식은 사용 중인 데이터베이스 및 드라이버에 따라 다를 것입니다. 일반적으로 특정 드라이버에 대한 문서에서 정보와 예제를 찾을 수 있습니다. 사용 중인 드라이버에 대한 문서는 여기에서 찾을 수 있습니다."
+<br><br>
+데이터 소스 이름의 형식은 사용 중인 데이터베이스 및 드라이버에 따라 다를 것입니다. 일반적으로 특정 드라이버에 대한 문서에서 정보와 예제를 찾을 수 있습니다. 사용 중인 드라이버에 대한 문서는 여기에서 찾을 수 있습니다.
 </p></li>
 
 <li><p>The <code>parseTime=true</code> part of the DSN above is a <em>driver-specific</em> parameter which instructs our driver to convert SQL <code>TIME</code> and <code>DATE</code> fields to Go <code>time.Time</code> objects.
-<br>
-"위의 DSN에서 <code>parseTime=true</code> 부분은 우리의 드라이버에게 SQL <code>TIME</code> 및 <code>DATE</code> 필드를 Go <code>time.Time</code> 객체로 변환하도록 지시하는 드라이버별 매개변수입니다."
+<br><br>
+위의 DSN에서 <code>parseTime=true</code> 부분은 우리의 드라이버에게 SQL <code>TIME</code> 및 <code>DATE</code> 필드를 Go <code>time.Time</code> 객체로 변환하도록 지시하는 드라이버별 매개변수입니다.
 </p></li>
 
 <li><p>The <code>sql.Open()</code> function returns a <a href="https://pkg.go.dev/database/sql/#DB"><code>sql.DB</code></a> object. This isn&rsquo;t a database connection &mdash; it&rsquo;s a <em>pool of many connections</em>. This is an important difference to understand. Go manages the connections in this pool as needed, automatically opening and closing connections to the database via the driver.
-<br>
-"<code>sql.Open()</code> 함수는 <code>sql.DB</code> 객체를 반환합니다. 이는 데이터베이스 연결이 아닌 많은 연결의 풀입니다. 이것은 이해해야 할 중요한 차이입니다. Go는 필요에 따라 이 풀의 연결을 관리하며 드라이버를 통해 데이터베이스에 대한 연결을 자동으로 열고 닫습니다."
+<br><br>
+<code>sql.Open()</code> 함수는 <code>sql.DB</code> 객체를 반환합니다. 이는 데이터베이스 연결이 아닌 많은 연결의 풀입니다. 이것은 이해해야 할 중요한 차이입니다. Go는 필요에 따라 이 풀의 연결을 관리하며 드라이버를 통해 데이터베이스에 대한 연결을 자동으로 열고 닫습니다.
 
 </p></li>
 
 <li><p>The connection pool is safe for concurrent access, so you can use it from web application handlers safely.
-<br>
-"연결 풀은 동시 액세스에 대한 안전성이 보장되므로 웹 애플리케이션 핸들러에서 안전하게 사용할 수 있습니다."
+<br><br>
+연결 풀은 동시 액세스에 대한 안전성이 보장되므로 웹 애플리케이션 핸들러에서 안전하게 사용할 수 있습니다.
 </p></li>
 
 <li><p>The connection pool is intended to be long-lived. In a web application it&rsquo;s normal to initialize the connection pool in your <code>main()</code> function and then pass the pool to your handlers. You shouldn&rsquo;t call <code>sql.Open()</code> in a short-lived HTTP handler itself &mdash; it would be a waste of memory and network resources.
-<br>
-"연결 풀은 장기적으로 사용되도록 의도되었습니다. 웹 애플리케이션에서는 주로 <code>main()</code> 함수에서 연결 풀을 초기화하고 그 후에 핸들러에 풀을 전달하는 것이 일반적입니다. 짧은 수명의 HTTP 핸들러에서 <code>sql.Open()</code>을 직접 호출하지 않아야 합니다. 이렇게 하면 메모리와 네트워크 리소스가 낭비될 수 있습니다."
+<br><br>
+연결 풀은 장기적으로 사용되도록 의도되었습니다. 웹 애플리케이션에서는 주로 <code>main()</code> 함수에서 연결 풀을 초기화하고 그 후에 핸들러에 풀을 전달하는 것이 일반적입니다. 짧은 수명의 HTTP 핸들러에서 <code>sql.Open()</code>을 직접 호출하지 않아야 합니다. 이렇게 하면 메모리와 네트워크 리소스가 낭비될 수 있습니다.
 </p></li>
 </ul>
 
 <h3 id="using-it-in-our-web-application">Using it in our web application</h3>
 
 <p>Let&rsquo;s look at how to use <code>sql.Open()</code> in practice. Open up your <code>main.go</code> file and add the following code:
-<br>
-"실제로 <code>sql.Open()</code>을 어떻게 사용하는지 살펴보겠습니다. <code>main.go</code> 파일을 열고 다음 코드를 추가하세요:"
+<br><br>
+실제로 <code>sql.Open()</code>을 어떻게 사용하는지 살펴보겠습니다. <code>main.go</code> 파일을 열고 다음 코드를 추가하세요:
 </p>
 
 <figure class="code go">
@@ -161,31 +161,31 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>There&rsquo;re a few things about this code which are interesting: "이 코드에는 몇 가지 흥미로운 점이 있습니다:"</p>
+<p>There&rsquo;re a few things about this code which are interesting: <br><br>이 코드에는 몇 가지 흥미로운 점이 있습니다:</p>
 
 <ul>
 <li><p>Notice how the import path for our driver is prefixed with an underscore? This is because our <code>main.go</code> file doesn&rsquo;t actually use anything in the <code>mysql</code> package. So if we try to import it normally the Go compiler will raise an error. However, we need the driver&rsquo;s <code>init()</code> function to run so that it can register itself with the <code>database/sql</code> package. The trick to getting around this is to alias the package name to the blank identifier, like we are here. This is standard practice for most of Go&rsquo;s SQL drivers.
-<br>
-"우리의 드라이버를 위한 import 경로가 밑줄로 시작되는 것을 주목했나요? 이는 <code>main.go</code> 파일이 실제로 <code>mysql</code> 패키지의 어떤 것도 사용하지 않기 때문입니다. 따라서 우리가 일반적으로 이를 가져오려고 하면 Go 컴파일러가 오류를 발생시킵니다. 그러나 <code>init()</code> 함수가 실행되어 <code>database/sql</code> 패키지에 자체를 등록할 수 있어야 합니다. 이를 우회하는 트릭은 패키지 이름을 빈 식별자로 별칭을 하는 것입니다. 여기서와 같이 이는 대부분의 Go의 SQL 드라이버에 대한 표준적인 방법입니다."
+<br><br>
+우리의 드라이버를 위한 import 경로가 밑줄로 시작되는 것을 주목했나요? 이는 <code>main.go</code> 파일이 실제로 <code>mysql</code> 패키지의 어떤 것도 사용하지 않기 때문입니다. 따라서 우리가 일반적으로 이를 가져오려고 하면 Go 컴파일러가 오류를 발생시킵니다. 그러나 <code>init()</code> 함수가 실행되어 <code>database/sql</code> 패키지에 자체를 등록할 수 있어야 합니다. 이를 우회하는 트릭은 패키지 이름을 빈 식별자로 별칭을 하는 것입니다. 여기서와 같이 이는 대부분의 Go의 SQL 드라이버에 대한 표준적인 방법입니다.
 </p></li>
 
 <li><p>The <code>sql.Open()</code> function doesn&rsquo;t actually create any connections, all it does is initialize the pool for future use. Actual connections to the database are established lazily, as and when needed for the first time. So to verify that everything is set up correctly we need to use the <a href="https://pkg.go.dev/database/sql/#DB.Ping"><code>db.Ping()</code></a> method to create a connection and check for any errors. If there is an error, we call <a href="https://pkg.go.dev/database/sql/#DB.Close"><code>db.Close()</code></a> to close the connection pool and return the error.
-<br>
-"<code>sql.Open()</code> 함수는 실제로 어떤 연결도 생성하지 않습니다. 단지 나중에 사용하기 위해 풀을 초기화할 뿐입니다. 실제 데이터베이스와의 연결은 필요할 때 처음으로 필요할 때 게으르게 수립됩니다. 따라서 모든 것이 올바로 설정되었는지 확인하려면 <code>db.Ping()</code> 메서드를 사용하여 연결을 생성하고 오류를 확인해야 합니다. 오류가 발생하면 <code>db.Close()</code>를 호출하여 연결 풀을 닫고 오류를 반환합니다."
+<br><br>
+<code>sql.Open()</code> 함수는 실제로 어떤 연결도 생성하지 않습니다. 단지 나중에 사용하기 위해 풀을 초기화할 뿐입니다. 실제 데이터베이스와의 연결은 필요할 때 처음으로 필요할 때 게으르게 수립됩니다. 따라서 모든 것이 올바로 설정되었는지 확인하려면 <code>db.Ping()</code> 메서드를 사용하여 연결을 생성하고 오류를 확인해야 합니다. 오류가 발생하면 <code>db.Close()</code>를 호출하여 연결 풀을 닫고 오류를 반환합니다.
 
 </p></li>
 
 <li><p>Going back to the <code>main()</code> function, at this moment in time the call to <code>defer db.Close()</code> is a bit superfluous. Our application is only ever terminated by a signal interrupt (i.e. <code>Ctrl+C</code>) or by <code>os.Exit(1)</code>. In both of those cases, the program exits immediately and deferred functions are never run. But making sure to always close the connection pool is a good habit to get into, and it could be beneficial in the future if you add a graceful shutdown to your application.
-<br>
-"<code>main()</code> 함수로 돌아와서, 현재 시점에서 <code>defer db.Close()</code> 호출은 다소 불필요합니다. 우리의 응용 프로그램은 시그널 인터럽트(<code>Ctrl+C</code>) 또는 <code>os.Exit(1)</code>에 의해서만 종료됩니다. 이 두 경우 모두 프로그램이 즉시 종료되며 지연된 함수는 실행되지 않습니다. 그러나 항상 연결 풀을 닫는 습관을 들이는 것은 좋은 습관이며 앞으로 응용 프로그램에 우아한 종료를 추가할 경우에 유용할 수 있습니다."
+<br><br>
+<code>main()</code> 함수로 돌아와서, 현재 시점에서 <code>defer db.Close()</code> 호출은 다소 불필요합니다. 우리의 응용 프로그램은 시그널 인터럽트(<code>Ctrl+C</code>) 또는 <code>os.Exit(1)</code>에 의해서만 종료됩니다. 이 두 경우 모두 프로그램이 즉시 종료되며 지연된 함수는 실행되지 않습니다. 그러나 항상 연결 풀을 닫는 습관을 들이는 것은 좋은 습관이며 앞으로 응용 프로그램에 우아한 종료를 추가할 경우에 유용할 수 있습니다.
 </p></li>
 </ul>
 
 <h3 id="testing-a-connection">Testing a connection</h3>
 
 <p>Make sure that the file is saved, and then try running the application. If everything has gone to plan, the connection pool should be established and the <code>db.Ping()</code> method should be able to create a connection without any errors. All being well, you should see the normal <em>starting server</em> log message like so:
-<br>
-"파일을 저장한 후 애플리케이션을 실행해 보세요. 모든 계획대로 진행되었다면 연결 풀이 설정되고 <code>db.Ping()</code> 메서드가 오류 없이 연결을 생성할 수 있어야 합니다. 모든 것이 잘 진행되면 다음과 같이 일반적인 서버 시작 로그 메시지가 표시됩니다:"
+<br><br>
+파일을 저장한 후 애플리케이션을 실행해 보세요. 모든 계획대로 진행되었다면 연결 풀이 설정되고 <code>db.Ping()</code> 메서드가 오류 없이 연결을 생성할 수 있어야 합니다. 모든 것이 잘 진행되면 다음과 같이 일반적인 서버 시작 로그 메시지가 표시됩니다:
 </p>
 
 <figure class="code bash">
@@ -194,8 +194,8 @@
 </figure>
 
 <p>If the application fails to start and you get an <code>&quot;Access denied...&quot;</code> error message like below, then the problem probably lies with your DSN. Double-check that the username and password are correct, that your database users have the right permissions, and that your MySQL instance is using standard settings.
-<br>
-"애플리케이션이 시작하지 못하고 "<code>&quot;Access denied...&quot;</code> 와 같은 오류 메시지가 표시된다면, 문제는 아마도 DSN에 있을 것입니다. 사용자 이름과 비밀번호가 올바른지, 데이터베이스 사용자가 올바른 권한을 갖고 있는지, MySQL 인스턴스가 표준 설정을 사용하고 있는지를 다시 확인하세요."
+<br><br>
+애플리케이션이 시작하지 못하고 "<code>&quot;Access denied...&quot;</code> 와 같은 오류 메시지가 표시된다면, 문제는 아마도 DSN에 있을 것입니다. 사용자 이름과 비밀번호가 올바른지, 데이터베이스 사용자가 올바른 권한을 갖고 있는지, MySQL 인스턴스가 표준 설정을 사용하고 있는지를 다시 확인하세요.
 </p>
 
 <figure class="code bash">

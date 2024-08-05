@@ -31,8 +31,8 @@
 			<h2 id="multiple-record-sql-queries">Multiple-record SQL queries</h2>
 
 <p>Finally let&rsquo;s look at the pattern for executing SQL statements which return multiple rows.  I&rsquo;ll demonstrate this by updating the <code>SnippetModel.Latest()</code> method to return the <em>most recently created ten snippets</em> (so long as they haven&rsquo;t expired) using the following SQL query:
-<br>
-"마지막으로 여러 행을 반환하는 SQL 문을 실행하는 패턴을 살펴보겠습니다. 이를 위해 <code>SnippetModel.Latest()</code> 메서드를 업데이트하여 가장 최근에 생성된 10개의 스니펫을 반환하겠습니다(만료되지 않은 경우) 다음과 같은 SQL 쿼리를 사용하여 이를 시연하겠습니다:"
+<br><br>
+마지막으로 여러 행을 반환하는 SQL 문을 실행하는 패턴을 살펴보겠습니다. 이를 위해 <code>SnippetModel.Latest()</code> 메서드를 업데이트하여 가장 최근에 생성된 10개의 스니펫을 반환하겠습니다(만료되지 않은 경우) 다음과 같은 SQL 쿼리를 사용하여 이를 시연하겠습니다:
 </p>
 
 <figure class="code sql">
@@ -40,7 +40,7 @@
 <span class="k">WHERE</span> <span class="n">expires</span> <span class="o">&gt;</span> <span class="n">UTC_TIMESTAMP</span><span class="p">(</span><span class="p">)</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">id</span> <span class="k">DESC</span> <span class="k">LIMIT</span> <span class="mi">10</span></pre>
 </figure>
 
-<p>Open up the <code>internal/models/snippets.go</code> file and add the following code: "<code>internal/models/snippets.go</code> 파일을 열고 다음 코드를 추가하십시오:"</p>
+<p>Open up the <code>internal/models/snippets.go</code> file and add the following code: <br><br><code>internal/models/snippets.go</code> 파일을 열고 다음 코드를 추가하십시오:</p>
 
 <figure class="code go">
 <figcaption>File: internal/models/snippets.go</figcaption>
@@ -107,15 +107,15 @@
 
 <aside class="important"><p>
 <strong>Important:</strong> Closing a resultset with <code>defer rows.Close()</code> is critical in the code above. As long as a resultset is open it will keep the underlying database connection open&hellip; so if something goes wrong in this method and the resultset isn&rsquo;t closed, it can rapidly lead to all the connections in your pool being used up.
-<br>
-"<strong>중요:</strong> 위의 코드에서 <code>defer rows.Close()</code>로 결과 집합을 닫는 것은 중요합니다. 결과 집합이 열려 있는 동안에는 기본 데이터베이스 연결이 계속 열려 있게 됩니다. 따라서 이 메서드에서 문제가 발생하고 결과 집합이 닫히지 않으면 풀의 모든 연결이 빠르게 소진될 수 있습니다."
+<br><br>
+<strong>중요:</strong> 위의 코드에서 <code>defer rows.Close()</code>로 결과 집합을 닫는 것은 중요합니다. 결과 집합이 열려 있는 동안에는 기본 데이터베이스 연결이 계속 열려 있게 됩니다. 따라서 이 메서드에서 문제가 발생하고 결과 집합이 닫히지 않으면 풀의 모든 연결이 빠르게 소진될 수 있습니다.
 </p></aside>
 
 <h3 id="using-the-model-in-our-handlers">Using the model in our handlers</h3>
 
 <p>Head back to your <code>cmd/web/handlers.go</code> file and update the <code>home</code> handler to use the <code>SnippetModel.Latest()</code> method, dumping the snippet contents to a HTTP response. For now just comment out the code relating to template rendering, like so:
-<br>
-"<code>cmd/web/handlers.go</code> 파일로 돌아가서 <code>home</code> 핸들러를 업데이트하여 <code>SnippetModel.Latest()</code> 메서드를 사용하고 스니펫 내용을 HTTP 응답에 덤프하십시오. 일단은 템플릿 렌더링과 관련된 코드에 주석을 달아주세요. 아래와 같이요:"
+<br><br>
+<code>cmd/web/handlers.go</code> 파일로 돌아가서 <code>home</code> 핸들러를 업데이트하여 <code>SnippetModel.Latest()</code> 메서드를 사용하고 스니펫 내용을 HTTP 응답에 덤프하십시오. 일단은 템플릿 렌더링과 관련된 코드에 주석을 달아주세요. 아래와 같이요:
 </p>
 
 <figure class="code go">
@@ -170,8 +170,8 @@
 </figure>
 
 <p>If you run the application now and visit <a href="http://localhost:4000/"><code>http://localhost:4000</code></a> in your browser you should get a response similar to this:
-<br>
-"지금 애플리케이션을 실행하고 브라우저에서 <code>http://localhost:4000</code>을 방문하면 다음과 유사한 응답을 받아야 합니다:"
+<br><br>
+지금 애플리케이션을 실행하고 브라우저에서 <code>http://localhost:4000</code>을 방문하면 다음과 유사한 응답을 받아야 합니다:
 </p>
 
 <figure class="img">
