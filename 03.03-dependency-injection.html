@@ -31,9 +31,8 @@
 			<h2 id="dependency-injection">Dependency injection</h2>
 
 <p>If you open up your <code>handlers.go</code> file you&rsquo;ll notice that the <code>home</code> handler function is still writing error messages using Go&rsquo;s standard logger, not the structured logger that we now want to be using.
-<br>
-"만약 당신이 <code>handlers.go</code> 파일을 열어보면, <code>home</code> 핸들러 함수가 여전히 Go의 표준 로거를 사용하여 오류 메시지를 작성하고 있는 것을 알 수 있습니다. 우리가 지금 사용하길 원하는 구조화된 로거가 아닙니다."
 </p>
+<p>만약 당신이 <code>handlers.go</code> 파일을 열어보면, <code>home</code> 핸들러 함수가 여전히 Go의 표준 로거를 사용하여 오류 메시지를 작성하고 있는 것을 알 수 있습니다. 우리가 지금 사용하길 원하는 구조화된 로거가 아닙니다.</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="nf">home</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
@@ -55,28 +54,25 @@
 </figure>
 
 <p>This raises a good question: <em>how can we make our new structured logger available to our <code>home</code> function from <code>main()</code>?</em>
-<br>
-"이것은 좋은 질문을 던집니다: <code>main()</code> 에서 <code>home</code> 함수에 새로운 구조화된 로거를 어떻게 사용할 수 있게 할 수 있을까요?"
 </p>
+<p>이것은 좋은 질문을 던집니다: <code>main()</code> 에서 <code>home</code> 함수에 새로운 구조화된 로거를 어떻게 사용할 수 있게 할 수 있을까요?</p>
 
 <p>And this question generalizes further. Most web applications will have multiple dependencies that their handlers need to access, such as a database connection pool, centralized error handlers, and template caches. What we really want to answer is: <em>how can we make any dependency available to our handlers?</em>
-<br>
-"이 질문은 더 일반화될 수 있습니다. 대부분의 웹 애플리케이션은 핸들러가 액세스해야 하는 여러 종속성을 가집니다. 이 종속성에는 데이터베이스 연결 풀, 중앙화된 오류 핸들러 및 템플릿 캐시와 같은 것들이 있습니다. 실제로 우리가 해결하고자 하는 질문은 다음과 같습니다: 어떻게 하면 핸들러에서 어떤 종속성이든 사용 가능하게 할 수 있을까요?"
 </p>
+<p>이 질문은 더 일반화될 수 있습니다. 대부분의 웹 애플리케이션은 핸들러가 액세스해야 하는 여러 종속성을 가집니다. 이 종속성에는 데이터베이스 연결 풀, 중앙화된 오류 핸들러 및 템플릿 캐시와 같은 것들이 있습니다. 실제로 우리가 해결하고자 하는 질문은 다음과 같습니다: 어떻게 하면 핸들러에서 어떤 종속성이든 사용 가능하게 할 수 있을까요?</p>
 
 <p>There are a <a href="https://www.alexedwards.net/blog/organising-database-access">few different ways</a> to do this, the simplest being to just put the dependencies in global variables. But in general, it is good practice to <em>inject dependencies</em> into your handlers. It makes your code more explicit, less error-prone, and easier to unit test than if you use global variables.
-<br>
-"이를 수행하는 몇 가지 다른 방법이 있습니다. 가장 간단한 방법은 종속성을 전역 변수에 단순히 두는 것입니다. 그러나 <u>일반적으로 핸들러에 종속성을 주입하는 것이 좋은 실천 방법입니다.</u> 이렇게 하면 코드가 명시적이 되고 오류 발생 가능성이 줄어들며 전역 변수를 사용하는 것보다 단위 테스트가 더 쉬워집니다."
 </p>
+<p>이를 수행하는 몇 가지 다른 방법이 있습니다. 가장 간단한 방법은 종속성을 전역 변수에 단순히 두는 것입니다. 그러나 <u>일반적으로 핸들러에 종속성을 주입하는 것이 좋은 실천 방법입니다.</u> 이렇게 하면 코드가 명시적이 되고 오류 발생 가능성이 줄어들며 전역 변수를 사용하는 것보다 단위 테스트가 더 쉬워집니다.</p>
 
 <p>For applications where all your handlers are in the same package, like ours, a neat way to inject dependencies is to put them into a custom <code>application</code> struct, and then define your handler functions as methods against <code>application</code>.
-<br>
-"우리와 같이 모든 핸들러가 동일한 패키지에 있는 애플리케이션의 경우, 종속성을 주입하는 깔끔한 방법은 이(종속성)를 custom <code>application</code> struct 에 넣고, 그런 다음 핸들러 함수를 <code>application</code> 에 대한 method 로 정의하는 것입니다."
 </p>
+<p>우리와 같이 모든 핸들러가 동일한 패키지에 있는 애플리케이션의 경우, 종속성을 주입하는 깔끔한 방법은 이(종속성)를 custom <code>application</code> struct 에 넣고, 그런 다음 핸들러 함수를 <code>application</code> 에 대한 method 로 정의하는 것입니다.</p>
 
-<p>I&rsquo;ll demonstrate. "내가 보여줄게."</p>
+<p>I&rsquo;ll demonstrate. 내가 보여줄게.</p>
 
-<p>First open your <code>main.go</code> file and create a new <code>application</code> struct like so: <br>"먼저 <code>main.go</code> 파일을 열고 다음과 같이 새로운 <code>application</code> struct 를 만드세요:"</p>
+<p>First open your <code>main.go</code> file and create a new <code>application</code> struct like so: </p>
+<p>먼저 <code>main.go</code> 파일을 열고 다음과 같이 새로운 <code>application</code> struct 를 만드세요:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -102,9 +98,8 @@
 </figure>
 
 <p>And then in the <code>handlers.go</code> file, we want to update the handler functions so that they become <em>methods against the <code>application</code> struct</em> and use the structured logger that it contains.
-<br>
-"그리고 <code>handlers.go</code> 파일에서 핸들러 함수를 업데이트하여 해당 함수들이 <code>application</code> struct 의 메서드가 되도록 하고, 그 구조체가 포함하는 구조화된 로거를 사용하도록 하고 싶습니다."
 </p>
+<p>그리고 <code>handlers.go</code> 파일에서 핸들러 함수를 업데이트하여 해당 함수들이 <code>application</code> struct 의 메서드가 되도록 하고, 그 구조체가 포함하는 구조화된 로거를 사용하도록 하고 싶습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -177,7 +172,8 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>And finally let&rsquo;s wire things together in our <code>main.go</code> file:<br>"마지막으로 <code>main.go</code> 파일에서 모든 것을 함께 연결해 봅시다:"</p>
+<p>And finally let&rsquo;s wire things together in our <code>main.go</code> file:</p>
+<p>마지막으로 <code>main.go</code> 파일에서 모든 것을 함께 연결해 봅시다:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -226,23 +222,19 @@
 </figure>
 
 <p>I understand that this approach might feel a bit complicated and convoluted, especially when an alternative is to simply make <code>logger</code> a global variable. But stick with me. As the application grows, and our handlers start to need more dependencies, this pattern will begin to show its worth.
-<br>
-
-"이 접근 방식은 <code>logger</code> 를 전역 변수로 만드는 대안이 있기 때문에 다소 복잡하고 난해하게 느껴질 수 있습니다. 그러나 계속 따라와 주세요. 애플리케이션이 성장하고 핸들러가 더 많은 종속성이 필요해지면, 이 패턴의 가치가 나타나기 시작할 것입니다."
 </p>
+<p>이 접근 방식은 <code>logger</code> 를 전역 변수로 만드는 대안이 있기 때문에 다소 복잡하고 난해하게 느껴질 수 있습니다. 그러나 계속 따라와 주세요. 애플리케이션이 성장하고 핸들러가 더 많은 종속성이 필요해지면, 이 패턴의 가치가 나타나기 시작할 것입니다.</p>
 
 <h3 id="adding-a-deliberate-error">Adding a deliberate error</h3>
 
-<p>Let&rsquo;s try this out by quickly adding a deliberate error to our application. <br>
-"의도적으로 애플리케이션에 오류를 빠르게 추가하여 이를 시도해 보겠습니다."
-</p>
+<p>Let&rsquo;s try this out by quickly adding a deliberate error to our application.</p>
+<p>의도적으로 애플리케이션에 오류를 빠르게 추가하여 이를 시도해 보겠습니다.</p>
 
 <p>Open your terminal and rename the <code>ui/html/pages/home.tmpl</code> to <code>ui/html/pages/home.bak</code>. When we run our application and make a request for the home page, this now should result in an error because the <code>ui/html/pages/home.tmpl</code> file no longer exists.
-<br>
-"터미널을 열어서 <code>ui/html/pages/home.tmpl</code> 파일의 이름을 <code>ui/html/pages/home.bak</code>으로 변경하세요. 이제 애플리케이션을 실행하고 홈 페이지에 대한 요청을 하면 이제 <code>ui/html/pages/home.tmpl</code> 파일이 더 이상 존재하지 않아 오류가 발생해야 합니다."
 </p>
+<p>터미널을 열어서 <code>ui/html/pages/home.tmpl</code> 파일의 이름을 <code>ui/html/pages/home.bak</code>으로 변경하세요. 이제 애플리케이션을 실행하고 홈 페이지에 대한 요청을 하면 이제 <code>ui/html/pages/home.tmpl</code> 파일이 더 이상 존재하지 않아 오류가 발생해야 합니다.</p>
 
-<p>Go ahead and make the change: "앞으로 진행하고 변경하세요:"</p>
+<p>Go ahead and make the change: 앞으로 진행하고 변경하세요:</p>
 
 <figure class="code bash">
 <pre>$ cd $HOME/code/snippetbox
@@ -250,9 +242,8 @@ $ mv ui/html/pages/home.tmpl ui/html/pages/home.bak</pre>
 </figure>
 
 <p>Then run the application and make a request to <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>. You should get an <code>Internal Server Error</code> HTTP response in your browser, and see a corresponding log entry at <code>Error</code> level in your terminal similar to this:
-<br>
-"그런 다음 애플리케이션을 실행하고 <code>http://localhost:4000</code> 에 대한 요청을 보내세요. 브라우저에서 <code>Internal Server Error</code> HTTP 응답을 받아야하며 터미널에서는 다음과 유사한 <code>Error</code> 수준의 로그 항목을 확인해야 합니다:"
 </p>
+<p>그런 다음 애플리케이션을 실행하고 <code>http://localhost:4000</code> 에 대한 요청을 보내세요. 브라우저에서 <code>Internal Server Error</code> HTTP 응답을 받아야하며 터미널에서는 다음과 유사한 <code>Error</code> 수준의 로그 항목을 확인해야 합니다:</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web
@@ -261,14 +252,12 @@ time=2023-09-05T17:52:06.063+02:00 level=ERROR msg=&#34;open ./ui/html/pages/hom
 </figure>
 
 <p>This demonstrates nicely that our structured <code>logger</code> is now being passed through to our <code>home</code> handler as a dependency, and is working as expected.
-<br>
-"이것은 우리의 구조화된 <code>logger</code> 가 이제 <code>home</code> 핸들러에 종속성으로 전달되고 예상대로 작동하는 것을 잘 보여줍니다."
 </p>
+<p>이것은 우리의 구조화된 <code>logger</code> 가 이제 <code>home</code> 핸들러에 종속성으로 전달되고 예상대로 작동하는 것을 잘 보여줍니다.</p>
 
 <p>Leave the deliberate error in place for now; we&rsquo;ll need it again in the next chapter.
-<br>
-"지금은 의도적인 오류를 그대로 두세요. 다음 장에서 다시 사용할 예정입니다."
 </p>
+<p>지금은 의도적인 오류를 그대로 두세요. 다음 장에서 다시 사용할 예정입니다.</p>
 
 <hr />
 
@@ -277,9 +266,8 @@ time=2023-09-05T17:52:06.063+02:00 level=ERROR msg=&#34;open ./ui/html/pages/hom
 <h4 id="closures-for-dependency-injection">Closures for dependency injection (의존성 주입을 위한 클로저)</h4>
 
 <p>The pattern that we&rsquo;re using to inject dependencies won&rsquo;t work if your handlers are spread across multiple packages. In that case, an alternative approach is to create a standalone <code>config</code> package which exports an <code>Application</code> struct, and have your handler functions close over this to form a <em>closure</em>. Very roughly:
-<br>
-"우리가 종속성을 주입하는 패턴은 핸들러가 여러 패키지에 걸쳐 분산되어 있으면 작동하지 않을 것입니다. 이 경우 대안적인 접근 방식은 독립적인 <code>config</code> 패키지를 만들어 <code>Application</code> struct 를 내보내고, 핸들러 함수가 이를 <em>closure</em> 를 형성하도록 만드는 것입니다. 대략적으로 말하면 다음과 같습니다:"
 </p>
+<p>우리가 종속성을 주입하는 패턴은 핸들러가 여러 패키지에 걸쳐 분산되어 있으면 작동하지 않을 것입니다. 이 경우 대안적인 접근 방식은 독립적인 <code>config</code> 패키지를 만들어 <code>Application</code> struct 를 내보내고, 핸들러 함수가 이를 <em>closure</em> 를 형성하도록 만드는 것입니다. 대략적으로 말하면 다음과 같습니다:</p>
 
 <figure class="code go">
 <pre><span class="c1">// package config
@@ -320,9 +308,8 @@ time=2023-09-05T17:52:06.063+02:00 level=ERROR msg=&#34;open ./ui/html/pages/hom
 </figure>
 
 <p>You can find a complete and more concrete example of how to use the closure pattern in <a href="https://gist.github.com/alexedwards/5cd712192b4831058b21">this Gist</a>.
-<br>
-"클로저 패턴을 사용하는 방법에 대한 완전하고 구체적인 예제는 <a href="https://gist.github.com/alexedwards/5cd712192b4831058b21">this Gist</a>에서 찾을 수 있습니다."
 </p>
+<p>클로저 패턴을 사용하는 방법에 대한 완전하고 구체적인 예제는 <a href="https://gist.github.com/alexedwards/5cd712192b4831058b21">this Gist</a>에서 찾을 수 있습니다.</p>
 
 		</main>
 		<footer>

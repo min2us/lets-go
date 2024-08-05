@@ -31,19 +31,16 @@
 			<h2 id="structured-logging">Structured logging</h2>
 
 <p>At the moment we&rsquo;re outputting log entries from our code using the <a href="https://pkg.go.dev/log/#Printf"><code>log.Printf()</code></a> and <a href="https://pkg.go.dev/log/#Fatal"><code>log.Fatal()</code></a> functions. A good example of this is the <em>&ldquo;starting server&hellip;&rdquo;</em> log entry that we print just before our server starts:
-<br>
-
-"현재 코드에서 <code>log.Printf()</code> 및 <code>log.Fatal()</code> 함수를 사용하여 로그 항목을 출력하고 있습니다. 이를 나타내는 좋은 예는 서버를 시작하기 직전에 출력하는 <em>&ldquo;starting server&hellip;&rdquo;</em> 로그 항목입니다."
 </p>
+<p>현재 코드에서 <code>log.Printf()</code> 및 <code>log.Fatal()</code> 함수를 사용하여 로그 항목을 출력하고 있습니다. 이를 나타내는 좋은 예는 서버를 시작하기 직전에 출력하는 <em>&ldquo;starting server&hellip;&rdquo;</em> 로그 항목입니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;starting server on %s&#34;</span><span class="p">,</span> <span class="o">*</span><span class="nx">addr</span><span class="p">)</span></pre>
 </figure>
 
 <p>Both the <code>log.Printf()</code> and <code>log.Fatal()</code> functions output log entries using Go&rsquo;s <dfn>standard logger</dfn> from the <a href="https://pkg.go.dev/log"><code>log</code></a> package, which &mdash; by default &mdash; prefixes a message with the local date and time and writes out to the standard error stream (which should display in your terminal window).
-<br>
-"<code>log.Printf()</code> 및 <code>log.Fatal()</code> 함수는 모두 기본적으로 Go의 <code>log</code> 패키지에서 제공하는 표준 로거를 사용하여 로그 항목을 출력합니다. 이 로거는 기본적으로 메시지를 로컬 날짜 및 시간으로 접두어를 붙이고 <u>표준 오류 스트림</u>으로 기록합니다(이는 터미널 창에 표시됩니다)."
 </p>
+<p><code>log.Printf()</code> 및 <code>log.Fatal()</code> 함수는 모두 기본적으로 Go의 <code>log</code> 패키지에서 제공하는 표준 로거를 사용하여 로그 항목을 출력합니다. 이 로거는 기본적으로 메시지를 로컬 날짜 및 시간으로 접두어를 붙이고 <u>표준 오류 스트림</u>으로 기록합니다(이는 터미널 창에 표시됩니다).</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web/
@@ -51,20 +48,16 @@
 </figure>
 
 <p>For many applications, using the standard logger will be <em>good enough</em>, and there&rsquo;s no need to do anything more complex.
-<br>
-"많은 애플리케이션에 대해서는 표준 로거를 사용하는 것이 충분하며, 더 복잡한 작업을 수행할 필요가 없을 것입니다."
 </p>
+<p>많은 애플리케이션에 대해서는 표준 로거를 사용하는 것이 충분하며, 더 복잡한 작업을 수행할 필요가 없을 것입니다.</p>
 
 <p>But for applications which do a lot of logging, you may want to make the log entries easier to filter and work with. For example, you might want to distinguish between different <em>severities</em> of log entries (like informational and error entries), or to enforce a consistent structure for log entries so that they are easy for external programs or services to parse.
-<br>
-
-"그러나 많은 로깅을 하는 애플리케이션의 경우 로그 항목을 필터링하고 처리하기 쉽게 만들고 싶을 것입니다. 예를 들어, 정보 및 오류 항목과 같은 서로 다른 심각도의 로그 항목을 구별하고 로그 항목에 일관된 구조를 부여하여 외부 프로그램이나 서비스가 구문 분석하기 쉽게 만들 수 있습니다."
 </p>
+<p>그러나 많은 로깅을 하는 애플리케이션의 경우 로그 항목을 필터링하고 처리하기 쉽게 만들고 싶을 것입니다. 예를 들어, 정보 및 오류 항목과 같은 서로 다른 심각도의 로그 항목을 구별하고 로그 항목에 일관된 구조를 부여하여 외부 프로그램이나 서비스가 구문 분석하기 쉽게 만들 수 있습니다.</p>
 
 <p>To support this, the Go standard library includes the <a href="https://pkg.go.dev/log/slog"><code>log/slog</code></a> package which lets you create custom <em>structured loggers</em> that output log entries in a set format. Each log entry includes the following things:
-<br>
-"이를 지원하기 위해 Go 표준 라이브러리에는 <a href="https://pkg.go.dev/log/slog"><code>log/slog</code></a> 패키지가 포함되어 있습니다. 이 패키지를 사용하면 특정 형식으로 로그 항목을 출력하는 사용자 지정 구조화된 로거를 만들 수 있습니다. 각 로그 항목에는 다음이 포함됩니다:"
 </p>
+<p>이를 지원하기 위해 Go 표준 라이브러리에는 <a href="https://pkg.go.dev/log/slog"><code>log/slog</code></a> 패키지가 포함되어 있습니다. 이 패키지를 사용하면 특정 형식으로 로그 항목을 출력하는 사용자 지정 구조화된 로거를 만들 수 있습니다. 각 로그 항목에는 다음이 포함됩니다:</p>
 
 <ul>
 <li>A timestamp with millisecond precision.
@@ -88,16 +81,15 @@
 <h3 id="creating-a-structured-logger">Creating a structured logger</h3>
 
 <p>The code for creating a structured logger with the <code>log/slog</code> package can be a little bit confusing the first time you see it.
-<br>
-"<code>log/slog</code> 패키지를 사용하여 구조화된 로거를 만드는 코드는 처음 보는 경우 약간 혼란스러울 수 있습니다."
 </p>
+<p><code>log/slog</code> 패키지를 사용하여 구조화된 로거를 만드는 코드는 처음 보는 경우 약간 혼란스러울 수 있습니다.</p>
 
 <p>The key thing to understand is that all structured loggers have a <em>structured logging handler</em> associated with them (not to be confused with a HTTP handler), and it&rsquo;s actually this handler that controls how log entries are formatted and where they are written to.
-<br>
-"이해해야 할 중요한 점은 모든 구조화된 로거가 해당 로거에 연결된 <em>structured logging handler</em> 를 갖고 있다는 것입니다(HTTP 핸들러와는 혼동하지 마세요). 실제로 로그 항목이 어떻게 형식화되고 어디에 쓰여지는지를 제어하는 것은 이 핸들러입니다."
 </p>
+<p>이해해야 할 중요한 점은 모든 구조화된 로거가 해당 로거에 연결된 <em>structured logging handler</em> 를 갖고 있다는 것입니다(HTTP 핸들러와는 혼동하지 마세요). 실제로 로그 항목이 어떻게 형식화되고 어디에 쓰여지는지를 제어하는 것은 이 핸들러입니다.</p>
 
-<p>The code for creating a logger looks like this:"로거를 생성하는 코드는 다음과 같습니다:"</p>
+<p>The code for creating a logger looks like this:</p>
+<p>로거를 생성하는 코드는 다음과 같습니다:</p>
 
 <figure class="code go">
 <pre><span class="nx">loggerHandler</span> <span class="o">:=</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">NewTextHandler</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">slog</span><span class="p">.</span><span class="nx">HandlerOptions</span><span class="p">{</span><span class="o">...</span><span class="p">}</span><span class="p">)</span>
@@ -105,31 +97,28 @@
 </figure>
 
 <p>In the first line of code we first use the <a href="https://pkg.go.dev/log/slog#NewTextHandler"><code>slog.NewTextHandler()</code></a> function to create the structured logging handler. This function accepts two arguments:
-<br>
-"첫 번째 코드 라인에서 <code>slog.NewTextHandler()</code> 함수를 사용하여 구조화된 로깅 핸들러를 만듭니다. 이 함수는 두 개의 인수를 받습니다:"
 </p>
+<p>첫 번째 코드 라인에서 <code>slog.NewTextHandler()</code> 함수를 사용하여 구조화된 로깅 핸들러를 만듭니다. 이 함수는 두 개의 인수를 받습니다:</p>
 
 <ul>
 <li>The first argument is the write destination for the log entries. In the example above we&rsquo;ve set it to <code>os.Stdout</code>, which means it will write log entries to the standard out stream.
-<br>
-"첫 번째 인수는 로그 항목을 쓸 대상입니다. 위의 예제에서는 <code>os.Stdout</code> 으로 설정했으며, 이는 로그 항목을 표준 출력 스트림에 쓸 것을 의미합니다."
+<br><br>
+첫 번째 인수는 로그 항목을 쓸 대상입니다. 위의 예제에서는 <code>os.Stdout</code> 으로 설정했으며, 이는 로그 항목을 표준 출력 스트림에 쓸 것을 의미합니다.
 </li>
+
 <li>The second argument is a pointer to a <a href="https://pkg.go.dev/log/slog#HandlerOptions"><code>slog.HandlerOptions</code></a> struct , which you can use to customize the behavior of the handler. We&rsquo;ll take a look at some of the available customizations at the end of this chapter. If you&rsquo;re happy with the defaults and don&rsquo;t want to change anything, you can pass <code>nil</code> as the second argument instead.
-<br>
-"
-두 번째 인수는 <code>slog.HandlerOptions</code> 구조체에 대한 포인터로, 핸들러의 동작을 사용자 정의하는 데 사용할 수 있습니다. 이 장의 끝에서 사용 가능한 몇 가지 사용자 정의를 살펴보겠습니다. 기본값을 사용하고 아무것도 변경하고 싶지 않다면 두 번째 인수로 <code>nil</code> 을 전달할 수 있습니다."
+<br><br>
+두 번째 인수는 <code>slog.HandlerOptions</code> 구조체에 대한 포인터로, 핸들러의 동작을 사용자 정의하는 데 사용할 수 있습니다. 이 장의 끝에서 사용 가능한 몇 가지 사용자 정의를 살펴보겠습니다. 기본값을 사용하고 아무것도 변경하고 싶지 않다면 두 번째 인수로 <code>nil</code> 을 전달할 수 있습니다.
 </li>
 </ul>
 
 <p>Then in the second line of code, we actually create the structured logger by passing the handler to the <a href="https://pkg.go.dev/log/slog#New"><code>slog.New()</code></a> function.
-<br>
-"그런 다음 두 번째 코드 라인에서는 실제로 handler를 <code>slog.New()</code> 함수에 전달하여 구조화된 로거를 만듭니다."
 </p>
+<p>그런 다음 두 번째 코드 라인에서는 실제로 handler를 <code>slog.New()</code> 함수에 전달하여 구조화된 로거를 만듭니다.</p>
 
 <p>In practice, it&rsquo;s more common to do all this  in a single line of code:
-<br>
-"실제로는 이 모든 것을 한 줄의 코드로 처리하는 것이 더 흔합니다:"
 </p>
+<p>실제로는 이 모든 것을 한 줄의 코드로 처리하는 것이 더 흔합니다:</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span> <span class="o">:=</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">slog</span><span class="p">.</span><span class="nf">NewTextHandler</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">slog</span><span class="p">.</span><span class="nx">HandlerOptions</span><span class="p">{</span><span class="o">...</span><span class="p">}</span><span class="p">)</span><span class="p">)</span></pre>
@@ -138,35 +127,31 @@
 <h3 id="using-a-structured-logger">Using a structured logger</h3>
 
 <p>Once you&rsquo;ve created a structured logger, you can then write a log entry at a specific severity level by calling the <code>Debug()</code>, <code>Info()</code>, <code>Warn()</code> or <code>Error()</code> methods on the logger. As an example, the following line of code:
-<br>
-"
-한 번 구조화된 로거를 만들면 로거의 <code>Debug()</code>, <code>Info()</code>, <code>Warn()</code> 또는 <code>Error()</code> 메서드를 호출하여 특정 심각도 수준에서 로그 항목을 작성할 수 있습니다. 예를 들어 다음 코드 라인:"
 </p>
+<p>한 번 구조화된 로거를 만들면 로거의 <code>Debug()</code>, <code>Info()</code>, <code>Warn()</code> 또는 <code>Error()</code> 메서드를 호출하여 특정 심각도 수준에서 로그 항목을 작성할 수 있습니다. 예를 들어 다음 코드 라인:</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;request received&#34;</span><span class="p">)</span></pre>
 </figure>
 
-<p>Would result in a log entry that looks like this:"다음과 같이 보일 것입니다:"</p>
+<p>Would result in a log entry that looks like this:</p>
+<p>다음과 같이 보일 것입니다:</p>
 
 <figure class="code bash">
 <pre><samp>time=2023-09-05T11:21:37.311+02:00 level=INFO msg=&#34;request received&#34;</samp></pre>
 </figure>
 
 <p>The <code>Debug()</code>, <code>Info()</code>, <code>Warn()</code> or <code>Error()</code> methods are <em>variadic methods</em> which accept an arbitrary number of additional attributes ( key-value pairs). Like so:
-<br>
-"<code>Debug()</code>, <code>Info()</code>, <code>Warn()</code> or <code>Error()</code> 메서드는 임의의 추가 속성 (키-값 쌍)을 허용하는 <em>variadic methods</em> 입니다. 다음과 같이 사용됩니다:"
 </p>
+<p><code>Debug()</code>, <code>Info()</code>, <code>Warn()</code> or <code>Error()</code> 메서드는 임의의 추가 속성 (키-값 쌍)을 허용하는 <em>variadic methods</em> 입니다. 다음과 같이 사용됩니다:</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;request received&#34;</span><span class="p">,</span> <span class="s">&#34;method&#34;</span><span class="p">,</span> <span class="s">&#34;GET&#34;</span><span class="p">,</span> <span class="s">&#34;path&#34;</span><span class="p">,</span> <span class="s">&#34;/&#34;</span><span class="p">)</span></pre>
 </figure>
 
 <p>In this example, we&rsquo;ve added two extra attributes to the log entry: the key <code>&quot;method&quot;</code> and value <code>&quot;GET&quot;</code>, and the key <code>&quot;path&quot;</code> and value <code>&quot;/&quot;</code>.  Attribute keys must always be strings, but the values can be of any type. In this example, the log entry will look like this:
-<br>
-"
-이 예제에서는 로그 항목에 두 가지 추가 속성을 추가했습니다: 키 <code>&quot;method&quot;</code> 및 값 <code>&quot;GET&quot;</code>, 그리고 키 <code>&quot;path&quot;</code> 및 값 <code>&quot;/&quot;</code>. 속성 키는 항상 문자열이어야 하지만 값은 모든 유형이 될 수 있습니다. 이 예에서 로그 항목은 다음과 같을 것입니다:"
 </p>
+<p>이 예제에서는 로그 항목에 두 가지 추가 속성을 추가했습니다: 키 <code>&quot;method&quot;</code> 및 값 <code>&quot;GET&quot;</code>, 그리고 키 <code>&quot;path&quot;</code> 및 값 <code>&quot;/&quot;</code>. 속성 키는 항상 문자열이어야 하지만 값은 모든 유형이 될 수 있습니다. 이 예에서 로그 항목은 다음과 같을 것입니다:</p>
 
 <figure class="code bash">
 <pre><samp>time=2023-09-05T11:22:30.405+02:00 level=INFO msg=&#34;request received&#34; method=GET path=/</samp></pre>
@@ -174,17 +159,15 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> If your attribute keys, values, or log message contain <code>&quot;</code> or <code>=</code> characters or any whitespace, they will be wrapped in double quotes in the log output. We can see this behavior in the example above, where the log message <code>msg=&quot;request received&quot;</code> is quoted.
-<br>
-"
-<strong>Note:</strong> 속성 키, 값 또는 로그 메시지에 <code>&quot;</code> or <code>=</code> 문자 또는 공백이 포함되어 있다면 로그 출력에서 이들은 이중 따옴표로 감싸집니다. 위의 예에서 <code>msg=&quot;request received&quot;</code> 는 따옴표로 둘러싸여 있습니다."
-</p></aside>
+</p>
+<p><strong>Note:</strong> 속성 키, 값 또는 로그 메시지에 <code>&quot;</code> or <code>=</code> 문자 또는 공백이 포함되어 있다면 로그 출력에서 이들은 이중 따옴표로 감싸집니다. 위의 예에서 <code>msg=&quot;request received&quot;</code> 는 따옴표로 둘러싸여 있습니다.</p>
+</aside>
 
 <h3 id="adding-structured-logging-to-our-application">Adding structured logging to our application</h3>
 
 <p>OK, let&rsquo;s go ahead and update our <code>main.go</code> file to use a structured logger instead of Go&rsquo;s standard logger. Like so:
-<br>
-"좋아요, 이제 <code>main.go</code> 파일을 업데이트하여 Go의 표준 로거 대신 구조화된 로거를 사용하도록 하겠습니다. 다음과 같이요:"
 </p>
+<p>좋아요, 이제 <code>main.go</code> 파일을 업데이트하여 Go의 표준 로거 대신 구조화된 로거를 사용하도록 하겠습니다. 다음과 같이요:</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -229,18 +212,18 @@
 
 <aside class="important"><p>
 <strong>Important:</strong> There is no structured logging equivalent to the <code>log.Fatal()</code> function that we can use to handle an error returned by <code>http.ListenAndServe()</code>. Instead, the closest we can get is logging a message at the <code>Error</code> severity level and then manually calling <code>os.Exit(1)</code> to terminate the application with the <a href="https://tldp.org/LDP/abs/html/exitcodes.html">exit code 1</a>, like we are in the code above.
-<br>
-"<strong>Important:</strong> 우리가 <code>http.ListenAndServe()</code>에서 반환된 오류를 처리하는 데 사용할 수 있는 <code>log.Fatal()</code> 함수의 구조화된 로깅 버전은 없습니다. 대신, 가장 가까운 방법은 오류 메시지를 <code>Error</code> 심각도 수준으로 로깅한 다음 수동으로 <code>os.Exit(1)</code>을 호출하여 종료 코드 1로 응용 프로그램을 종료하는 것입니다. 위의 코드에서 하는 대로입니다."
-</p></aside>
+</p>
+<p><strong>Important:</strong> 우리가 <code>http.ListenAndServe()</code>에서 반환된 오류를 처리하는 데 사용할 수 있는 <code>log.Fatal()</code> 함수의 구조화된 로깅 버전은 없습니다. 대신, 가장 가까운 방법은 오류 메시지를 <code>Error</code> 심각도 수준으로 로깅한 다음 수동으로 <code>os.Exit(1)</code>을 호출하여 종료 코드 1로 응용 프로그램을 종료하는 것입니다. 위의 코드에서 하는 대로입니다.</p>
+</aside>
 
 <p>Alright&hellip; let&rsquo;s try this out! "좋아요... 이제 시도해보죠!"</p>
 
 <p>Go ahead and run the application, then open <em>another</em> terminal window and try to run it a second time. This should generate an error because the network address our server wants to listen on (<code>&quot;:4000&quot;</code>) is already in use.
-<br>
-"애플리케이션을 실행하고 다른 터미널 창을 열어 두 번째로 실행해 보세요. 서버가 듣기를 원하는 네트워크 주소(<code>&quot;:4000&quot;</code>)가 이미 사용 중이기 때문에 오류가 발생해야 합니다."
 </p>
+<p>애플리케이션을 실행하고 다른 터미널 창을 열어 두 번째로 실행해 보세요. 서버가 듣기를 원하는 네트워크 주소(<code>&quot;:4000&quot;</code>)가 이미 사용 중이기 때문에 오류가 발생해야 합니다.</p>
 
-<p>The log output in your second terminal should look a bit like this: "두 번째 터미널에서의 로그 출력은 다음과 같이 보일 것입니다:"</p>
+<p>The log output in your second terminal should look a bit like this: </p>
+<p>두 번째 터미널에서의 로그 출력은 다음과 같이 보일 것입니다:</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web
@@ -250,14 +233,12 @@ exit status 1</samp></pre>
 </figure>
 
 <p>This is looking pretty good. We can see that the two log entries contain different information, but are formatted in the same overall way.
-<br>
-"이렇게 보면 꽤 괜찮아 보입니다. 두 로그 항목이 서로 다른 정보를 포함하지만 전체적으로는 동일한 방식으로 서식이 지정되어 있습니다."
 </p>
+<p>이렇게 보면 꽤 괜찮아 보입니다. 두 로그 항목이 서로 다른 정보를 포함하지만 전체적으로는 동일한 방식으로 서식이 지정되어 있습니다.</p>
 
 <p>The first log entry has the severity <code>level=INFO</code> and message <code>msg=&quot;starting server&quot;</code>, along with the additional <code>addr=:4000</code> attribute. In contrast, we see that the second log entry has the severity <code>level=ERROR</code>, the <code>msg</code> value contains the content of the error message, and there are no additional attributes.
-<br>
-"첫 번째 로그 항목에는 severity <code>level=INFO</code> 및 message <code>msg=&quot;starting server&quot;</code>가 있으며 추가로 <code>addr=:4000</code> 속성이 있습니다. 반면에 두 번째 로그 항목에는 severity <code>level=ERROR</code>, the <code>msg</code> 값에 오류 메시지의 내용이 포함되어 있으며 추가 속성이 없습니다."
 </p>
+<p>첫 번째 로그 항목에는 severity <code>level=INFO</code> 및 message <code>msg=&quot;starting server&quot;</code>가 있으며 추가로 <code>addr=:4000</code> 속성이 있습니다. 반면에 두 번째 로그 항목에는 severity <code>level=ERROR</code>, the <code>msg</code> 값에 오류 메시지의 내용이 포함되어 있으며 추가 속성이 없습니다.</p>
 
 <hr />
 
@@ -266,9 +247,8 @@ exit status 1</samp></pre>
 <h4 id="safer-attributes">Safer attributes</h4>
 
 <p>Let&rsquo;s say that you accidentally write some code where you forget to include either the key or value for an attribute. For example:
-<br>
-"속성의 키 또는 값을 포함하는 것을 잊어버린 경우가 있다고 가정해 봅시다. 예를 들어 다음과 같습니다."
 </p>
+<p>속성의 키 또는 값을 포함하는 것을 잊어버린 경우가 있다고 가정해 봅시다. 예를 들어 다음과 같습니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;starting server&#34;</span><span class="p">,</span> <span class="s">&#34;addr&#34;</span><span class="p">)</span> <span class="c1">// Oops, the value for &#34;addr&#34; is missing
@@ -276,49 +256,45 @@ exit status 1</samp></pre>
 </figure>
 
 <p>When this happens, the log entry will still be written but the attribute will have the key <code>!BADKEY</code>, like so:
-<br>
-"이런 경우에도 로그 항목은 기록되지만, 속성은 키 <code>!BADKEY</code>로 표시됩니다."
 </p>
+<p>이런 경우에도 로그 항목은 기록되지만, 속성은 키 <code>!BADKEY</code>로 표시됩니다.</p>
 
 <figure class="code bash">
 <pre><samp>time=2023-09-05T17:41:19.227+02:00 level=INFO msg=&#34;starting server&#34; !BADKEY=addr</samp></pre>
 </figure>
 
 <p>To avoid this happening and catch any problems at compile-time, you can use the <a href="https://pkg.go.dev/log/slog#Any"><code>slog.Any()</code></a> function to create an attribute pair instead:
-<br>
-"이러한 문제를 피하고 컴파일 시간에 문제를 감지하려면 <code>slog.Any()</code> 함수를 사용하여 속성 쌍을 만들 수 있습니다:"
 </p>
+<p>이러한 문제를 피하고 컴파일 시간에 문제를 감지하려면 <code>slog.Any()</code> 함수를 사용하여 속성 쌍을 만들 수 있습니다:</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;starting server&#34;</span><span class="p">,</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">Any</span><span class="p">(</span><span class="s">&#34;addr&#34;</span><span class="p">,</span> <span class="s">&#34;:4000&#34;</span><span class="p">)</span><span class="p">)</span></pre>
 </figure>
 
 <p>Or you can go even further and introduce some additional type safety by using the <code>slog.String()</code>, <code>slog.Int()</code>, <code>slog.Bool()</code>, <code>slog.Time()</code> and <code>slog.Duration()</code> functions to create attributes with a specific type of value.
-<br>
-"또는 더 나아가서 <code>slog.String()</code>, <code>slog.Int()</code>, <code>slog.Bool()</code>, <code>slog.Time()</code> and <code>slog.Duration()</code> 함수를 사용하여 특정 유형의 값으로 속성을 만들어 추가적인 유형 안전성을 도입할 수 있습니다."
 </p>
+<p>또는 더 나아가서 <code>slog.String()</code>, <code>slog.Int()</code>, <code>slog.Bool()</code>, <code>slog.Time()</code> and <code>slog.Duration()</code> 함수를 사용하여 특정 유형의 값으로 속성을 만들어 추가적인 유형 안전성을 도입할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span><span class="p">.</span><span class="nf">Info</span><span class="p">(</span><span class="s">&#34;starting server&#34;</span><span class="p">,</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;addr&#34;</span><span class="p">,</span> <span class="s">&#34;:4000&#34;</span><span class="p">)</span><span class="p">)</span></pre>
 </figure>
 
 <p>Whether you want to use these functions or not is up to you. The <code>log/slog</code> package is new to Go (introduced in Go 1.21), and there isn&rsquo;t much in the way of established best-practices or conventions around using it yet. But the trade-off is straightforward&hellip; using functions like <code>slog.String()</code> to create attributes is more verbose, but safer in sense that it reduces the risk of bugs in your application.
-<br>
-"이러한 함수를 사용할 지 여부는 여러분에게 달려 있습니다. <code>log/slog</code> 패키지는 Go에 새로 추가된 패키지이며 (Go 1.21에서 소개됨), 아직 사용에 관한 확립된 모범 사례나 규칙이 많지 않습니다. 그러나 트레이드 오프는 명확합니다. <code>slog.String()</code>과 같은 함수를 사용하여 속성을 만드는 것은 더 많은 양의 코드를 작성해야 하지만 응용 프로그램에서의 버그 가능성을 줄이는 측면에서 더 안전합니다."
 </p>
+<p>이러한 함수를 사용할 지 여부는 여러분에게 달려 있습니다. <code>log/slog</code> 패키지는 Go에 새로 추가된 패키지이며 (Go 1.21에서 소개됨), 아직 사용에 관한 확립된 모범 사례나 규칙이 많지 않습니다. 그러나 트레이드 오프는 명확합니다. <code>slog.String()</code>과 같은 함수를 사용하여 속성을 만드는 것은 더 많은 양의 코드를 작성해야 하지만 응용 프로그램에서의 버그 가능성을 줄이는 측면에서 더 안전합니다.</p>
 
 <h4 id="json-formatted-logs">JSON formatted logs</h4>
 
 <p>The <code>slog.NewTextHandler()</code> function that we&rsquo;ve used in this chapter creates a handler that writes plaintext log entries. But it&rsquo;s possible to create a handler that writes log entries as <em>JSON objects</em> instead using the <a href="https://pkg.go.dev/log/slog#NewJSONHandler"><code>slog.NewJSONHandler()</code></a> function. Like so:
-<br>
-"이번 장에서 사용한 <code>slog.NewTextHandler()</code> 함수는 일반 텍스트 형식의 로그 항목을 작성하는 핸들러를 생성합니다. 그러나 <code>slog.NewJSONHandler()</code> 함수를 사용하여 로그 항목을 JSON 객체로 작성하는 핸들러를 생성할 수도 있습니다. 다음과 같이:"
 </p>
+<p>이번 장에서 사용한 <code>slog.NewTextHandler()</code> 함수는 일반 텍스트 형식의 로그 항목을 작성하는 핸들러를 생성합니다. 그러나 <code>slog.NewJSONHandler()</code> 함수를 사용하여 로그 항목을 JSON 객체로 작성하는 핸들러를 생성할 수도 있습니다. 다음과 같이:</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span> <span class="o">:=</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">slog</span><span class="p">.</span><span class="nf">NewJSONHandler</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span><span class="p">)</span></pre>
 </figure>
 
-<p>When using the JSON handler, the log output will look similar to this:"JSON 핸들러를 사용할 때 로그 출력은 다음과 유사할 것입니다:"</p>
+<p>When using the JSON handler, the log output will look similar to this:</p>
+<p>JSON 핸들러를 사용할 때 로그 출력은 다음과 유사할 것입니다:</p>
 
 <figure class="code bash">
 <pre><samp>{&#34;time&#34;:&#34;2023-09-05T17:42:33.028876279+02:00&#34;,&#34;level&#34;:&#34;INFO&#34;,&#34;msg&#34;:&#34;starting server&#34;,&#34;addr&#34;:&#34;:4000&#34;}
@@ -328,20 +304,16 @@ exit status 1</samp></pre>
 <h4 id="minimum-log-level">Minimum log level</h4>
 
 <p>As we’ve mentioned a couple of times, the <code>log/slog</code> package supports four severity levels: <code>Debug</code>, <code>Info</code>, <code>Warn</code> and <code>Error</code> <em>in that order</em>. <code>Debug</code> is the least severe level, and <code>Error</code> is the most severe.
-<br>
-"
-여러 번 언급한 대로 <code>log/slog</code> 패키지는 <code>Debug</code>, <code>Info</code>, <code>Warn</code> and <code>Error</code> 의 네 가지 심각도 수준을 지원합니다. <code>Debug</code> 는 가장 경미한 수준이며, <code>Error</code> 는 가장 심각한 수준입니다."
 </p>
+<p>여러 번 언급한 대로 <code>log/slog</code> 패키지는 <code>Debug</code>, <code>Info</code>, <code>Warn</code> and <code>Error</code> 의 네 가지 심각도 수준을 지원합니다. <code>Debug</code> 는 가장 경미한 수준이며, <code>Error</code> 는 가장 심각한 수준입니다.</p>
 
 <p>By default, the minimum log level for a structured logger is <code>Info</code>. That means that any log entries with a severity <em>less</em> than <code>Info</code>  &mdash; i.e. <code>Debug</code> level entries &mdash; will be silently discarded.
-<br>
-"기본적으로 구조화된 로거의 최소 로그 수준은 <code>Info</code> 입니다. 즉, <code>Debug</code> 수준의 로그 항목은 무시됩니다."
 </p>
+<p>기본적으로 구조화된 로거의 최소 로그 수준은 <code>Info</code> 입니다. 즉, <code>Debug</code> 수준의 로그 항목은 무시됩니다.</p>
 
 <p>You can use the <code>slog.HandlerOptions</code> struct to override this and set the minimum level to <code>Debug</code> (or any other level) if you want:
-<br>
-"<code>slog.HandlerOptions</code> 구조체를 사용하여 이를 무시하고 최소 수준을 <code>Debug</code>(또는 다른 수준)으로 설정할 수 있습니다."
 </p>
+<p><code>slog.HandlerOptions</code> 구조체를 사용하여 이를 무시하고 최소 수준을 <code>Debug</code>(또는 다른 수준)으로 설정할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span> <span class="o">:=</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">slog</span><span class="p">.</span><span class="nf">NewTextHandler</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">slog</span><span class="p">.</span><span class="nx">HandlerOptions</span><span class="p">{</span>
@@ -352,10 +324,8 @@ exit status 1</samp></pre>
 <h4 id="caller-location">Caller location</h4>
 
 <p>You can also customize the handler so that it includes the filename and line number of the calling source code in the log entries, like so:
-<br>
-"
-호출되는 source code의 파일명과 라인 번호를 로그 항목에 포함하도록 핸들러를 사용자 정의할 수도 있습니다."
 </p>
+<p>호출되는 source code의 파일명과 라인 번호를 로그 항목에 포함하도록 핸들러를 사용자 정의할 수도 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="nx">logger</span> <span class="o">:=</span> <span class="nx">slog</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">slog</span><span class="p">.</span><span class="nf">NewTextHandler</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">slog</span><span class="p">.</span><span class="nx">HandlerOptions</span><span class="p">{</span>
@@ -364,9 +334,8 @@ exit status 1</samp></pre>
 </figure>
 
 <p>The log entries will look similar to this, with the caller location recorded under the <code>source</code> key:
-<br>
-"이러한 경우 로그 항목은 다음과 같이 기록되며, 호출자 위치는 <code>source</code> 키 아래에 기록됩니다."
 </p>
+<p>이러한 경우 로그 항목은 다음과 같이 기록되며, 호출자 위치는 <code>source</code> 키 아래에 기록됩니다.</p>
 
 <figure class="code bash">
 <pre><samp>time=2023-09-05T17:43:52.373+02:00 level=INFO source=/home/alex/code/snippetbox/cmd/web/main.go:32 msg=&#34;starting server&#34; addr=:4000</samp></pre>
@@ -375,28 +344,23 @@ exit status 1</samp></pre>
 <h4 id="decoupled-logging">Decoupled logging</h4>
 
 <p>In this chapter we&rsquo;ve set up our structured logger to write entries to <code>os.Stdout</code> &mdash; the standard out stream.
-<br>
-"이번 챕터에서는 구조화된 로거를 <code>os.Stdout</code> 에 로그를 작성하도록 설정했습니다."
 </p>
+<p>이번 챕터에서는 구조화된 로거를 <code>os.Stdout</code> 에 로그를 작성하도록 설정했습니다.</p>
 
 <p>The big benefit of writing log entries to <code>os.Stdout</code> is that your application and logging are decoupled. Your application itself isn&rsquo;t concerned with the routing or storage of the logs, and that can make it easier to manage the logs differently depending on the environment.
-<br>
-"
-<code>os.Stdout</code>에 로그를 작성하는 큰 이점은 응용 프로그램과 로깅이 분리된다는 것입니다. 응용 프로그램 자체는 로그의 라우팅이나 저장과 관련이 없으며, 이는 환경에 따라 로그를 다르게 관리하는 데 도움이 될 수 있습니다."
 </p>
+<p><code>os.Stdout</code>에 로그를 작성하는 큰 이점은 응용 프로그램과 로깅이 분리된다는 것입니다. 응용 프로그램 자체는 로그의 라우팅이나 저장과 관련이 없으며, 이는 환경에 따라 로그를 다르게 관리하는 데 도움이 될 수 있습니다.</p>
 
 <p>During development, it&rsquo;s easy to view the log output because the standard out stream is displayed in the terminal.
-<br>
-"개발 중에는 표준 출력 스트림이 터미널에 표시되므로 로그 출력을 쉽게 볼 수 있습니다."
 </p>
+<p>개발 중에는 표준 출력 스트림이 터미널에 표시되므로 로그 출력을 쉽게 볼 수 있습니다.</p>
 
 <p>In staging or production environments, you can redirect the stream to a final destination for viewing and archival. This destination could be on-disk files, or a logging service such as Splunk. Either way, the final destination of the logs can be managed by your execution environment independently of the application.
-<br>
-"
-스테이징이나 프로덕션 환경에서는 표준 출력 스트림을 최종 목적지로 리디렉션하여 보고 및 보관할 수 있습니다. 이 목적지는 디스크 파일이나 Splunk와 같은 로깅 서비스가 될 수 있습니다. 어쨌든 로그의 최종 목적지는 응용 프로그램과 독립적으로 실행 환경에서 관리할 수 있습니다."
 </p>
+<p>스테이징이나 프로덕션 환경에서는 표준 출력 스트림을 최종 목적지로 리디렉션하여 보고 및 보관할 수 있습니다. 이 목적지는 디스크 파일이나 Splunk와 같은 로깅 서비스가 될 수 있습니다. 어쨌든 로그의 최종 목적지는 응용 프로그램과 독립적으로 실행 환경에서 관리할 수 있습니다.</p>
 
-<p>For example, we could redirect the standard out stream to a on-disk file when starting the application like so: "예를 들어, 다음과 같이 응용 프로그램을 시작할 때 표준 출력 스트림을 디스크 파일로 리디렉션할 수 있습니다:"</p>
+<p>For example, we could redirect the standard out stream to a on-disk file when starting the application like so:</p>
+<p>예를 들어, 다음과 같이 응용 프로그램을 시작할 때 표준 출력 스트림을 디스크 파일로 리디렉션할 수 있습니다:</p>
 
 <figure class="code bash">
 <pre>$ go run ./cmd/web &gt;&gt;/tmp/web.log</pre>
@@ -404,23 +368,19 @@ exit status 1</samp></pre>
 
 <aside class="note"><p>
 <strong>Note:</strong> Using the double arrow <code>&gt;&gt;</code> will append to an existing file, instead of truncating it when starting the application.
-<br>
-"<strong>Note:</strong> 두 개의 화살표를 사용하면 <code>&gt;&gt;</code> 기존 파일에 추가됩니다. 응용 프로그램을 시작할 때 파일을 잘라내는 대신에 추가됩니다."
-</p></aside>
+</p>
+<p><strong>Note:</strong> 두 개의 화살표를 사용하면 <code>&gt;&gt;</code> 기존 파일에 추가됩니다. 응용 프로그램을 시작할 때 파일을 잘라내는 대신에 추가됩니다.</p>
+</aside>
 
 <h4 id="concurrent-logging">Concurrent logging</h4>
 
 <p>Custom loggers created by <code>slog.New()</code> are concurrency-safe. You can share a single logger and use it across multiple goroutines and in your HTTP handlers without needing to worry about race conditions.
-<br>
-
-"<code>slog.New()</code>으로 생성된 사용자 지정 로거들은 동시성 안전합니다. 여러 고루틴 및 HTTP 핸들러에서 단일 로거를 공유하고 사용할 수 있으며 경쟁 조건에 대해 걱정할 필요가 없습니다."
 </p>
+<p><code>slog.New()</code>으로 생성된 사용자 지정 로거들은 동시성 안전합니다. 여러 고루틴 및 HTTP 핸들러에서 단일 로거를 공유하고 사용할 수 있으며 경쟁 조건에 대해 걱정할 필요가 없습니다.</p>
 
 <p>That said, if you have <em>multiple</em> structured loggers writing to the same destination then you need to be careful and ensure that the destination&rsquo;s underlying <code>Write()</code> method is also safe for concurrent use.
-<br>
-
-"그렇다고 해도, 동일한 대상에 여러 구조화된 로거가 쓰는 경우 해당 대상의 기본 <code>Write()</code> 메서드도 동시 사용에 안전하도록 주의해야 합니다."
 </p>
+<p>그렇다고 해도, 동일한 대상에 여러 구조화된 로거가 쓰는 경우 해당 대상의 기본 <code>Write()</code> 메서드도 동시 사용에 안전하도록 주의해야 합니다.</p>
 
 		</main>
 		<footer>
