@@ -31,10 +31,13 @@
 			<h2 id="common-dynamic-data">Common dynamic data</h2>
 
 <p>In some web applications there may be common dynamic data that you want to include on more than one &mdash; or even every &mdash; webpage. For example, you might want to include the name and profile picture of the current user, or a CSRF token in all pages with forms.</p>
+<p>어떤 웹 애플리케이션에서는 여러 페이지 또는 모든 페이지에 포함하고 싶은 공통 동적 데이터가 있을 수 있습니다. 예를 들어, 현재 사용자 이름과 프로필 사진을 포함하거나, 모든 양식이 있는 페이지에 CSRF 토큰을 포함하고 싶을 수 있습니다.</p>
 
 <p>In our case let&rsquo;s begin with something simple, and say that we want to include the current year in the footer on every page.</p>
+<p>우리의 경우 간단한 예로 시작해보겠습니다. 모든 페이지의 푸터에 현재 연도를 포함하고 싶다고 가정해 봅시다.</p>
 
 <p>To do this we&rsquo;ll begin by adding a new <code>CurrentYear</code> field to the <code>templateData</code> struct, like so:</p>
+<p>이 작업을 수행하기 위해 <code>templateData</code> 구조체에 새로운 <code>CurrentYear</code> 필드를 추가하겠습니다. 다음과 같이 추가하면 됩니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -53,8 +56,9 @@
 </figure>
 
 <p>The next step is to add a <code>newTemplateData()</code> helper method to our application, which will return a <code>templateData</code> struct initialized with the current year.</p>
+<p>다음 단계는 애플리케이션에 <code>newTemplateData()</code> 헬퍼 메서드를 추가하여, 현재 연도로 초기화된 <code>templateData</code> 구조체를 반환하도록 하는 것입니다.</p>
 
-<p>I&rsquo;ll demonstrate:</p>
+<p>I&rsquo;ll demonstrate: 제가 시연해 보겠습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -82,6 +86,7 @@
 </figure>
 
 <p>Then let&rsquo;s update our <code>home</code> and <code>snippetView</code> handlers to use the <code>newTemplateData()</code> helper, like so:</p>
+<p>그 다음 <code>home</code> 과 <code>snippetView</code> 핸들러를 <code>newTemplateData()</code> 헬퍼를 사용하도록 업데이트합시다. 다음과 같이 변경하면 됩니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -139,6 +144,7 @@
 </figure>
 
 <p>And then the final thing we need to do is update the <code>ui/html/base.tmpl</code> file to display the year in the footer, like so:</p>
+<p>마지막으로 해야 할 일은 <code>ui/html/base.tmpl</code> 파일을 업데이트하여 푸터에 연도를 표시하도록 하는 것입니다. 다음과 같이 변경하면 됩니다.</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/base.tmpl</figcaption>
@@ -171,6 +177,7 @@
 </figure>
 
 <p>If you restart the application and visit the home page at <a href="http://localhost:4000/"><code>http://localhost:4000</code></a>, you now should see the current year in the footer. Like this:</p>
+<p>애플리케이션을 다시 시작하고 <code>http://localhost:4000</code> 에 있는 홈 페이지를 방문하면, 이제 푸터에 현재 연도가 표시될 것입니다. 다음과 같이 보일 것입니다</p>
 
 <figure class="img">
 <img src="assets/img/05.05-01.png" alt="05.05-01.png" />
