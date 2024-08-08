@@ -31,18 +31,27 @@
 			<h2 id="validating-form-data">Validating form data</h2>
 
 <p>Right now there&rsquo;s a glaring problem with our code: we&rsquo;re not validating the (untrusted) user input from the form in any way. We should do this to ensure that the form data is present, of the correct type and meets any business rules that we have.</p>
+<p>지금 우리 코드에는 명백한 문제가 있습니다. 우리는 폼에서 입력된 신뢰할 수 없는 사용자 입력을 전혀 검증하지 않고 있습니다. 폼 데이터가 존재하고, 올바른 유형이며, 우리가 설정한 비즈니스 규칙을 준수하는지 확인하기 위해 검증이 필요합니다.</p>
 
-<p>Specifically for this form we want to:</p>
+<p>Specifically for this form we want to: 특히 이 폼을 위해 우리는</p>
 
 <ul>
-<li>Check that the <code>title</code> and <code>content</code> fields are not empty.</li>
-<li>Check that the <code>title</code> field is not more than 100 characters long.</li>
-<li>Check that the <code>expires</code> value exactly matches one of our permitted values (<code>1</code>, <code>7</code> or <code>365</code> days).</li>
+<li>Check that the <code>title</code> and <code>content</code> fields are not empty.
+<p><code>title</code> 과 <code>content</code> 필드가 비어 있지 않은지 확인하세요.</p>
+</li>
+<li>Check that the <code>title</code> field is not more than 100 characters long.
+<p><code>title</code> 필드가 100자 이상인지 확인하세요.</p>
+</li>
+<li>Check that the <code>expires</code> value exactly matches one of our permitted values (<code>1</code>, <code>7</code> or <code>365</code> days).
+<p>만료 값이 허용된 값 중 하나(<code>1</code>일, <code>7</code>일 또는 <code>365</code>일)와 정확히 일치하는지 확인하세요.</p>
+</li>
 </ul>
 
 <p>All of these checks are fairly straightforward to implement using some <code>if</code> statements and various functions in Go&rsquo;s <a href="https://pkg.go.dev/strings/"><code>strings</code></a> and <a href="https://pkg.go.dev/unicode/utf8/"><code>unicode/utf8</code></a> packages.</p>
+<p>이러한 모든 검사는 Go의 <code>strings</code> 와 <code>unicode/utf8</code> 패키지의 다양한 함수와 <code>if</code> 문을 사용하여 구현하기가 꽤 간단합니다.</p>
 
 <p>Open up your <code>handlers.go</code> file and update the <code>snippetCreatePost</code> handler to include the appropriate validation rules like so:</p>
+<p><code>handlers.go</code> 파일을 열고 <code>snippetCreatePost</code> 핸들러를 적절한 검증 규칙을 포함하도록 다음과 같이 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -121,15 +130,19 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> When we check the length of the <code>title</code> field, we&rsquo;re using the <a href="https://pkg.go.dev/unicode/utf8/#RuneCountInString"><code>utf8.RuneCountInString()</code></a> function &mdash; not Go&rsquo;s <code>len()</code> function. This will count the number of <em>Unicode code points</em> in the title rather than the number of bytes. To illustrate the difference, the string <code>&quot;Zoë&quot;</code> contains 3 Unicode code points, but 4 bytes because of the umlauted <code>ë</code> character.
-</p></aside>
+</p>
+<p><code>title</code> 필드의 길이를 확인할 때, Go의 <code>len()</code> 함수가 아니라 <code>utf8.RuneCountInString()</code> 함수를 사용합니다. 이 함수는 제목의 바이트 수가 아니라 유니코드 코드 포인트(<em>Unicode code points</em>)의 수를 셉니다. 차이를 설명하기 위해, 문자열 <code>&quot;Zoë&quot;</code>는 3개의 유니코드 코드 포인트를 포함하지만, 움라우트가 있는 <code>ë</code> 문자 때문에 4바이트를 차지합니다.</p>
+</aside>
 
 <p>Alright, let&rsquo;s give this a try! Restart the application and try submitting the form with a too-long snippet title and blank content field, a bit like this&hellip;</p>
+<p>자 한번 시도해봅시다! 애플리케이션을 재시작한 후, 너무 긴 스니펫 제목과 빈 내용 필드를 가진 폼을 제출해 보세요. 대략 이런 식으로…</p>
 
 <figure class="img">
 <img src="assets/img/08.03-01.png" alt="08.03-01.png" />
 </figure>
 
 <p>And you should see a dump of the appropriate validation failure messages, like so:</p>
+<p>그러면 적절한 검증 실패 메시지들이 표시될 것입니다, 대략 이런 식으로</p>
 
 <figure class="img">
 <img src="assets/img/08.03-02.png" alt="08.03-02.png" />
@@ -137,7 +150,10 @@
 
 <aside class="hint"><p>
 <strong>Tip:</strong> You can find a bunch of code patterns for processing and validating different types of inputs in <a href="https://www.alexedwards.net/blog/validation-snippets-for-go">this blog post</a>.
-</p></aside>
+</p>
+
+<p><strong>Tip:</strong> <a href="https://www.alexedwards.net/blog/validation-snippets-for-go">이 블로그 포스트</a>에서 다양한 유형의 입력을 처리하고 검증하는 코드 패턴들을 많이 찾을 수 있습니다.</p>
+</aside>
 
 		</main>
 		<footer>
