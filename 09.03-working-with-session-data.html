@@ -31,12 +31,12 @@
 			<h2 id="working-with-session-data">Working with session data</h2>
 
 <p>In this chapter let&rsquo;s put the session functionality to work and use it to persist the confirmation flash message between HTTP requests that we <a href="09.00-stateful-http.html">discussed earlier</a>.
-<br>
+<br><br>
 이 장에서는 세션 기능을 활용하여 <a href="09.00-stateful-http.html">이전에 논의한</a> HTTP 요청 간에 확인 플래시 메시지(confirmation flash message)를 유지하는 방법을 적용해 보겠습니다.
 </p>
 
 <p>We&rsquo;ll begin in our <code>cmd/web/handlers.go</code> file and update our <code>snippetCreatePost</code> method so that a flash message is added to the user&rsquo;s session data if &mdash; and only if &mdash; the snippet was created successfully. Like so:
-<br>
+<br><br>
 <code>cmd/web/handlers.go</code> 파일에서 시작하여 <code>snippetCreatePost</code> 메서드를 업데이트하겠습니다. 이를 통해 Snippet이 성공적으로 생성된 경우에만 사용자 세션 데이터에 flash message 가 추가되도록 할 것입니다.
 </p>
 
@@ -82,7 +82,7 @@
 </figure>
 
 <p>That&rsquo;s nice and simple, but there are a couple of things to point out:
-<br>
+<br><br>
 이것은 좋고 간단하지만 몇 가지 지적할 점이 있습니다.
 </p>
 

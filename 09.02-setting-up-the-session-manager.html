@@ -31,12 +31,12 @@
 			<h2 id="setting-up-the-session-manager">Setting up the session manager</h2>
 
 <p>In this chapter I&rsquo;ll run through the basics of setting up and using the <code>alexedwards/scs</code> package, but if you&rsquo;re going to use it in a production application I recommend reading the <a href="https://github.com/alexedwards/scs">documentation</a> and <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2">API reference</a> to familiarize yourself with the full range of features.
-<br>
+<br><br>
 이 장에서는 <code>alexedwards/scs</code> 패키지를 설정하고 사용하는 기본 사항을 소개하겠지만, 실제 제품 애플리케이션에서 사용할 경우 전체 기능 범위를 파악하기 위해 문서와 API 참조를 읽는 것을 추천합니다.
 </p>
 
 <p>The first thing we need to do is create a <code>sessions</code> table in our MySQL database to hold the session data for our users. Start by connecting to MySQL from your terminal window as the <code>root</code> user and execute the following SQL statement to setup the <code>sessions</code> table:
-<br>
+<br><br>
 첫 번째로 수행해야 할 일은 사용자의 <code>sessions</code> 데이터를 저장할 MySQL 데이터베이스에 세션 테이블을 생성하는 것입니다. 터미널 창에서 <code>root</code> 사용자로 MySQL에 연결한 다음 다음 SQL 문을 실행하여 <code>sessions</code> 테이블을 설정하세요.
 
 </p>
@@ -57,28 +57,28 @@
 
 <ul>
 <li><p>The <code>token</code> field will contain a unique, randomly-generated, identifier for each session.
-<br>
+<br><br>
 <code>token</code> 필드에는 각 세션에 대한 고유한 무작위 생성 식별자가 포함됩니다.
 </p></li>
 
 <li><p>The <code>data</code> field will contain the actual session data that you want to share between HTTP requests. This is stored as <em>binary data</em> in a <code>BLOB</code> (binary large object) type.
-<br>
+<br><br>
 <code>data</code> 필드에는 HTTP 요청 간에 공유하려는 실제 세션 데이터가 포함됩니다. 이는  <code>BLOB</code> (binary large object) 유형으로 이진 데이터로 저장됩니다.
 </p></li>
 
 <li><p>The <code>expiry</code> field will contain an expiry time for the session. The <code>scs</code> package will automatically delete expired sessions from the <code>sessions</code> table so that it doesn&rsquo;t grow too large.
-<br>
+<br><br>
 <code>expiry</code> 필드에는 세션의 만료 시간이 포함됩니다. <code>scs</code> 패키지는 자동으로 만료된 세션을 <code>sessions</code> 테이블에서 삭제하여 테이블이 너무 커지지 않도록 합니다.
 </p></li>
 </ul>
 
 <p>The next thing we need to do is establish a <dfn>session manager</dfn> in our <code>main.go</code> file and make it available to our handlers via the <code>application</code> struct. The session manager holds the configuration settings for our sessions, and also provides some middleware and helper methods to handle the loading and saving of session data.
-<br>
+<br><br>
 다음으로 수행해야 할 작업은 <code>main.go</code> 파일에서 <dfn>session manager</dfn>를 설정하고 <code>application</code> 구조체를 통해 핸들러에서 사용할 수 있도록 하는 것입니다. 세션 매니저는 세션의 구성 설정을 보유하며 세션 데이터의 로딩 및 저장을 처리하는 데 사용되는 미들웨어 및 도우미 메서드를 제공합니다.
 </p>
 
 <p>Open your <code>main.go</code> file and update it as follows: 
-<br>
+<br><br>
 <code>main.go</code> 파일을 열고 다음과 같이 업데이트하세요. </p>
 
 <figure class="code go">
@@ -162,33 +162,33 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> The <code>scs.New()</code> function returns a pointer to a <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager"><code>SessionManager</code></a> struct which holds the configuration settings for your sessions. In the code above we&rsquo;ve set the <code>Store</code> and <code>Lifetime</code> fields of this struct, but there&rsquo;s a range of <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager">other fields</a> that you can and should configure depending on your application&rsquo;s needs.
-<br>
+<br><br>
 <strong>노트:</strong> <code>scs.New()</code> 함수는 세션의 구성 설정을 보유하는 <code>SessionManager</code> 구조체에 대한 포인터를 반환합니다. 위의 코드에서는 이 구조체의 <code>Store</code> 및 <code>Lifetime</code> 필드를 설정했지만, 응용 프로그램의 요구에 따라 구성해야 할 다양한 다른 필드가 있습니다.
 
 </p></aside>
 
 <p>For the sessions to work, we also need to wrap our application routes with the middleware provided by the <a href="https://pkg.go.dev/github.com/alexedwards/scs/v2#SessionManager.LoadAndSave"><code>SessionManager.LoadAndSave()</code></a> method. This middleware automatically loads and saves session data with every HTTP request and response.
-<br>
+<br><br>
 세션이 작동하려면 <code>SessionManager.LoadAndSave()</code> 메서드에서 제공하는 미들웨어로 애플리케이션 라우트를 랩핑해야 합니다. 이 미들웨어는 모든 HTTP 요청 및 응답에 대해 세션 데이터를 자동으로 로드하고 저장합니다.
 </p>
 
 <p>It&rsquo;s important to note that we don&rsquo;t need this middleware to act on <em>all</em> our application routes. Specifically, we don&rsquo;t need it on the <code>/static/*filepath</code> route, because all this does is serve static files and there is no need for any stateful behavior.
-<br>
+<br><br>
 이 미들웨어가 모든 애플리케이션 라우트에 작용할 필요는 없다는 것을 주목하는 것이 중요합니다. 특히 <code>/static/*filepath</code> 라우트에서는 필요하지 않습니다. 이 라우트는 단순히 정적 파일을 제공하며 상태를 유지할 필요가 없기 때문입니다.
 </p>
 
 <p>So, because of that, it doesn&rsquo;t make sense to add the session middleware to our existing <code>standard</code> middleware chain.
-<br>
+<br><br>
 그래서 이로 인해 세션 미들웨어를 기존의 <code>standard</code> 미들웨어 체인에 추가하는 것은 의미가 없습니다.
 </p>
 
 <p>Instead, let&rsquo;s create a new <code>dynamic</code> middleware chain containing the middleware appropriate for our dynamic application routes only.
-<br>
+<br><br>
 대신, 동적인 애플리케이션 라우트에 적합한 미들웨어만 포함하는 새로운 <code>dynamic</code> 미들웨어 체인을 생성해 봅시다.
 </p>
 
 <p>Open the <code>routes.go</code> file and update it like so:
-<br>
+<br><br>
 <code>routes.go</code> 파일을 열고 다음과 같이 업데이트하세요.
 </p>
 
@@ -234,7 +234,7 @@
 </figure>
 
 <p>If you run the application now you should find that it compiles all OK, and your application routes continue to work as normal.
-<br>
+<br><br>
 지금 애플리케이션을 실행하면 모든 것이 잘 컴파일되며 애플리케이션 라우트가 계속 정상적으로 작동하는 것을 확인할 수 있어야 합니다.
 </p>
 
@@ -245,7 +245,7 @@
 <h4 id="without-using-alice">Without using alice</h4>
 
 <p>If you&rsquo;re not using the <code>justinas/alice</code> package to help manage your middleware chains, then you&rsquo;d need to use the <code>http.HandlerFunc()</code> adapter to convert your handler functions like <code>app.home</code> to a <code>http.Handler</code>, and then wrap that with session middleware instead. Like this:
-<br>
+<br><br>
 만약 <code>justinas/alice</code> 패키지를 사용하여 미들웨어 체인을 관리하지 않는다면, <code>http.HandlerFunc()</code> 어댑터를 사용하여 <code>app.home</code> 과 같은 핸들러 함수를 <code>http.Handler</code> 로 변환하고, 그런 다음 세션 미들웨어로 랩핑해야 합니다. 
 </p>
 
