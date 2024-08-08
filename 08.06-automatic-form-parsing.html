@@ -31,8 +31,10 @@
 			<h2 id="automatic-form-parsing">Automatic form parsing</h2>
 
 <p>We can simplify our <code>snippetCreatePost</code> handler further by using a third-party package like <a href="https://github.com/go-playground/form"><code>go-playground/form</code></a> or <a href="https://github.com/gorilla/schema"><code>gorilla/schema</code></a> to automatically decode the form data into the <code>createSnippetForm</code> struct. Using an automatic decoder is <em>totally</em> optional, but it can help to save you time and typing &mdash; especially if your application has lots of forms, or you need to process a very large form.</p>
+<p>우리는 <code>snippetCreatePost</code> 핸들러를 더 간단하게 만들기 위해 <code>go-playground/form</code> 이나 <code>gorilla/schema</code> 와 같은 서드파티 패키지를 사용하여 폼 데이터를 <code>createSnippetForm</code> 구조체로 자동으로 디코딩할 수 있습니다. 자동 디코더를 사용하는 것은 완전히 선택 사항이지만, 많은 폼이 있거나 매우 큰 폼을 처리해야 하는 경우에는 시간과 타이핑을 절약하는 데 도움이 될 수 있습니다.</p>
 
 <p>In this chapter we&rsquo;ll look at how to use the <code>go-playground/form</code> package. If you&rsquo;re following along, please go ahead and install it like so:</p>
+<p>이번 장에서는 <code>go-playground/form</code> 패키지를 사용하는 방법을 살펴보겠습니다. 따라 하신다면, 다음과 같이 설치해 주세요.</p>
 
 <figure class="code bash">
 <pre>$ go get github.com/go-playground/form/v4@v4
@@ -42,6 +44,7 @@
 <h3 id="using-the-form-decoder">Using the form decoder</h3>
 
 <p>To get this working, the first thing that we need to do is initialize a new <a href="https://pkg.go.dev/github.com/go-playground/form?utm_source=godoc#Decoder"><code>*form.Decoder</code></a> instance in our <code>main.go</code> file and make it available to our handlers as a dependency. Like this:</p>
+<p>이를 작동시키기 위해 먼저 <code>main.go</code> 파일에서 새로운 <code>*form.Decoder</code> 인스턴스를 초기화하고 이를 핸들러에서 의존성으로 사용할 수 있도록 해야 합니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/main.go</figcaption>
@@ -111,6 +114,7 @@
 </figure>
 
 <p>Next let&rsquo;s go to our <code>cmd/web/handlers.go</code> file and update it to use this new decoder, like so:</p>
+<p>다음으로 <code>cmd/web/handlers.go</code> 파일로 가서 이 새로운 디코더를 사용하도록 업데이트해 봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -174,26 +178,39 @@
 </figure>
 
 <p>Hopefully you can see the benefit of this pattern. We can use simple struct tags to define a mapping between our HTML form and the &lsquo;destination&rsquo; struct fields, and unpacking the form data to the destination now only requires us to write a few lines of code &mdash; irrespective of how large the form is.</p>
+<p>이 패턴의 이점을 이해하셨길 바랍니다. 간단한 구조체 태그를 사용해 HTML 폼과 '대상' 구조체 필드 간의 매핑을 정의할 수 있으며, 폼 데이터를 대상 구조체로 언패킹하는 데는 폼의 크기와 상관없이 몇 줄의 코드만 작성하면 됩니다.</p>
 
 <p>Importantly, type conversions are handled automatically too. We can see that in the code above, where the <code>expires</code> value is automatically mapped to an <code>int</code> data type.</p>
+<p>중요한 점은 타입 변환도 자동으로 처리된다는 것입니다. 위 코드에서 <code>expires</code> 값이 자동으로 <code>int</code> 데이터 타입으로 매핑되는 것을 볼 수 있습니다.</p>
 
 <p>So that&rsquo;s really good. But there is one problem.</p>
+<p>그래서 정말 좋습니다. 하지만 한 가지 문제가 있습니다.</p>
 
 <p>When we call <code>app.formDecoder.Decode()</code> it requires a <em>non-nil pointer</em> as the target decode destination. If we try to pass in something that <em>isn&rsquo;t</em> a non-nil pointer, then <code>Decode()</code> will return a <a href="https://pkg.go.dev/github.com/go-playground/form/v4#InvalidDecoderError"><code>form.InvalidDecoderError</code></a> error.</p>
+<p><code>app.formDecoder.Decode()</code> 를 호출할 때, 대상 디코딩 목적지로 nil이 아닌 포인터가 필요합니다. nil이 아닌 포인터가 아닌 것을 전달하려고 하면 <code>Decode()</code> 는 <code>form.InvalidDecoderError</code> 오류를 반환합니다.</p>
 
 <p>If this ever happens, it&rsquo;s a critical problem with our application code (rather than a client error due to bad input). So we need to check for this error specifically and manage it as a special case, rather than just returning a <code>400 Bad Request</code> response.</p>
+<p>이런 일이 발생하면, 이는 잘못된 입력으로 인한 클라이언트 오류가 아니라 애플리케이션 코드의 치명적인 문제입니다. 따라서 <code>400 Bad Request</code> 응답을 반환하는 대신, 이 오류를 특별히 검사하고 특별한 경우로 처리해야 합니다.</p>
 
 <h3 id="creating-a-decodepostform-helper">Creating a decodePostForm helper</h3>
 
 <p>To assist with this, let&rsquo;s create a new <code>decodePostForm()</code> helper which does three things:</p>
+<p>이를 돕기 위해, 세 가지 작업을 수행하는 새로운 <code>decodePostForm()</code> 헬퍼를 만들어 봅시다.</p>
 
 <ul>
-<li>Calls <code>r.ParseForm()</code> on the current request.</li>
-<li>Calls <code>app.formDecoder.Decode()</code> to unpack the HTML form data to a target destination.</li>
-<li>Checks for a <code>form.InvalidDecoderError</code> error and triggers a panic if we ever see it.</li>
+<li>Calls <code>r.ParseForm()</code> on the current request.
+<p><code>r.ParseForm()</code> 을 현재 요청에서 호출합니다.</p>
+</li>
+<li>Calls <code>app.formDecoder.Decode()</code> to unpack the HTML form data to a target destination.
+<p><code>app.formDecoder.Decode()</code> 를 호출하여 HTML 폼 데이터를 대상 위치로 언패킹합니다.</p>
+</li>
+<li>Checks for a <code>form.InvalidDecoderError</code> error and triggers a panic if we ever see it.
+<p><code>form.InvalidDecoderError</code> 오류를 검사하고, 이 오류가 발생하면 패닉을 발생시킵니다.</p>
+</li>
 </ul>
 
 <p>If you&rsquo;re following along, please go ahead and add this to your <code>cmd/web/helpers.go</code> file like so:</p>
+<p>따라 하신다면 다음과 같이 <code>cmd/web/helpers.go</code> 파일에 이 코드를 추가해 주세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/helpers.go</figcaption>
@@ -244,6 +261,7 @@
 </figure>
 
 <p>And with that done, we can make the final simplification to our <code>createSnippetPost</code> handler. Go ahead and update it to use the <code>decodePostForm()</code> helper and remove the <code>r.ParseForm()</code> call, so that the code looks like this:</p>
+<p>이제 작업이 완료되었으므로, <code>createSnippetPost</code> 핸들러를 최종적으로 단순화할 수 있습니다. <code>decodePostForm()</code> 헬퍼를 사용하도록 업데이트하고 <code>r.ParseForm()</code> 호출을 제거하여 코드가 다음과 같도록 수정해 주세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -282,9 +300,10 @@
 <span class="p">}</span></pre>
 </figure>
 
-<p>That&rsquo;s looking really good.</p>
+<p>That&rsquo;s looking really good. 정말 좋습니다.</p>
 
 <p>Our handler code is now nice and succinct, but still very clear in terms of it&rsquo;s behavior and what it is doing. And we have a general pattern in place for form processing and validation that we can easily re-use on other forms in our project &mdash; such as the user signup and login forms that we&rsquo;ll build shortly.</p>
+<p>우리 핸들러 코드는 이제 간결하면서도 동작과 기능이 명확하게 드러나 있습니다. 그리고 폼 처리와 검증을 위한 일반적인 패턴이 마련되어 있어, 프로젝트의 다른 폼에서도 쉽게 재사용할 수 있습니다. 예를 들어, 곧 만들게 될 사용자 가입 및 로그인 폼 등이 이에 해당합니다.</p>
 
 		</main>
 		<footer>
