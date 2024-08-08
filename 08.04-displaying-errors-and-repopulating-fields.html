@@ -31,10 +31,13 @@
 			<h2 id="displaying-errors-and-repopulating-fields">Displaying errors and repopulating fields</h2>
 
 <p>Now that the <code>snippetCreatePost</code> handler is validating the data, the next stage is to manage these validation errors gracefully.</p>
+<p>이제 <code>snippetCreatePost</code> 핸들러가 데이터를 검증하고 있으므로, 다음 단계는 이러한 검증 오류를 우아하게 처리하는 것입니다.</p>
 
 <p>If there are any validation errors, we want to re-display the HTML form, highlighting the fields which failed validation and automatically re-populating any previously submitted data (so that the user doesn&rsquo;t need to enter it again).</p>
+<p>검증 오류가 있는 경우 HTML 폼을 다시 표시하고 검증에 실패한 필드를 강조 표시하며, 이전에 제출한 데이터를 자동으로 다시 채워 사용자가 다시 입력할 필요가 없도록 해야 합니다.</p>
 
 <p>To do this, let&rsquo;s begin by adding a new <code>Form</code> field to our <code>templateData</code> struct:</p>
+<p>이를 위해 먼저 우리의 <code>templateData</code> 구조체에 새로운 <code>Form</code> 필드를 추가합시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -60,8 +63,10 @@
 </figure>
 
 <p>We&rsquo;ll use this <code>Form</code> field to pass the validation errors and previously submitted data back to the template when we re-display the form.</p>
+<p>이 <code>Form</code> 필드를 사용하여 검증 오류와 이전에 제출한 데이터를 템플릿으로 다시 전달하고 폼을 다시 표시할 때 활용할 것입니다.</p>
 
 <p>Next let&rsquo;s head back to our <code>cmd/web/handlers.go</code> file and define a new <code>snippetCreateForm</code> struct to hold the form data and any validation errors, and update our <code>snippetCreatePost</code> handler to use this.</p>
+<p>다음으로 <code>cmd/web/handlers.go</code> 파일로 돌아가서 폼 데이터와 검증 오류를 담을 새로운 <code>snippetCreateForm</code> 구조체를 정의하고, <code>snippetCreatePost</code> 핸들러를 이 구조체를 사용하도록 업데이트합시다.</p>
 
 <p>Like so:</p>
 
@@ -146,22 +151,30 @@
 </figure>
 
 <p>OK, so now when there are any validation errors we are re-displaying the <code>create.tmpl</code> template, passing in the previous data and validation errors in a <code>snippetCreateForm</code> struct via the template data&rsquo;s <code>Form</code> field.</p>
+<p>좋습니다. 이제 검증 오류가 있을 때는 <code>create.tmpl</code> 템플릿을 다시 표시하고, 이전 데이터와 검증 오류를 <code>snippetCreateForm</code> 구조체를 통해 템플릿 데이터의 Form 필드에 전달하고 있습니다.</p>
 
 <p>If you like, you should be able to run the application at this point and the code should compile without any errors.</p>
+<p>원하신다면 지금 이 시점에서 애플리케이션을 실행해 보시고 코드가 오류 없이 컴파일되는지 확인할 수 있을 것입니다.</p>
 
 <h3 id="updating-the-html-template">Updating the HTML template</h3>
 
 <p>The next thing that we need to do is update our <code>create.tmpl</code> template to display the validation errors and re-populate any previous data.</p>
+<p>다음으로 해야 할 일은 <code>create.tmpl</code> 템플릿을 업데이트하여 검증 오류를 표시하고 이전 데이터를 다시 채우는 것입니다.</p>
 
 <p>Re-populating the form data is straightforward enough &mdash; we should be able to render this in the templates using tags like <code>{{.Form.Title}}</code> and <code>{{.Form.Content}}</code>, in the same way that we displayed the snippet data earlier in the book.</p>
+<p>폼 데이터를 다시 채우는 것은 꽤 간단합니다. 이전에 책에서 스니펫 데이터를 표시한 방식과 마찬가지로, <code>{{.Form.Title}}</code> 및 <code>{{.Form.Content}}</code>와 같은 태그를 사용하여 템플릿에서 이를 렌더링할 수 있어야 합니다.</p>
 
 <p>For the validation errors, the underlying type of our <code>FieldErrors</code> field is a <code>map[string]string</code>, which uses the form field names as keys. For maps, it&rsquo;s possible to access the value for a given key by simply chaining the key name. So, for example, to render a validation error for the <code>title</code> field we can use the tag <code>{{.Form.FieldErrors.title}}</code> in our template.</p>
+<p>검증 오류의 경우, code>FieldErrors</code> 필드의 기본 유형은 <code>map[string]string</code>이며, 이는 폼 필드 이름을 키로 사용합니다. 맵에서는 주어진 키에 대한 값을 단순히 키 이름을 체이닝하여 접근할 수 있습니다. 예를 들어, <code>title</code> 필드에 대한 검증 오류를 렌더링하려면 템플릿에서 <code>{{.Form.FieldErrors.title}}</code> 태그를 사용할 수 있습니다.</p>
 
 <aside class="note"><p>
 <strong>Note:</strong> Unlike struct fields, map key names <em>don&rsquo;t</em> have to be capitalized in order to access them from a template.
-</p></aside>
+</p>
+<p><strong>Note:</strong> 구조체 필드와 달리, 맵의 키 이름은 템플릿에서 접근하기 위해 대문자로 시작할 필요가 없습니다.</p>
+</aside>
 
 <p>With that in mind, let&rsquo;s update the <code>create.tmpl</code> file to re-populate the data and display the error messages for each field, if they exist.</p>
+<p>이를 염두에 두고 <code>create.tmpl</code> 파일을 업데이트하여 데이터를 다시 채우고 각 필드에 대한 오류 메시지를 (존재하는 경우) 표시합시다.</p>
 
 <figure class="code html">
 <figcaption>File: ui/html/pages/create.tmpl</figcaption>
@@ -211,10 +224,13 @@
 </figure>
 
 <p>Hopefully this markup and our use of Go&rsquo;s templating actions is generally clear &mdash; it&rsquo;s just using techniques that we&rsquo;ve already <a href="05.02-template-actions-and-functions.html">seen and discussed</a> earlier in the book.</p>
+<p>이 마크업과 Go의 템플릿 액션 사용법이 일반적으로 명확하길 바랍니다—이는 책에서 이미 보았고 논의했던 기법들을 사용하는 것입니다.</p>
 
 <p>There&rsquo;s one final thing we need to do. If we tried to run the application now, we would get a <code>500 Internal Server Error</code> when we first visit the form at <a href="http://localhost:4000/snippet/create"><code>http://localhost:4000/snippet/create</code></a>. This is because our <code>snippetCreate</code> handler currently doesn&rsquo;t set a value for the <code>templateData.Form</code> field, meaning that when Go tries to evaluate a template tag like <code>{{with .Form.FieldErrors.title}}</code> it would result in an error because <code>Form</code> is <code>nil</code>.</p>
+<p>마지막으로 해야 할 일이 하나 있습니다. 현재 애플리케이션을 실행하면, <code>http://localhost:4000/snippet/create</code> 에서 폼을 처음 방문할 때 <code>500 Internal Server Error</code>가 발생할 것입니다. 이는 현재 <code>snippetCreate</code> 핸들러가 <code>templateData.Form</code> 필드에 값을 설정하지 않기 때문입니다. 그래서 Go가 <code>{{with .Form.FieldErrors.title}}</code>와 같은 템플릿 태그를 평가하려고 할 때 <code>Form</code> 이 <code>nil</code> 이므로 오류가 발생합니다.</p>
 
 <p>Let&rsquo;s fix that by updating our <code>snippetCreate</code> handler so that it initializes a new <code>createSnippetForm</code> instance and passes it to the template, like so:</p>
+<p>이를 수정하기 위해 <code>snippetCreate</code> 핸들러를 업데이트하여 새로운 <code>createSnippetForm</code> 인스턴스를 초기화하고 이를 템플릿에 전달하도록 합시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -240,20 +256,24 @@
 </figure>
 
 <p>Now that&rsquo;s done, please restart the application and visit <a href="http://localhost:4000/snippet/create"><code>http://localhost:4000/snippet/create</code></a> in your browser. You should find that the page renders correctly without any errors.</p>
+<p>이제 작업이 완료되었으니, 애플리케이션을 재시작하고 브라우저에서 <code>http://localhost:4000/snippet/create</code> 를 방문해 보세요. 페이지가 오류 없이 올바르게 렌더링되는 것을 확인할 수 있을 것입니다.</p>
 
 <p>The try adding some content and changing the default expiry time, but <em>leave the title field blank</em> like so:</p>
+<p>몇 가지 내용을 추가하고 기본 만료 시간을 변경해 보되 제목 필드는 빈 채로 두세요. 다음과 같이.</p>
 
 <figure class="img">
 <img src="assets/img/08.04-01.png" alt="08.04-01.png" />
 </figure>
 
 <p>After submission you should now see the form re-displayed, with the correctly re-populated snippet content and expiry option, and a &ldquo;This field cannot be blank&rdquo; error message alongside the title field:</p>
+<p>제출 후 폼이 다시 표시되며 올바르게 다시 채워진 스니펫 내용과 만료 옵션이 보이고, 제목 필드 옆에 '이 필드는 비워둘 수 없습니다'라는 오류 메시지가 나타나는 것을 확인할 수 있어야 합니다.</p>
 
 <figure class="img">
 <img src="assets/img/08.04-02.png" alt="08.04-02.png" />
 </figure>
 
 <p>Before we continue, feel free to spend some time playing around with the form and validation rules until you&rsquo;re confident that everything is working as you expect it to.</p>
+<p>계속하기 전에 폼과 검증 규칙을 가지고 충분히 시간을 들여 실험해 보시고, 모든 것이 예상대로 작동하는지 확신이 서도록 하세요.</p>
 
 		</main>
 		<footer>
