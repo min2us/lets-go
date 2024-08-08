@@ -31,14 +31,18 @@
 			<h2 id="creating-validation-helpers">Creating validation helpers</h2>
 
 <p>OK, so we&rsquo;re now in the position where our application is validating the form data according to our business rules and gracefully handling any validation errors. That&rsquo;s great, but it&rsquo;s taken quite a bit of work to get there.</p>
+<p>좋습니다. 이제 우리의 애플리케이션이 비즈니스 규칙에 따라 폼 데이터를 검증하고, 검증 오류를 우아하게 처리하는 상태에 도달했습니다. 좋긴 하지만 여기에 도달하기까지 꽤 많은 작업이 필요했습니다.</p>
 
 <p>And while the approach we&rsquo;ve taken is fine as a one-off, if your application has <em>many forms</em> then you can end up with quite a lot of repetition in your code and validation rules. Not to mention, writing code for validating forms isn&rsquo;t exactly the most exciting way to spend your time.</p>
+<p>우리가 취한 접근 방식이 일회성으로는 괜찮지만 애플리케이션에 많은 폼이 있을 경우 코드와 검증 규칙에 상당한 반복이 발생할 수 있습니다. 게다가 폼 검증을 위한 코드를 작성하는 것이 가장 흥미로운 방법은 아닙니다.</p>
 
 <p>So to help us with validation throughout the rest of this project, we&rsquo;ll create our own small <code>internal/validator</code> package to abstract some of this behavior and reduce the boilerplate code in our handlers. We won&rsquo;t actually change how the application works for the user at all; it&rsquo;s really just a refactoring of our codebase.</p>
+<p>그래서 이 프로젝트의 나머지 부분에서 검증을 돕기 위해, 일부 동작을 추상화하고 핸들러의 보일러플레이트 코드를 줄이기 위해 작은 <code>internal/validator</code> 패키지를 만들겠습니다. 실제로 애플리케이션의 사용자에게는 아무런 변화가 없을 것이며, 코드베이스의 리팩토링에 불과합니다.</p>
 
 <h3 id="adding-a-validator-package">Adding a validator package</h3>
 
 <p>If you’re coding-along, please go ahead and create the following directory and file on your machine:</p>
+<p>코딩을 따라 하고 있다면, 아래 디렉터리와 파일을 여러분의 컴퓨터에 생성해 주세요.</p>
 
 <figure class="code bash">
 <pre>$ mkdir internal/validator
@@ -46,6 +50,7 @@ $ touch internal/validator/validator.go</pre>
 </figure>
 
 <p>Then in this new <code>internal/validator/validator.go</code> file add the following code:</p>
+<p>그런 다음 새로 생성한 <code>internal/validator/validator.go</code> 파일에 다음 코드를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: internal/validator/validator.go</figcaption>
@@ -111,22 +116,30 @@ $ touch internal/validator/validator.go</pre>
 
 <p>In the code above we’ve defined a <code>Validator</code> struct type which contains a map of error messages. The <code>Validator</code> type provides a <code>CheckField()</code> method for conditionally adding errors to the map,
 and a <code>Valid()</code> method which returns whether the errors map is empty or not. We’ve also added <code>NotBlank()</code> , <code>MaxChars()</code> and <code>PermittedValue()</code> functions to help us perform some specific validation checks</p>
+<p>위 코드에서는 오류 메시지의 맵을 포함하는 <code>Validator</code> 구조체 유형을 정의했습니다. <code>Validator</code> 타입은 맵에 조건적으로 오류를 추가할 수 있는 <code>CheckField()</code> 메서드와 오류 맵이 비어 있는지 여부를 반환하는 <code>Valid()</code> 메서드를 제공합니다. 또한, 특정 검증 검사를 수행하는 데 도움이 되는 <code>NotBlank()</code>, <code>MaxChars()</code>, 및 <code>PermittedValue()</code> 함수를 추가했습니다.</p>
 
 <aside class="note"><p>
 <strong>Note:</strong> the <code>PermittedValue()</code> function is a <em>generic function</em> which will work with values of different types. We&rsquo;ll talk about generics in more detail at the end of this chapter.
-</p></aside>
+</p>
+<p><strong>Note:</strong> <code>PermittedValue()</code> 함수는 다양한 유형의 값과 함께 작동하는 제네릭 함수입니다. 제네릭에 대해서는 이 장의 끝에서 더 자세히 설명하겠습니다.</p>
+</aside>
 
 <p>Conceptually this <code>Validator</code> type is quite basic, but that’s not a bad thing. As we’ll see over the course of this book, it’s surprisingly powerful in practice and gives us a lot of flexibility and control over validation checks and how we perform them.</p>
+<p>개념적으로 이 <code>Validator</code> 타입은 꽤 기본적이지만, 그리 나쁜 것은 아닙니다. 이 책을 진행하면서 보겠지만, 실제로는 놀라울 정도로 강력하며 검증 검사와 이를 수행하는 방법에 대해 많은 유연성과 제어를 제공합니다.</p>
 
 <h3 id="using-the-helpers">Using the helpers</h3>
 
 <p>Alright, let’s start putting the <code>Validator</code> type to use!</p>
+<p>자, 이제 <code>Validator</code> 타입을 사용해 봅시다!</p>
 
 <p>We&rsquo;ll head back to our <code>cmd/web/handlers.go</code> file and update it to <em>embed</em> a <code>Validator</code> struct in our <code>snippetCreateForm</code> struct, and then use this to perform the necessary validation checks on the form data.</p>
+<p>다시 <code>cmd/web/handlers.go</code> 파일로 돌아가서, <code>snippetCreateForm</code> 구조체에 <code>Validator</code> 구조체를 포함하도록 업데이트하고, 이를 사용하여 폼 데이터에 필요한 검증 검사를 수행합시다.</p>
 
 <aside class="hint"><p>
 <strong>Tip:</strong> If you&rsquo;re not familiar with the concept of struct embedding in Go, Eli Bendersky has written a <a href="https://eli.thegreenplace.net/2020/embedding-in-go-part-1-structs-in-structs/">good introduction</a> on the topic and I recommend quickly reading it before you continue.
-</p></aside>
+</p>
+<p><strong>Tip:</strong> Go에서 구조체 임베딩의 개념에 익숙하지 않다면, Eli Bendersky가 이 주제에 대한 <a href="https://eli.thegreenplace.net/2020/embedding-in-go-part-1-structs-in-structs/">좋은 소개 글</a>을 작성했으니, 계속하기 전에 잠깐 읽어보는 것을 추천합니다.</p>
+</aside>
 
 <p>Like so:</p>
 
@@ -211,10 +224,13 @@ and a <code>Valid()</code> method which returns whether the errors map is empty 
 </figure>
 
 <p>So this is shaping up really nicely.</p>
+<p>그래서 상황이 정말 잘 풀리고 있습니다.</p>
 
 <p>We&rsquo;ve now got an <code>internal/validator</code> package with validation rules and logic that can be reused across our application, and it can easily be extended to include additional rules in the future. Both form data and errors are neatly encapsulated in a single <code>snippetCreateForm</code> struct &mdash; which we can easily pass to our templates &mdash; and the syntax for displaying error messages and re-populating the data in our templates is simple and consistent.</p>
+<p>이제 내부에 검증 규칙과 로직을 포함하는 <code>internal/validator</code> 패키지가 있어 애플리케이션 전반에서 재사용할 수 있으며, 미래에 추가 규칙을 쉽게 확장할 수 있습니다. 폼 데이터와 오류는 단일 <code>snippetCreateForm</code> 구조체에 깔끔하게 캡슐화되어 있어 템플릿에 쉽게 전달할 수 있으며, 오류 메시지를 표시하고 데이터를 다시 채우는 템플릿의 문법은 간단하고 일관적입니다.</p>
 
 <p>If you like, go ahead and re-run the application now. All being well, you should find that the form and validation rules are working correctly and in exactly the same manner as before.</p>
+<p>원하신다면, 지금 애플리케이션을 다시 실행해 보세요. 모든 것이 잘 되었다면, 폼과 검증 규칙이 이전과 정확히 같은 방식으로 올바르게 작동하는 것을 확인할 수 있을 것입니다.</p>
 
 <hr />
 
@@ -223,8 +239,10 @@ and a <code>Valid()</code> method which returns whether the errors map is empty 
 <h4 id="generics">Generics</h4>
 
 <p>Go 1.18 was the first version of the language to support <em>generics</em> &mdash; also known by the more technical name of <em>parametric polymorphism</em>. Very broadly, generics allow you to write code that works with <em>different concrete types</em>.</p>
+<p>Go 1.18은 제네릭을 지원하는 첫 번째 버전이었으며, 제네릭은 더 기술적인 용어인 매개변수 다형성(<em>parametric polymorphism</em>)으로도 알려져 있습니다. 매우 간단히 말하면, 제네릭은 다양한 구체적인 유형과 함께 작동하는 코드를 작성할 수 있게 해줍니다.</p>
 
 <p>For example, in older versions of Go, if you wanted to count how many times a particular value appears in a <code>[]string</code> slice and an <code>[]int</code> slice you would need to write two separate functions &mdash; one function for the <code>[]string</code> type and another for the <code>[]int</code>. A bit like this:</p>
+<p>예를 들어, 이전 버전의 Go에서는 특정 값이 <code>[]string</code> 슬라이스와 <code>[]int</code> 슬라이스에 각각 몇 번 나타나는지를 세고 싶다면 두 개의 별도 함수를 작성해야 했습니다. 하나는 <code>[]string</code> 유형을 위한 함수이고, 다른 하나는 <code>[]int</code> 를 위한 함수였습니다. 대략 이렇게요.</p>
 
 <figure class="code go">
 <pre><span class="c1">// Count how many times the value v appears in the slice s.
@@ -250,6 +268,7 @@ and a <code>Valid()</code> method which returns whether the errors map is empty 
 </figure>
 
 <p>Now, with generics, it&rsquo;s possible to write a single <code>count()</code> function that will work for <code>[]string</code>, <code>[]int</code>, or any other slice of a <a href="https://pkg.go.dev/builtin#comparable">comparable type</a>. The code would look like this:</p>
+<p>이제 제네릭을 사용하면 <code>[]string</code>, <code>[]int</code> 또는 비교 가능한 다른 슬라이스 유형에 대해 작동하는 단일 <code>count()</code> 함수를 작성할 수 있습니다. 코드는 다음과 같이 보일 것입니다.</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="nx">count</span><span class="p">[</span><span class="nx">T</span> <span class="nx">comparable</span><span class="p">]</span><span class="p">(</span><span class="nx">v</span> <span class="nx">T</span><span class="p">,</span> <span class="nx">s</span> <span class="p">[</span><span class="p">]</span><span class="nx">T</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
@@ -264,30 +283,48 @@ and a <code>Valid()</code> method which returns whether the errors map is empty 
 </figure>
 
 <p>If you&rsquo;re not familiar with the syntax for generic code in Go, there&rsquo;s a lot of great information available which explains how generics works and walks you through the syntax for writing generic code.</p>
+<p>Go에서 제네릭 코드의 문법에 익숙하지 않다면, 제네릭이 어떻게 작동하는지 설명하고 제네릭 코드를 작성하는 문법을 안내하는 훌륭한 정보가 많이 있습니다.</p>
 
 <p>To get up to speed, I highly recommend reading the <a href="https://go.dev/doc/tutorial/generics">official Go generics tutorial</a>, and also watching the first 15 minutes of <a href="https://www.youtube.com/watch?v=Pa_e9EeCdy8">this video</a> to help consolidate what you&rsquo;ve learnt.</p>
+<p>빠르게 익히기 위해, 공식 Go 제네릭 튜토리얼을 읽고, 이 비디오의 처음 15분을 시청하여 배운 내용을 확실히 다지는 것을 강력히 추천합니다.</p>
 
 <p>Rather than duplicating that same information here, instead I&rsquo;d like to talk briefly about a less common (but just as important!) topic: <em>when</em> to use generics.</p>
+<p>여기에서 그 정보를 반복하기보다는, 덜 일반적이지만 똑같이 중요한 주제인 제네릭을 사용할 때에 대해 간단히 이야기하고자 합니다.</p>
 
 <p>For now at least, you should aim to use generics <em>judiciously and cautiously</em>.</p>
+<p>당분간은 제네릭을 신중하고 조심스럽게 사용하는 것이 좋습니다.</p>
 
 <p>I know that might sound a bit boring, but generics are a relatively new language feature and best-practices around writing generic code are still being established. If you work on a team, or write code in public, it&rsquo;s also worth keeping in mind that not all other Go developers will necessarily be familiar with how generic code works.</p>
+<p>조금 지루하게 들릴 수도 있지만, 제네릭은 비교적 새로운 언어 기능이며 제네릭 코드를 작성하는 모범 사례는 아직 확립되고 있습니다. 팀에서 작업하거나 공개적으로 코드를 작성하는 경우, 모든 Go 개발자가 제네릭 코드의 작동 방식에 익숙하지 않을 수도 있다는 점도 염두에 두는 것이 좋습니다.</p>
 
 <p>You don&rsquo;t <em>need</em> to use generics, and it&rsquo;s OK not to.</p>
+<p>제네릭을 사용할 필요는 없으며, 사용하지 않는 것도 괜찮습니다.</p>
 
 <p>But even with those caveats, writing generic code can be really useful in certain scenarios. Very generally speaking, you might want to consider it:</p>
+<p>하지만 이러한 주의사항에도 불구하고, 특정 시나리오에서는 제네릭 코드를 작성하는 것이 정말 유용할 수 있습니다. 아주 일반적으로 말하자면, 제네릭을 고려해 볼 만합니다.</p>
 
 <ul>
-<li>If you find yourself writing repeated boilerplate code for different data types. Examples of this might be common operations on slices, maps or channels &mdash; or helpers for carrying out validation checks or test assertions on different data types.</li>
-<li>When you are writing code and find yourself reaching for the <code>any</code> (empty <code>interface{}</code>) type. An example of this might be when you are creating a data structure (like a queue, cache or linked list) which needs to operate on different types.</li>
+<li>If you find yourself writing repeated boilerplate code for different data types. Examples of this might be common operations on slices, maps or channels &mdash; or helpers for carrying out validation checks or test assertions on different data types.
+<p>서로 다른 데이터 유형에 대해 반복적인 보일러플레이트 코드를 작성하고 있다면, 제네릭을 고려해 볼 수 있습니다. 예를 들어, 슬라이스, 맵, 채널에 대한 일반적인 작업이나 다양한 데이터 유형에 대한 검증 검사 또는 테스트 어설션을 수행하기 위한 헬퍼 등이 있을 수 있습니다.</p>
+</li>
+<li>When you are writing code and find yourself reaching for the <code>any</code> (empty <code>interface{}</code>) type. An example of this might be when you are creating a data structure (like a queue, cache or linked list) which needs to operate on different types.
+<p>코드를 작성하면서 <code>any</code> (empty <code>interface{}</code>) 타입을 사용하려고 할 때, 제네릭을 고려해 볼 수 있습니다. 예를 들어, 다양한 유형에서 작동해야 하는 데이터 구조(예: 큐, 캐시, 링크드 리스트)를 만들 때가 이에 해당할 수 있습니다.</p>
+</li>
 </ul>
 
 <p>In contrast, you probably don&rsquo;t want to use generics:</p>
+<p>반대로, 제네릭을 사용하지 않는 것이 좋을 경우도 있습니다.</p>
 
 <ul>
-<li>If it makes your code harder to understand or less clear.</li>
-<li>If all the types that you need to work with have a common set of methods &mdash; in which case it&rsquo;s better to define and use a normal <code>interface</code> type instead.</li>
-<li>Just <em>because you can</em>. Prefer instead write non-generic code by default, and switch to a generic version later <em>only if it is actually needed</em>.</li>
+<li>If it makes your code harder to understand or less clear.
+<p>코드가 이해하기 어렵거나 덜 명확해질 경우에는 제네릭을 사용하지 않는 것이 좋습니다.</p>
+</li>
+<li>If all the types that you need to work with have a common set of methods &mdash; in which case it&rsquo;s better to define and use a normal <code>interface</code> type instead.
+<p>작업해야 하는 모든 타입이 공통된 메서드 집합을 가지고 있다면, 이 경우에는 일반 <code>interface</code> 타입을 정의하고 사용하는 것이 더 좋습니다.</p>
+</li>
+<li>Just <em>because you can</em>. Prefer instead write non-generic code by default, and switch to a generic version later <em>only if it is actually needed</em>.
+<p>단지 가능하다는 이유만으로 제네릭을 사용하는 것은 피하는 것이 좋습니다. 대신 기본적으로는 비제네릭 코드를 작성하고, 실제로 필요할 때만 제네릭 버전으로 전환하세요.</p>
+</li>
 </ul>
 
 		</main>
