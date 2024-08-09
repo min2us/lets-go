@@ -122,8 +122,10 @@
 </figure>
 
 <p>So, this is good stuff. The <code>ok</code> in this output indicates that all tests in the package (for now, only our <code>TestHumanDate()</code> test) passed without any problems.</p>
+<p>그래서 이건 좋은 결과예요. 이 출력에서 <code>ok</code> 라는 메시지는 패키지의 모든 테스트가 (현재로서는 <code>TestHumanDate()</code> 테스트만 있지만) 아무 문제 없이 통과했음을 의미해요.</p>
 
 <p>If you want more detail, you can see exactly which tests are being run by using the <code>-v</code> flag to get the <em>verbose</em> output:</p>
+<p>더 자세한 내용을 원한다면, <code>-v</code> 플래그를 사용하여 실행 중인 테스트를 정확히 확인하고 자세한 출력을 받을 수 있습니다.</p>
 
 <figure class="code bash">
 <pre>$ go test -v ./cmd/web
@@ -136,18 +138,25 @@ ok      snippetbox.alexedwards.net/cmd/web    0.007s</samp></pre>
 <h3 id="table-driven-tests">Table-driven tests</h3>
 
 <p>Let&rsquo;s now expand our <code>TestHumanDate()</code> function to cover some additional <dfn>test cases</dfn>. Specifically, we&rsquo;re going to update it to also check that:</p>
+<p>이제 <code>TestHumanDate()</code> 함수에 몇 가지 추가 테스트 케이스(<dfn>test cases</dfn>)를 포함하도록 확장해 봅시다. 구체적으로는 이 함수가 다음 사항도 확인하도록 업데이트할 것입니다.</p>
 
 <ol>
-<li><p>If the input to <code>humanDate()</code> is the <a href="https://pkg.go.dev/time/#Time.IsZero">zero time</a>, then it returns the empty string <code>&quot;&quot;</code>.</p></li>
+<li><p>If the input to <code>humanDate()</code> is the <a href="https://pkg.go.dev/time/#Time.IsZero">zero time</a>, then it returns the empty string <code>&quot;&quot;</code>.</p>
+<p><code>humanDate()</code> 함수에 입력된 값이 제로 타임일 경우 빈 문자열 <code>&quot;&quot;</code>을 반환해야 합니다.</p>
+</li>
 
-<li><p>The output from the <code>humanDate()</code> function always uses the UTC time zone.</p></li>
+<li><p>The output from the <code>humanDate()</code> function always uses the UTC time zone.</p>
+<p><code>humanDate()</code> 함수의 출력은 항상 UTC 시간대를 사용합니다.</p>
+</li>
 </ol>
 
 <p>In Go, an idiomatic way to run multiple test cases is to use <dfn>table-driven tests</dfn>.</p>
+<p>Go에서 여러 테스트 케이스를 실행하는 관용적인 방법은 테이블 기반 테스트를 사용하는 것입니다.</p>
 
 <p>Essentially, the idea behind table-driven tests is to create a &lsquo;table&rsquo; of test cases containing the inputs and expected outputs, and to then loop over these, running each test case in a <dfn>sub-test</dfn>. There are a few ways you could set this up, but a common approach is to define your test cases in an slice of anonymous structs.</p>
+<p>본질적으로 테이블 기반 테스트의 아이디어는 입력 값과 예상 출력을 포함하는 '테이블' 형태의 테스트 케이스를 만들고, 이를 반복하면서 각 테스트 케이스를 서브 테스트로 실행하는 것입니다. 이를 설정하는 방법에는 몇 가지가 있지만 일반적인 접근법은 테스트 케이스를 익명 구조체의 슬라이스로 정의하는 것입니다.</p>
 
-<p>I&rsquo;ll demonstrate:</p>
+<p>I&rsquo;ll demonstrate: 제가 시연해 보겠습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates_test.go</figcaption>
@@ -203,9 +212,12 @@ ok      snippetbox.alexedwards.net/cmd/web    0.007s</samp></pre>
 
 <aside class="note"><p>
 <strong>Note:</strong> In the third test case we&rsquo;re using CET (Central European Time) as the time zone, which is one hour ahead of UTC. So we want the output from <code>humanDate()</code> (which should be in UTC) to be <code>17 Mar 2023 at 09:15</code>, not <code>17 Mar 2023 at 10:15</code>.
-</p></aside>
+</p>
+<p><strong>Note:</strong> 세 번째 테스트 케이스에서는 CET (중부 유럽 시간대)를 사용하고 있습니다. CET는 UTC보다 1시간 빠릅니다. 따라서 <code>humanDate()</code> 함수의 출력이 (UTC 기준으로) <code>17 Mar 2023 at 09:15</code> 가 되어야 하고, <code>17 Mar 2023 at 10:15</code> 가 되어서는 안 됩니다.</p>
+</aside>
 
 <p>OK, let&rsquo;s run this and see what happens:</p>
+<p>좋아요. 이걸 실행해 보고 결과를 확인해 봅시다.</p>
 
 <figure class="code bash">
 <pre>$ go test -v ./cmd/web
@@ -225,8 +237,10 @@ FAIL</samp></pre>
 </figure>
 
 <p>So here we can see the individual output for each of our sub-tests. As you might have guessed, our first test case passed but the <code>Empty</code> and <code>CET</code>  tests both failed. Notice how &mdash; for the failed test cases &mdash; we get the relevant failure message and filename and line number in the output?</p>
+<p>여기서 각 서브 테스트의 개별 출력을 볼 수 있습니다. 아마 짐작하셨겠지만 첫 번째 테스트 케이스는 통과했지만 <code>Empty</code> 와 <code>CET</code> 테스트는 둘 다 실패했습니다. 실패한 테스트 케이스에서는 출력에서 관련 실패 메시지와 파일 이름, 줄 번호가 제공되는 것을 확인할 수 있죠?</p>
 
 <p>Let&rsquo;s head back to our <code>humanDate()</code> function and update it to fix these two problems:</p>
+<p>이제 <code>humanDate()</code> 함수로 돌아가서 이 두 가지 문제를 해결하도록 업데이트해 봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates.go</figcaption>
@@ -248,6 +262,7 @@ FAIL</samp></pre>
 </figure>
 
 <p>And when you re-run the tests everything should now pass.</p>
+<p>그리고 테스트를 다시 실행하면 모든 테스트가 이제 통과할 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ go test -v ./cmd/web
@@ -266,6 +281,7 @@ ok      snippetbox.alexedwards.net/cmd/web      0.003s</samp></pre>
 <h3 id="helpers-for-test-assertions">Helpers for test assertions</h3>
 
 <p>As I mentioned briefly earlier in the book, over the next few chapters we&rsquo;ll be writing a lot of <em>test assertions</em> that are a variation of this pattern:</p>
+<p>책 초반에 간단히 언급했듯이 다음 몇 장에서 우리는 이 패턴의 변형인 많은 테스트 어설션을 작성할 것입니다.</p>
 
 <figure class="code go">
 <pre><span class="k">if</span> <span class="nx">actualValue</span> <span class="o">!=</span> <span class="nx">expectedValue</span> <span class="p">{</span>
@@ -274,15 +290,17 @@ ok      snippetbox.alexedwards.net/cmd/web      0.003s</samp></pre>
 </figure>
 
 <p>Let&rsquo;s quickly abstract this code into a helper function.</p>
+<p>이 코드를 빠르게 헬퍼 함수로 추상화해 봅시다.</p>
 
 <p>If you&rsquo;re following along, go ahead and create a new <code>internal/assert</code> package:</p>
+<p>따라오고 있다면 새로운 <code>internal/assert</code> 패키지를 생성해 보세요.</p>
 
 <figure class="code bash">
 <pre>$ mkdir internal/assert
 $ touch internal/assert/assert.go</pre>
 </figure>
 
-<p>And then add the following code:</p>
+<p>And then add the following code:그 다음 다음 코드를 추가하세요. </p>
 
 <figure class="code go">
 <figcaption>File: internal/assert/assert.go</figcaption>
@@ -302,12 +320,16 @@ $ touch internal/assert/assert.go</pre>
 </figure>
 
 <p>Notice how <code>Equal()</code> is a <em>generic function</em>? This means that we&rsquo;ll be able to use it irrespective of what the type of the <code>actual</code> and <code>expected</code> values is. So long as both <code>actual</code> and <code>expected</code> have the <em>same</em> type and can be compared using the <code>!=</code> operator (for example, they are both <code>string</code> values, or both <code>int</code> values) our test code should compile and work fine when we call <code>Equal()</code>.</p>
+<p><code>Equal()</code> 이 제네릭 함수라는 점에 주목하세요. 이는 <code>actual</code>과 <code>expected</code>의 타입에 관계없이 사용할 수 있음을 의미합니다. <code>actual</code>과 <code>expected</code>이 같은 타입을 가지고 있고 <code>!=</code> 연산자로 비교할 수 있는 한 (예를 들어, 두 값이 모두 <code>string</code> 이거나 모두 <code>int</code> 일 때), 우리의 테스트 코드는 컴파일되고 <code>Equal()</code> 을 호출할 때 잘 작동할 것입니다.</p>
 
 <aside class="note"><p>
 <strong>Note:</strong> The <a href="https://pkg.go.dev/testing#T.Helper"><code>t.Helper()</code></a> function that we&rsquo;re using in the code above indicates to the Go test runner that our <code>Equal()</code> function is a test helper. This means that when <code>t.Errorf()</code> is called from our <code>Equal()</code> function, the Go test runner will report the filename and line number of the code <em>which called</em> our <code>Equal()</code> function in the output.
-</p></aside>
+</p>
+<p><strong>Note:</strong> 위 코드에서 사용한 <code>t.Helper()</code> 함수는 Go 테스트 러너에게 우리의 <code>Equal()</code> 함수가 테스트 헬퍼임을 알립니다. 즉, <code>Equal()</code> 함수에서 <code>t.Errorf()</code>가 호출될 때, Go 테스트 러너는 출력에서 <code>Equal()</code> 함수를 호출한 코드의 파일 이름과 줄 번호를 보고합니다.</p>
+</aside>
 
 <p>With that in place, we can simplify our <code>TestHumanDate()</code> test like so:</p>
+<p>이제 그 작업이 완료되었으니 <code>TestHumanDate()</code> 테스트를 다음과 같이 간단하게 만들 수 있습니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/templates_test.go</figcaption>
@@ -362,6 +384,7 @@ $ touch internal/assert/assert.go</pre>
 <h4 id="sub-tests-without-a-table-of-test-cases">Sub-tests without a table of test cases</h4>
 
 <p>It&rsquo;s important to point out that you don&rsquo;t need to use sub-tests in conjunction with table-driven tests (like we have done so far in this chapter). It&rsquo;s perfectly valid to execute sub-tests by calling <code>t.Run()</code> consecutively in your test functions, similar to this:</p>
+<p>테이블 기반 테스트와 함께 서브 테스트를 사용할 필요는 없다는 점을 강조하는 것이 중요합니다 (지금까지 이 장에서 했던 것처럼). 테스트 함수에서 <code>t.Run()</code>을 연속적으로 호출하여 서브 테스트를 실행하는 것도 완전히 유효합니다. 예를 들어, 다음과 같이 할 수 있습니다.</p>
 
 <figure class="code go">
 <pre><span class="kd">func</span> <span class="nf">TestExample</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>

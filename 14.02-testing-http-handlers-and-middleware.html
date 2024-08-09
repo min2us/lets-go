@@ -31,10 +31,13 @@
 			<h2 id="testing-http-handlers-and-middleware">Testing HTTP handlers and middleware</h2>
 
 <p>Let&rsquo;s move on and discuss some specific techniques for unit testing your HTTP handlers.</p>
+<p>이제 HTTP 핸들러의 단위 테스트를 위한 몇 가지 구체적인 기법에 대해 논의해 봅시다.</p>
 
 <p>All the handlers that we&rsquo;ve written for this project so far are a bit complex to test, and to introduce things I&rsquo;d prefer to start off with something more simple.</p>
+<p>지금까지 이 프로젝트를 위해 작성한 모든 핸들러는 테스트하기가 다소 복잡합니다. 따라서, 시작할 때는 더 간단한 것으로 시작하는 것이 좋겠습니다.</p>
 
 <p>So, if you&rsquo;re following along, head over to your <code>handlers.go</code> file and create a new <code>ping</code> handler function which returns a <code>200 OK</code> status code and an <code>&quot;OK&quot;</code> response body. It&rsquo;s the type of handler that you might want to implement for status-checking or uptime monitoring of your server.</p>
+<p>따라오고 있다면 <code>handlers.go</code> 파일로 가서 <code>200 OK</code> 상태 코드와 <code>&quot;OK&quot;</code> 응답 본문을 반환하는 새로운 <code>ping</code> 핸들러 함수를 생성하세요. 이는 서버의 상태 확인이나 가동 시간 모니터링을 위해 구현할 수 있는 핸들러 유형입니다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers.go</figcaption>
@@ -48,29 +51,40 @@
 </figure>
 
 <p>In this chapter we&rsquo;ll create a new <code>TestPing</code> unit test which:</p>
+<p>이 장에서는 새로운 <code>TestPing</code> 단위 테스트를 생성할 것이며, 이 테스트는</p>
 
 <ul>
-<li>Checks that the response status code written by the <code>ping</code> handler is <code>200</code>.</li>
-<li>Checks that the response body written by the <code>ping</code> handler is <code>&quot;OK&quot;</code>.</li>
+<li>Checks that the response status code written by the <code>ping</code> handler is <code>200</code>.
+<p><code>ping</code> 핸들러가 작성한 응답 상태 코드가 <code>200</code> 인지 확인합니다.</p>
+</li>
+<li>Checks that the response body written by the <code>ping</code> handler is <code>&quot;OK&quot;</code>.
+<p><code>ping</code> 핸들러가 작성한 응답 본문이 <code>&quot;OK&quot;</code> 인지 확인합니다.</p>
+</li>
+
 </ul>
 
 <h3 id="recording-responses">Recording responses</h3>
 
 <p>Go provides a bunch of useful tools in the <a href="https://pkg.go.dev/net/http/httptest"><code>net/http/httptest</code></a> package for helping to test your HTTP handlers.</p>
+<p>Go는 HTTP 핸들러를 테스트하는 데 도움이 되는 유용한 도구들을 <code>net/http/httptest</code> 패키지에 제공합니다.</p>
 
 <p>One of these tools is the <a href="https://pkg.go.dev/net/http/httptest/#ResponseRecorder"><code>httptest.ResponseRecorder</code></a> type. This is essentially an implementation of <code>http.ResponseWriter</code> which records the response status code, headers and body instead of actually writing them to a HTTP connection.</p>
+<p>이 도구 중 하나는 <code>httptest.ResponseRecorder</code> 타입입니다. 이것은 본질적으로 <code>http.ResponseWriter</code> 의 구현으로, 실제로 HTTP 연결에 응답을 작성하는 대신 응답 상태 코드, 헤더 및 본문을 기록합니다.</p>
 
 <p>So an easy way to unit test your handlers is to create a new <code>httptest.ResponseRecorder</code>, pass it to the handler function, and then examine it again after the handler returns.</p>
+<p>따라서 핸들러를 단위 테스트하는 간단한 방법은 새로운 <code>httptest.ResponseRecorder</code> 를 생성하고, 이를 핸들러 함수에 전달한 다음, 핸들러가 반환된 후에 다시 확인하는 것입니다.</p>
 
 <p>Let&rsquo;s try doing exactly that to test the <code>ping</code> handler function.</p>
+<p>정확히 그렇게 해서 <code>ping</code> 핸들러 함수를 테스트해 보겠습니다.</p>
 
 <p>First, follow the Go conventions and create a new <code>handlers_test.go</code> file to hold the test&hellip;</p>
+<p>먼저, Go 관습에 따라 새로운 <code>handlers_test.go</code> 파일을 생성하여 테스트를 담으세요…</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/handlers_test.go</pre>
 </figure>
 
-<p>And then add the following code:</p>
+<p>And then add the following code: 그 다음, 다음 코드를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers_test.go</figcaption>
@@ -122,11 +136,15 @@
 
 <aside class="note"><p>
 <strong>Note:</strong> In the code above we use the <a href="https://pkg.go.dev/testing/#T.Fatal"><code>t.Fatal()</code></a> function in a couple of places to handle situations where there is an unexpected error in our test code. When called, <code>t.Fatal()</code> will mark the test as failed, log the error, and then completely stop execution of the <em>current test</em> (or sub-test).</p>
+<p><strong>Note:</strong> 위 코드에서는 테스트 코드에 예상치 못한 오류가 발생할 때를 처리하기 위해 몇 군데에서 <code>t.Fatal()</code> 함수를 사용합니다. <code>t.Fatal()</code> 이 호출되면 테스트를 실패로 표시하고 오류를 로그에 기록한 후, 현재 테스트(또는 서브 테스트)의 실행을 완전히 중지합니다.</p>
 
 <p>Typically you should call <code>t.Fatal()</code> in situations where it doesn&rsquo;t make sense to continue the current test &mdash; such as an error during a setup step, or where an unexpected error from a Go standard library function means you can&rsquo;t proceed with the test.
-</p></aside>
+</p>
+<p>일반적으로, 현재 테스트를 계속하는 것이 의미가 없는 상황에서는 <code>t.Fatal()</code> 을 호출해야 합니다. 예를 들어, 설정 단계에서 오류가 발생하거나 Go 표준 라이브러리 함수에서 예상치 못한 오류가 발생하여 테스트를 진행할 수 없는 경우입니다.</p>
+</aside>
 
 <p>OK, save the file, then try running <code>go test</code> again with the verbose flag set. Like so:</p>
+<p>파일을 저장한 다음, <code>-v</code> 플래그를 설정하여 <code>go test</code> 를 다시 실행해 보세요. 다음과 같이요.</p>
 
 <figure class="code bash">
 <pre>$ go test -v ./cmd/web/
@@ -145,25 +163,33 @@ ok      snippetbox.alexedwards.net/cmd/web      0.003s</samp></pre>
 </figure>
 
 <p>So this is looking good. We can see that our new <code>TestPing</code> test is being run and passing without any problems.</p>
+<p>그래서 결과가 좋습니다. 새로운 <code>TestPing</code> 테스트가 실행되었고, 문제 없이 통과하는 것을 볼 수 있습니다.</p>
 
 <h3 id="testing-middleware">Testing middleware</h3>
 
 <p>It&rsquo;s also possible to use the same general pattern to unit test your middleware.</p>
+<p>같은 일반적인 패턴을 사용하여 미들웨어를 단위 테스트하는 것도 가능합니다.</p>
 
 <p>We&rsquo;ll demonstrate this by creating a new <code>TestSecureHeaders</code> test for the <code>secureHeaders()</code> middleware that we made <a href="06.02-setting-security-headers.html">earlier in the book</a>. As part of this test we want to check that:</p>
+<p>이것을 시연하기 위해, 책 초반에 만든 <code>secureHeaders()</code> 미들웨어에 대한 새로운 <code>TestSecureHeaders</code> 테스트를 생성할 것입니다. 이 테스트의 일환으로 다음을 확인하고자 합니다.</p>
 
 <ul>
-<li>The <code>secureHeaders()</code> middleware sets all the expected headers on the HTTP response.</li>
-<li>The <code>secureHeaders()</code> middleware correctly calls the next handler in the chain.</li>
+<li>The <code>secureHeaders()</code> middleware sets all the expected headers on the HTTP response.
+<p><code>secureHeaders()</code> 미들웨어는 HTTP 응답에 모든 예상 헤더를 설정합니다</p>
+</li>
+<li>The <code>secureHeaders()</code> middleware correctly calls the next handler in the chain.
+<p><code>secureHeaders()</code> 미들웨어가 체인에서 다음 핸들러를 올바르게 호출합니다.</p>
+</li>
 </ul>
 
 <p>First you&rsquo;ll need to create a <code>cmd/web/middleware_test.go</code> file to hold the test:</p>
+<p>먼저, <code>cmd/web/middleware_test.go</code> 파일을 생성하여 테스트를 담아야 합니다.</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/middleware_test.go</pre>
 </figure>
 
-<p>And then add the following code:</p>
+<p>And then add the following code: 그 다음, 다음 코드를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/middleware_test.go</figcaption>
@@ -245,6 +271,7 @@ ok      snippetbox.alexedwards.net/cmd/web      0.003s</samp></pre>
 </figure>
 
 <p>If you run the tests now, you should see that the <code>TestSecureHeaders</code> test passes without any issues.</p>
+<p>지금 테스트를 실행하면 <code>TestSecureHeaders</code> 테스트가 문제 없이 통과하는 것을 볼 수 있어야 합니다.</p>
 
 <figure class="code bash">
 <pre>$ go test -v ./cmd/web/
@@ -265,6 +292,7 @@ ok      snippetbox.alexedwards.net/cmd/web      0.003s</samp></pre>
 </figure>
 
 <p>So, in summary, a quick and easy way to unit test your HTTP handlers and middleware is to simply call them using the <code>httptest.ResponseRecorder</code> type. You can then examine the status code, headers and response body of the recorded response to make sure that they are working as expected.</p>
+<p>요약하자면, HTTP 핸들러와 미들웨어를 단위 테스트하는 간단하고 빠른 방법은 <code>httptest.ResponseRecorder</code> 타입을 사용하여 호출하는 것입니다. 그런 다음 기록된 응답의 상태 코드, 헤더 및 응답 본문을 확인하여 예상대로 작동하는지 확인할 수 있습니다.</p>
 
 		</main>
 		<footer>
