@@ -31,12 +31,16 @@
 			<h2 id="end-to-end-testing">End-to-end testing</h2>
 
 <p>In the last chapter we talked through the general pattern for how to unit test your HTTP handlers in isolation.</p>
+<p>지난 장에서는 HTTP 핸들러를 독립적으로 단위 테스트하는 일반적인 패턴에 대해 설명했습니다.</p>
 
 <p>But &mdash; most of the time &mdash; your HTTP handlers aren&rsquo;t <em>actually used</em> in isolation. So in this chapter we&rsquo;re going to explain how to run <dfn>end-to-end tests</dfn> on your web application that encompass your routing, middleware and handlers. In most cases, end-to-end testing should give you more confidence that your application is working correctly than unit testing in isolation.</p>
+<p>하지만 대부분의 경우, HTTP 핸들러는 실제로 독립적으로 사용되지 않습니다. 따라서 이번 장에서는 라우팅, 미들웨어, 핸들러를 포함하는 웹 애플리케이션에 대한 엔드 투 엔드 테스트를 실행하는 방법을 설명할 것입니다. 대부분의 경우, 엔드 투 엔드 테스트는 독립적인 단위 테스트보다 애플리케이션이 올바르게 작동하는지에 대해 더 많은 확신을 줄 수 있습니다.</p>
 
 <p>To illustrate this, we&rsquo;ll adapt our <code>TestPing</code> function so that it runs an end-to-end test on our code. Specifically, we want the test to ensure that a <code>GET /ping</code> request to our application calls the <code>ping</code> handler function and results in a <code>200 OK</code> status code and <code>&quot;OK&quot;</code> response body.</p>
+<p>이를 설명하기 위해, <code>TestPing</code> 함수를 수정하여 코드에 대한 엔드 투 엔드 테스트를 실행하도록 하겠습니다. 구체적으로, 이 테스트가 <code>GET /ping</code> 요청을 애플리케이션에 보내고 <code>ping</code> 핸들러 함수가 호출되며 <code>200 OK</code> 상태 코드와 <code>&quot;OK&quot;</code> 응답 본문이 반환되는지 확인하도록 할 것입니다.</p>
 
 <p>Essentially, we want to test that our application has a route like this:</p>
+<p>본질적으로, 우리는 애플리케이션에 다음과 같은 경로가 있는지 테스트하고자 합니다.</p>
 
 <table>
 <thead>
@@ -68,10 +72,13 @@
 <h3 id="using-httptest-server">Using httptest.Server</h3>
 
 <p>The key to end-to-end testing our application is the <a href="https://pkg.go.dev/net/http/httptest/#NewTLSServer"><code>httptest.NewTLSServer()</code></a> function, which spins up a <a href="https://pkg.go.dev/net/http/httptest/#Server"><code>httptest.Server</code></a> instance that we can make HTTPS requests to.</p>
+<p>애플리케이션에 대한 엔드 투 엔드 테스트의 핵심은 <code>httptest.NewTLSServer()</code> 함수입니다. 이 함수는 HTTPS 요청을 보낼 수 있는 <code>httptest.Server</code> 인스턴스를 생성합니다.</p>
 
 <p>The whole pattern is a bit too complicated to explain upfront, so it&rsquo;s probably best to demonstrate first by writing the code and then we&rsquo;ll talk through the details afterwards.</p>
+<p>전체 패턴은 처음부터 설명하기에는 조금 복잡할 수 있으므로, 우선 코드를 작성하여 시연한 후에 세부 사항을 설명하는 것이 좋겠습니다.</p>
 
 <p>With that in mind, head back to your <code>handlers_test.go</code> file and update the <code>TestPing</code> test so that it looks like this:</p>
+<p>이를 염두에 두고, <code>handlers_test.go</code> 파일로 돌아가서 <code>TestPing</code> 테스트를 다음과 같이 업데이트하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers_test.go</figcaption>
@@ -129,20 +136,31 @@
 </figure>
 
 <p>There are a few things about this code to point out and discuss.</p>
+<p>이 코드에서 주목하고 논의할 몇 가지 사항이 있습니다.</p>
 
 <ul>
 <li><p>When we call <code>httptest.NewTLSServer()</code> to initialize the test server we need to pass in a <code>http.Handler</code> as the parameter &mdash; and this handler is called each time the test server receives a HTTPS request. In our case, we&rsquo;ve passed in the return value from our <code>app.routes()</code> method, meaning that a request to the test server will use <em>all our real application routes, middleware and handlers</em>.</p>
+<p>테스트 서버를 초기화하기 위해 <code>httptest.NewTLSServer()</code> 를 호출할 때는 <code>http.Handler</code> 를 매개변수로 전달해야 합니다. 이 핸들러는 테스트 서버가 HTTPS 요청을 받을 때마다 호출됩니다. 우리의 경우, <code>app.routes()</code> 메소드의 반환 값을 전달했으므로, 테스트 서버에 대한 요청은 실제 애플리케이션의 모든 라우트, 미들웨어 및 핸들러를 사용하게 됩니다.</p>
 
-<p>This is a big upside of the work that we did <a href="03.05-isolating-the-application-routes.html">earlier in the book</a> to isolate all our application routing in the <code>app.routes()</code> method.</p></li>
+<p>This is a big upside of the work that we did <a href="03.05-isolating-the-application-routes.html">earlier in the book</a> to isolate all our application routing in the <code>app.routes()</code> method.</p>
 
-<li><p>If you&rsquo;re testing a HTTP (not HTTPS) server you should use the <a href="https://pkg.go.dev/net/http/httptest/#NewServer"><code>httptest.NewServer()</code></a> function to create the test server instead.</p></li>
+<p>이것은 앞서 책에서 애플리케이션의 모든 라우팅을 <code>app.routes()</code> 메소드로 분리한 작업의 큰 장점입니다.</p>
+</li>
 
-<li><p>The <a href="https://pkg.go.dev/net/http/httptest/#Server.Client"><code>ts.Client()</code></a> method returns the <em>test server client</em> &mdash; which has the type <a href="https://pkg.go.dev/net/http/#Client"><code>http.Client</code></a> &mdash; and we should always use this client to send requests to the test server. It&rsquo;s possible to configure the client to tweak its behavior, and we&rsquo;ll explain how to do that at the end of this chapter.</p></li>
+<li><p>If you&rsquo;re testing a HTTP (not HTTPS) server you should use the <a href="https://pkg.go.dev/net/http/httptest/#NewServer"><code>httptest.NewServer()</code></a> function to create the test server instead.</p>
+<p>HTTP (HTTPS가 아닌) 서버를 테스트하는 경우에는 대신 <code>httptest.NewServer()</code> 함수를 사용하여 테스트 서버를 생성해야 합니다.</p>
+</li>
 
-<li><p>You might be wondering why we have set the <code>logger</code> field of our <code>application</code> struct, but none of the other fields. The reason for this is that the logger is needed by the <code>logRequest</code> and <code>recoverPanic</code> middlewares, which are used by our application on every route. Trying to run this test without setting these the two dependencies will result in a panic.</p></li>
+<li><p>The <a href="https://pkg.go.dev/net/http/httptest/#Server.Client"><code>ts.Client()</code></a> method returns the <em>test server client</em> &mdash; which has the type <a href="https://pkg.go.dev/net/http/#Client"><code>http.Client</code></a> &mdash; and we should always use this client to send requests to the test server. It&rsquo;s possible to configure the client to tweak its behavior, and we&rsquo;ll explain how to do that at the end of this chapter.</p>
+<p><code>ts.Client()</code> 메소드는 테스트 서버 클라이언스를 반환합니다. 이 클라이언스는 <code>http.Client</code> 타입을 가지며, 테스트 서버에 요청을 보낼 때 항상 이 클라이언스를 사용해야 합니다. 클라이언스의 동작을 조정할 수 있으며, 이 장의 끝에서 그 방법을 설명할 것입니다.</p>
+</li>
+
+<li><p>You might be wondering why we have set the <code>logger</code> field of our <code>application</code> struct, but none of the other fields. The reason for this is that the logger is needed by the <code>logRequest</code> and <code>recoverPanic</code> middlewares, which are used by our application on every route. Trying to run this test without setting these the two dependencies will result in a panic.</p>
+<p>왜 <code>application</code> 구조체의 <code>logger</code> 필드만 설정하고 다른 필드는 설정하지 않았는지 궁금할 수 있습니다. 그 이유는 logger가 <code>logRequest</code> 와 <code>recoverPanic</code> 미들웨어에서 필요하기 때문입니다. 이 미들웨어는 애플리케이션의 모든 경로에서 사용됩니다. 이 두 종속성을 설정하지 않고 테스트를 실행하면 패닉이 발생할 수 있습니다.</p>
+</li>
 </ul>
 
-<p>Anyway, let&rsquo;s try out the new test:</p>
+<p>Anyway, let&rsquo;s try out the new test: 어쨌든, 새로운 테스트를 실행해 봅시다.</p>
 
 <figure class="code bash">
 <pre>$ go test ./cmd/web/
@@ -155,10 +173,12 @@ FAIL</samp></pre>
 </figure>
 
 <p>If you&rsquo;re following along, you should get a failure at this point.</p>
+<p>따라오고 있다면, 이 시점에서 실패를 경험할 것입니다.</p>
 
 <p>We can see from the test output that the response from our <code>GET /ping</code> request has a <code>404</code> status code, rather than the <code>200</code> we expected. And that&rsquo;s because we haven&rsquo;t actually registered a <code>GET /ping</code> route with our router yet.</p>
+<p>테스트 출력에서 <code>GET /ping</code> 요청의 응답이 예상했던 <code>200</code> 상태 코드가 아닌 <code>404</code> 상태 코드를 반환하는 것을 볼 수 있습니다. 이는 아직 라우터에 <code>GET /ping</code> 경로를 등록하지 않았기 때문입니다.</p>
 
-<p>Let&rsquo;s fix that now:</p>
+<p>Let&rsquo;s fix that now: 이제 그 문제를 해결합시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/routes.go</figcaption>
@@ -200,6 +220,7 @@ FAIL</samp></pre>
 </figure>
 
 <p>And if you run the tests again everything should now pass.</p>
+<p>테스트를 다시 실행하면 이제 모든 것이 통과할 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ go test ./cmd/web/
@@ -209,18 +230,22 @@ FAIL</samp></pre>
 <h3 id="using-test-helpers">Using test helpers</h3>
 
 <p>Our <code>TestPing</code> test is now working nicely. But there&rsquo;s a good opportunity to break out some of this code into helper functions, which we can reuse as we add more end-to-end tests to our project.</p>
+<p>이제 <code>TestPing</code> 테스트가 잘 작동합니다. 그러나 이 코드를 일부 헬퍼 함수로 분리하여 재사용할 수 있는 좋은 기회가 있습니다. 이렇게 하면 프로젝트에 더 많은 엔드 투 엔드 테스트를 추가할 때 유용할 것입니다.</p>
 
 <p>There&rsquo;s no hard-and-fast rules about where to put helper methods for tests. If a helper is only used in a specific <code>*_test.go</code> file, then it probably makes sense to include it inline in that file alongside your tests. At the other end of the spectrum, if you are going to use a helper in tests across multiple packages, then you might want to put it in a reusable package called <code>internal/testutils</code> (or similar) which can be imported by your test files.</p>
+<p>테스트 헬퍼 메서드를 어디에 두어야 하는지에 대한 엄격한 규칙은 없습니다. 헬퍼가 특정 <code>*_test.go</code> 파일에서만 사용된다면, 그 파일 내에서 테스트와 함께 인라인으로 포함하는 것이 합리적일 수 있습니다. 반면, 여러 패키지의 테스트에서 헬퍼를 사용할 예정이라면, 이를 <code>internal/testutils</code> (또는 유사한)이라는 재사용 가능한 패키지에 넣어 테스트 파일에서 가져다 사용할 수 있습니다.</p>
 
 <p>In our case, the helpers will be used for testing code throughout our <code>cmd/web</code> package but nowhere else, so it seems reasonable to put them in a new <code>cmd/web/testutils_test.go</code> file.</p>
+<p>우리의 경우, 헬퍼는 <code>cmd/web</code> 패키지의 테스트에만 사용되므로, 새로운 <code>cmd/web/testutils_test.go</code> 파일에 넣는 것이 합리적일 것입니다.</p>
 
 <p>If you&rsquo;re following along, please go ahead and create this now&hellip;</p>
+<p>따라오고 있다면, 지금 이 파일을 생성해 주세요…</p>
 
 <figure class="code bash">
 <pre>$ touch cmd/web/testutils_test.go</pre>
 </figure>
 
-<p>And then add the following code:</p>
+<p>And then add the following code: 그 다음, 다음 코드를 추가하세요.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/testutils_test.go</figcaption>
@@ -276,8 +301,10 @@ FAIL</samp></pre>
 </figure>
 
 <p>Essentially, this is just a generalization of the code that we&rsquo;ve already written in this chapter to spin up a test server and make a <code>GET</code> request against it.</p>
+<p>본질적으로, 이것은 이 장에서 이미 작성한 코드를 일반화하여 테스트 서버를 시작하고 <code>GET</code> 요청을 보내는 것입니다.</p>
 
 <p>Let&rsquo;s head back to our <code>TestPing</code> handler and put these new helpers to work:</p>
+<p>이제 <code>TestPing</code> 핸들러로 돌아가서 이 새로운 헬퍼들을 활용해 봅시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/handlers_test.go</figcaption>
@@ -304,6 +331,7 @@ FAIL</samp></pre>
 </figure>
 
 <p>And, again, if you run the tests again everything should still pass.</p>
+<p>다시 한 번 테스트를 실행하면 모든 것이 여전히 통과할 것입니다.</p>
 
 <figure class="code bash">
 <pre>$ go test ./cmd/web/
@@ -311,18 +339,25 @@ FAIL</samp></pre>
 </figure>
 
 <p>This is shaping up nicely now. We have a neat pattern in place for spinning up a test server and making requests to it, encompassing our routing, middleware and handlers in an end-to-end test. We&rsquo;ve also broken apart some of the code into helpers, which will make writing future tests quicker and easier.</p>
+<p>이제 상황이 잘 정리되었습니다. 테스트 서버를 시작하고 요청을 보내는 깔끔한 패턴이 마련되었으며, 이는 라우팅, 미들웨어, 핸들러를 포함한 엔드 투 엔드 테스트를 포함합니다. 또한, 일부 코드를 헬퍼로 분리하여 향후 테스트를 더 빠르고 쉽게 작성할 수 있게 되었습니다.</p>
 
 <h3 id="cookies-and-redirections">Cookies and redirections</h3>
 
 <p>So far in this chapter we&rsquo;ve been using the default <em>test server client</em> settings. But there are a couple of changes I&rsquo;d like to make so that it&rsquo;s better suited to testing our web application. Specifically:</p>
+<p>이번 장에서는 지금까지 기본 테스트 서버 클라이언트 설정을 사용해왔습니다. 하지만 웹 애플리케이션 테스트에 더 적합하도록 몇 가지 변경을 하고자 합니다.</p>
 
 <ul>
-<li><p>We want the client to automatically store any cookies sent in a HTTPS response, so that we can include them (if appropriate) in any subsequent requests back to the test server. This will come in handy later in the book when we need cookies to be supported across multiple requests in order to test our anti-CSRF measures.</p></li>
+<li><p>We want the client to automatically store any cookies sent in a HTTPS response, so that we can include them (if appropriate) in any subsequent requests back to the test server. This will come in handy later in the book when we need cookies to be supported across multiple requests in order to test our anti-CSRF measures.</p>
+<p>HTTPS 응답에서 전송된 쿠키를 클라이언트가 자동으로 저장하도록 하여, 이후 테스트 서버로 다시 보내는 요청에 (적절할 경우) 쿠키를 포함할 수 있기를 원합니다. 이 기능은 나중에 여러 요청에서 쿠키 지원이 필요할 때, 특히 반(反) CSRF 조치를 테스트할 때 유용할 것입니다.</p>
+</li>
 
-<li><p>We don&rsquo;t want the client to automatically follow redirects. Instead we want  it to return the first HTTPS response sent by our server so that we can test the response <em>for that specific request</em>.</p></li>
+<li><p>We don&rsquo;t want the client to automatically follow redirects. Instead we want  it to return the first HTTPS response sent by our server so that we can test the response <em>for that specific request</em>.</p>
+<p>클라이언트가 자동으로 리디렉션을 따르지 않기를 원합니다. 대신, 서버에서 전송된 첫 번째 HTTPS 응답을 반환하여 특정 요청에 대한 응답을 테스트할 수 있도록 하고자 합니다.</p>
+</li>
 </ul>
 
 <p>To make these changes, let&rsquo;s go back to the <code>testutils_test.go</code> file we just created and update the <code>newTestServer()</code> function like so:</p>
+<p>이러한 변경을 위해, 방금 생성한 <code>testutils_test.go</code> 파일로 돌아가서 <code>newTestServer()</code> 함수를 다음과 같이 업데이트합시다.</p>
 
 <figure class="code go">
 <figcaption>File: cmd/web/testutils_test.go</figcaption>
